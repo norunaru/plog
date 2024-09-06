@@ -1,0 +1,11 @@
+services:
+  spring:
+    container_name: spring
+    image: spring-app
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - app-network
+networks:
+  app-network:
+    external: true
