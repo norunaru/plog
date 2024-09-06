@@ -9,8 +9,8 @@ import com.plog.backend.domain.member.dto.request.MemberJoinRequestDto;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.entity.MemberImage;
 import com.plog.backend.domain.member.exception.MemberDuplicateException;
-import com.plog.backend.domain.member.exception.NotFoundMemberException;
-import com.plog.backend.domain.member.exception.ResignedMemberException;
+import com.plog.backend.domain.member.exception.MemberNotFoundException;
+import com.plog.backend.domain.member.exception.MemberResignedException;
 import com.plog.backend.domain.member.repository.MemberImageRepository;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -74,12 +74,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(NotFoundMemberException::new);
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
     }
 
     private void validateResignedMember(Member member) {
         if (member.getIsResign() == 1) {
-            throw new ResignedMemberException();
+            throw new MemberResignedException();
         }
     }
 
