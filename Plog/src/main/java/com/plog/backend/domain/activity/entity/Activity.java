@@ -1,36 +1,41 @@
-package com.plog.backend.domain.trail.entity;
+package com.plog.backend.domain.activity.entity;
 
+import com.plog.backend.domain.member.entity.Member;
 import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
-@Builder
 @Entity
 @Getter
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Table(name = "trail")
-public class Trail {
+@Table(name = "activity")
+public class Activity {
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member;
 
     @Type(value = DoubleArrayType.class)
     @NotNull
@@ -43,28 +48,19 @@ public class Trail {
     private Double[] lon;
 
     @NotNull
-    @Column(name = "name", columnDefinition = "varchar")
-    private String name;
-
-    @Column(name = "shop_cnt", columnDefinition = "double precision")
-    private Double shopCnt;
-
-    @Column(name = "toilet_cnt", columnDefinition = "double precision")
-    private Double toiletCnt;
-
-    @Column(name = "mountain", columnDefinition = "double precision")
-    private Double mountain;
-
-    @Column(name = "ocean", columnDefinition = "double precision")
-    private Double ocean;
-
-    @Column(name = "city", columnDefinition = "double precision")
-    private Double city;
-
-    @Column(name = "lake", columnDefinition = "double precision")
-    private Double lake;
-
     @Column(name = "distance", columnDefinition = "double precision")
     private Double distance;
+
+    @NotNull
+    @Column(name = "time", columnDefinition = "double precision")
+    private Double time;
+
+    @NotNull
+    @Column(name = "review", columnDefinition = "TEXT")
+    private String review;
+
+    @NotNull
+    @Column(name = "score", columnDefinition = "double precision")
+    private Double score;
 
 }
