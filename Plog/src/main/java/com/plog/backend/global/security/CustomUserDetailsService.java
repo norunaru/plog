@@ -19,8 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final ModelMapper mapper;
 
     @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Member member = memberRepository.findById(id)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저 존재하지 않음"));
 
         MemberDto memberDto = mapper.map(member, MemberDto.class);
