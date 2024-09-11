@@ -52,8 +52,8 @@ public class Trail {
     @Column(name = "toilet_cnt", columnDefinition = "double precision")
     private Double toiletCnt;
 
-    @Column(name = "mountain", columnDefinition = "double precision")
-    private Double mountain;
+    @Column(name = "park", columnDefinition = "double precision")
+    private Double park;
 
     @Column(name = "ocean", columnDefinition = "double precision")
     private Double ocean;
