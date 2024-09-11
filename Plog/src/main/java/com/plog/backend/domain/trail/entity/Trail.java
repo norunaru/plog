@@ -1,6 +1,6 @@
 package com.plog.backend.domain.trail.entity;
 
-import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
+import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,39 +32,41 @@ public class Trail {
     @Column(name = "id")
     private Integer id;
 
-    @Type(value = DoubleArrayType.class)
-    @NotNull
-    @Column(name = "lat", columnDefinition = "double precision[]")
-    private Double[] lat;
-
-    @Type(value = DoubleArrayType.class)
-    @NotNull
-    @Column(name = "lon", columnDefinition = "double precision[]")
-    private Double[] lon;
-
     @NotNull
     @Column(name = "name", columnDefinition = "varchar")
     private String name;
 
-    @Column(name = "shop_cnt", columnDefinition = "double precision")
-    private Double shopCnt;
+    @Column(name = "park", columnDefinition = "real")
+    private Float park;
 
-    @Column(name = "toilet_cnt", columnDefinition = "double precision")
-    private Double toiletCnt;
+    @Column(name = "ocean", columnDefinition = "real")
+    private Float ocean;
 
-    @Column(name = "park", columnDefinition = "double precision")
-    private Double park;
+    @Column(name = "city", columnDefinition = "real")
+    private Float city;
 
-    @Column(name = "ocean", columnDefinition = "double precision")
-    private Double ocean;
+    @Column(name = "lake", columnDefinition = "real")
+    private Float lake;
 
-    @Column(name = "city", columnDefinition = "double precision")
-    private Double city;
+    @Column(name = "shop_cnt", columnDefinition = "real")
+    private Float shopCnt;
 
-    @Column(name = "lake", columnDefinition = "double precision")
-    private Double lake;
+    @Column(name = "toilet_cnt", columnDefinition = "real")
+    private Float toiletCnt;
 
-    @Column(name = "distance", columnDefinition = "double precision")
-    private Double distance;
+    @Column(name = "distance", columnDefinition = "real")
+    private Float distance;
 
+    @Column(name = "area", columnDefinition = "real")
+    private Float area;
+
+    @Type(value = FloatArrayType.class)
+    @NotNull
+    @Column(name = "lat", columnDefinition = "real[]")
+    private Float[] lat;
+
+    @Type(value = FloatArrayType.class)
+    @NotNull
+    @Column(name = "lon", columnDefinition = "real[]")
+    private Float[] lon;
 }

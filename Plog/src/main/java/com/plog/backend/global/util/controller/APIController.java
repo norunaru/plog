@@ -98,7 +98,7 @@ public class APIController {
         }
 
         // 경로의 좌표 리스트를 저장할 변수
-        List<Double[]> coordinatesList = new ArrayList<>();
+        List<float[]> coordinatesList = new ArrayList<>();
 
         // 각 피처(feature) 객체를 순회하면서 좌표 데이터를 추출
         for (int i = 0; i < features.length(); i++) {
@@ -111,7 +111,7 @@ public class APIController {
                 for (int j = 0; j < coordinates.length(); j++) {
                     JSONArray coord = coordinates.getJSONArray(j);
                     // 좌표 배열에 [위도, 경도] 형식으로 저장합니다.
-                    coordinatesList.add(new Double[]{coord.getDouble(1), coord.getDouble(0)});
+                    coordinatesList.add(new float[]{coord.getFloat(1), coord.getFloat(0)});
                 }
             }
         }
@@ -122,8 +122,8 @@ public class APIController {
 
         // 리스트 크기를 기준으로 배열 생성
         int size = coordinatesList.size();
-        Double[] latArray = new Double[size];  // 위도만 저장할 배열
-        Double[] lonArray = new Double[size];  // 경도만 저장할 배열
+        Float[] latArray = new Float[size];  // 위도만 저장할 배열
+        Float[] lonArray = new Float[size];  // 경도만 저장할 배열
 
         // 리스트를 순회하며 위도와 경도를 각 배열에 저장
         for (int i = 0; i < size; i++) {
@@ -137,25 +137,17 @@ public class APIController {
 
         // 필요한 데이터를 이용하여 원하는 작업을 수행할 수 있습니다.
 
-        utilService.saveTrail(Trail.builder()
-            .lat(latArray)
-            .lon(lonArray)
-            .name(name)
-            .shopCnt(convenienceStores.size() + 0.0)
-            .toiletCnt(restrooms.size() + 0.0)
-            .park(0.0)
-            .ocean(1.0)
-            .city(1.0)
-            .lake(0.5)
-            .distance(totalDistance)
-            .build());
+        utilService.saveTrail(Trail.builder().lat(latArray).lon(lonArray).name(name)
+            .shopCnt((float) (convenienceStores.size() + 0.0))
+            .toiletCnt((float) (restrooms.size() + 0.0)).park(0.0F).ocean(1.0F).city(1.0F)
+            .lake(0.5F).distance((float) totalDistance).area(0.0F).build());
 
         return "Route data and nearby places fetched successfully";
     }
 
 
     // 좌표 리스트를 기반으로 편의점이나 화장실을 검색하는 메서드입니다.
-    private Set<SearchPlace> searchNearbyPlaces(List<Double[]> coordinatesList,
+    private Set<SearchPlace> searchNearbyPlaces(List<float[]> coordinatesList,
         String queryOrCategory, boolean isCategorySearch)
         throws JsonProcessingException, UnsupportedEncodingException {
 
@@ -170,7 +162,7 @@ public class APIController {
         headers.set("Authorization", "KakaoAK " + kakaoRestApi); // 카카오 API 사용을 위한 인증키를 헤더에 추가합니다.
 
         // 각 좌표에 대해 편의점 또는 화장실을 검색합니다.
-        for (Double[] coords : coordinatesList) {
+        for (float[] coords : coordinatesList) {
             // 카카오 API에 요청할 URL을 생성합니다.
             String url = buildKakaoApiUrl(queryOrCategory, coords, isCategorySearch);
 
@@ -196,7 +188,7 @@ public class APIController {
     }
 
     // 카카오 API에 요청할 URL을 생성하는 메서드입니다.
-    private String buildKakaoApiUrl(String queryOrCategory, Double[] coords,
+    private String buildKakaoApiUrl(String queryOrCategory, float[] coords,
         boolean isCategorySearch) throws UnsupportedEncodingException {
 
         // 카테고리 검색인 경우
