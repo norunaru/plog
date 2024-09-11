@@ -143,7 +143,7 @@ public class APIController {
             .name(name)
             .shopCnt(convenienceStores.size() + 0.0)
             .toiletCnt(restrooms.size() + 0.0)
-            .mountain(0.0)
+            .park(0.0)
             .ocean(1.0)
             .city(1.0)
             .lake(0.5)
