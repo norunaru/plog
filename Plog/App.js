@@ -47,10 +47,11 @@ function TabNavigator() {
           );
         },
         tabBarShowLabel: false, // 탭 레이블 숨기기
+        headerShown: false,
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="MyPage" component={MyPageScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
+      <Tab.Screen name="MyPage" component={MyPageScreen} />
     </Tab.Navigator>
   );
 }
