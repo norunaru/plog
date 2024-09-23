@@ -6,6 +6,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
+import RecommendScreen from './src/screens/RecommendScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // Tab Navigator와 Stack Navigator 생성
@@ -51,6 +52,7 @@ export default function App() {
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
         <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen name="Recommend" component={RecommendScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
