@@ -7,6 +7,14 @@ import MyPageScreen from './src/screens/MyPageScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Image} from 'react-native';
+
+import homeBlack from './assets/icons/homeBlack.png';
+import homeGray from './assets/icons/homeGray.png';
+import communityBlack from './assets/icons/communityBlack.png';
+import communityGray from './assets/icons/communityGray.png';
+import MyBlack from './assets/icons/myBlack.png';
+import MyGray from './assets/icons/myGray.png';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -17,19 +25,28 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarIcon: ({color, size}) => {
-          let iconName;
+        tabBarIcon: ({focused}) => {
+          let iconSource;
 
+          // 각 탭에 맞는 이미지 경로 설정
           if (route.name === 'Home') {
-            iconName = 'home';
+            iconSource = focused ? homeBlack : homeGray;
           } else if (route.name === 'MyPage') {
-            iconName = 'person';
+            iconSource = focused ? MyBlack : MyGray;
           } else if (route.name === 'Community') {
-            iconName = 'chatbubbles';
+            iconSource = focused ? communityBlack : communityGray;
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          // Image 컴포넌트를 사용하여 커스텀 이미지 렌더링
+          return (
+            <Image
+              source={iconSource}
+              style={{width: 38, height: 41}} // 이미지 크기 조정
+              resizeMode="contain" // 이미지의 크기가 변해도 비율 유지
+            />
+          );
         },
+        tabBarShowLabel: false, // 탭 레이블 숨기기
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="MyPage" component={MyPageScreen} />
