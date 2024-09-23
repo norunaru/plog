@@ -10,8 +10,12 @@ export default function HomeScreen({navigation}) {
         onPress={() => navigation.navigate('Detail')}
       />
       <Button 
-        title="T E S T"
+        title="Recommend"
         onPress={() => navigation.navigate('Recommend')}
+      />
+      <Button 
+        title="CourseDetail"
+        onPress={() => navigation.navigate('CourseDetail')}
       />
     </View>
   );

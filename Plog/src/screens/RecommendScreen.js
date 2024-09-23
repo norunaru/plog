@@ -5,7 +5,7 @@ import CourseBottomSheet from "../components/CourseBottomSheet";
 const RecommendScreen = () => {
     return (
         <View style={styles.mapView}>
-            <Image source={require('../../assets/images/image59.png')} style={styles.mapView}/>
+            <Image source={require('../../assets/images/image59.png')} style={styles.mapImg}/>
             <CourseBottomSheet />
         </View>
     );
@@ -14,8 +14,10 @@ const RecommendScreen = () => {
 const styles = StyleSheet.create({
     mapView: {
         flex: 1,
-        backgroundColor: 'white',
+    },
+    mapImg: {
         width: '100%',
+        height: '100%',
     },
 });
 

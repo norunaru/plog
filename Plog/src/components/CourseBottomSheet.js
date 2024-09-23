@@ -50,7 +50,6 @@ const CourseBottomSheet = () => {
     { id: 5, name: 'E코스', distance: '9km', time: '6시간 ~ 6시간 30분' },
     { id: 6, name: 'F코스', distance: '10km', time: '7시간 ~ 7시간 30분' },
     { id: 7, name: 'G코스', distance: '11km', time: '8시간 ~ 8시간 30분' },
-    // 추가 코스 데이터...
   ];
 
   // 표시할 코스들: 확장 여부에 따라 결정
@@ -72,7 +71,10 @@ const CourseBottomSheet = () => {
         showsVerticalScrollIndicator={false}
       >
         {displayedCourses.map(course => (
-          <View key={course.id} style={styles.courseItem}>
+          <View 
+          key={course.id} 
+          style={styles.courseItem}
+          >
             <Text style={styles.courseName}>{course.name}</Text>
             {/* 코스 상세 정보 */}
             <View style={styles.content}>
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#ccc',
+    backgroundColor: '#9B9BA3',
     marginVertical: 10,
   },
 });
