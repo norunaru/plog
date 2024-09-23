@@ -25,6 +25,7 @@ import org.hibernate.annotations.DynamicUpdate;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
