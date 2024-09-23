@@ -3,6 +3,8 @@ package com.plog.backend.domain.member.entity;
 import static jakarta.persistence.FetchType.*;
 
 import com.plog.backend.domain.member.dto.MemberImageDto;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
