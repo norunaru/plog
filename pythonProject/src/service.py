@@ -30,6 +30,7 @@ def normalization_trails(db: Session):
     shop_cnt_values = [trail.shop_cnt for trail in trails]
     toilet_cnt_values = [trail.toilet_cnt for trail in trails]
     distance_values = [trail.distance for trail in trails]
+    area_values = [trail.area for trail in trails]
 
     # 각 feature의 최대값과 최소값을 구함
     lat_min, lat_max = min(lat_values), max(lat_values)
@@ -37,6 +38,7 @@ def normalization_trails(db: Session):
     shop_cnt_min, shop_cnt_max = min(shop_cnt_values), max(shop_cnt_values)
     toilet_cnt_min, toilet_cnt_max = min(toilet_cnt_values), max(toilet_cnt_values)
     distance_min, distance_max = min(distance_values), max(distance_values)
+    area_min, area_max = min(area_values), max(area_values)
 
     for trail in trails:
         # 각 feature에 대해 정규화 진행
@@ -48,6 +50,7 @@ def normalization_trails(db: Session):
                     toilet_cnt_max - toilet_cnt_min) if toilet_cnt_max != toilet_cnt_min else 0
         normalized_distance = (trail.distance - distance_min) / (
                     distance_max - distance_min) if distance_max != distance_min else 0
+        normalized_area = (trail.area - area_min) / (area_max - area_min) if area_max != area_min else 0
 
         # TrailNormal 모델에 저장하기 위해 새로운 객체 생성
         normalized_trail = TrailNormalCreate(
@@ -57,7 +60,8 @@ def normalization_trails(db: Session):
             shop_cnt=normalized_shop_cnt,
             toilet_cnt=normalized_toilet_cnt,
             distance=normalized_distance,
-            mountain = trail.mountain,
+            area=normalized_area,
+            park = trail.park,
             ocean = trail.ocean,
             city = trail.city,
             lake = trail.lake
@@ -89,7 +93,7 @@ def cluster_trails(db: Session, n_clusters: int = 5):
 
     # feature vector 생성 (lat, lon, shop_cnt, toilet_cnt 등을 사용할 수 있음)
     feature_vectors = np.array([
-        [trail.lat, trail.lon, trail.shop_cnt, trail.toilet_cnt, trail.mountain, trail.ocean, trail.city, trail.lake, trail.distance]
+        [trail.lat, trail.lon, trail.shop_cnt, trail.toilet_cnt, trail.park, trail.ocean, trail.city, trail.lake, trail.distance,trail.area]
         for trail in trails
     ])
 

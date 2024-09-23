@@ -4,7 +4,7 @@ from src import models, schemas
 
 # Trail CRUD operations
 def get_trail(db: Session, trail_id: int):
-    return db.query(models.Trail).filter(models.Ttrail.id == trail_id).first()
+    return db.query(models.Trail).filter(models.Trail.id == trail_id).first()
 
 
 def get_trails(db: Session, skip: int = 0, limit: int = 100):
@@ -18,11 +18,12 @@ def create_trail(db: Session, trail: schemas.TrailCreate):
         lon=trail.lon,
         shop_cnt=trail.shop_cnt,
         toilet_cnt=trail.toilet_cnt,
-        mountain=trail.mountain,
+        park=trail.park,
         ocean=trail.ocean,
         city=trail.city,
         lake=trail.lake,
-        distance=trail.distance
+        distance=trail.distance,
+        area=trail.area,
     )
     db.add(db_trail)
     db.commit()
@@ -46,11 +47,12 @@ def create_trail_normal(db: Session, trail_normal: schemas.TrailNormalCreate):
         lon=trail_normal.lon,
         shop_cnt=trail_normal.shop_cnt,
         toilet_cnt=trail_normal.toilet_cnt,
-        mountain=trail_normal.mountain,
+        park=trail_normal.park,
         ocean=trail_normal.ocean,
         city=trail_normal.city,
         lake=trail_normal.lake,
-        distance=trail_normal.distance
+        distance=trail_normal.distance,
+        area=trail_normal.area,
     )
     db.add(db_trail_normal)
     db.commit()

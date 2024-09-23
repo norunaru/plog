@@ -6,13 +6,14 @@ class TrailBase(BaseModel):
     name: str
     lat: List[float]
     lon: List[float]
-    shop_cnt: int
-    toilet_cnt: int
-    mountain: int
-    ocean: int
-    city: int
-    lake: int
+    shop_cnt: float
+    toilet_cnt: float
+    park: float
+    ocean: float
+    city: float
+    lake: float
     distance: float
+    area: float
 
 
 class TrailCreate(TrailBase):
@@ -35,11 +36,12 @@ class TrailNormalBase(BaseModel):
     lon: float
     shop_cnt: float
     toilet_cnt: float
-    mountain: float
+    park: float
     ocean: float
     city: float
     lake: float
     distance: float
+    area: float
 
 
 class TrailNormalCreate(TrailNormalBase):

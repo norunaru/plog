@@ -54,8 +54,8 @@ def visualize_clustered_trails(trails, cluster_labels):
     trail_data = np.array([[trail.lat, trail.lon,
                             trail.shop_cnt, trail.toilet_cnt,
                             trail.distance,
-                            int(trail.mountain), int(trail.ocean),
-                            int(trail.city), int(trail.lake)] for trail in trails])
+                            trail.park, trail.ocean,
+                            trail.city, trail.lake] for trail in trails])
 
     # PCA로 점수 행렬을 2D로 축소
     pca = PCA(n_components=2)
