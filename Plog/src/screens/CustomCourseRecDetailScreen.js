@@ -2,9 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, Button } from 'react-native';
 import heartImage from '../../assets/icons/likeColor.png';
 
-const { width } = Dimensions.get('window');
-
-const CustomCourseRecDetailScreen = () => {
+const CustomCourseRecDetailScreen = ({navigation}) => {
   return (
     <View style={styles.wrap}>
       {/* 지도 이미지 */}
@@ -33,7 +31,7 @@ const CustomCourseRecDetailScreen = () => {
           <Image source={heartImage} style={styles.heartImg} />
           <Button
             title="플로깅 시작"
-            onPress={() => navigation.navigate('Detail')}
+            onPress={() => navigation.navigate('Plogging')}
           />
         </View>
       </View>

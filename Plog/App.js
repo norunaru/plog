@@ -8,6 +8,7 @@ import DetailScreen from './src/screens/DetailScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import CustomCourseRecDetail from './src/screens/CustomCourseRecDetailScreen';
+import PloggingScreen from './src/screens/PloggingScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Image} from 'react-native';
 
@@ -86,6 +87,11 @@ export default function App() {
             title:'코스 상세정보',
             headerTitleAlign: 'center',
           }}
+        />
+        <Stack.Screen 
+          name="Plogging" 
+          component={PloggingScreen} 
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
