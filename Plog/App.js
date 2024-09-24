@@ -6,6 +6,8 @@ import HomeScreen from './src/screens/HomeScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
+import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
+import CustomCourseRecDetail from './src/screens/CustomCourseRecDetailScreen';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Image} from 'react-native';
 
@@ -69,6 +71,22 @@ export default function App() {
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
         <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen 
+          name="CustomCourseRec" 
+          component={CustomCourseRecScreen} 
+          options={{
+            title:'OO님에게 추천드려요',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen 
+          name="CustomCourseRecDetail" 
+          component={CustomCourseRecDetail} 
+          options={{
+            title:'코스 상세정보',
+            headerTitleAlign: 'center',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
