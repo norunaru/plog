@@ -8,7 +8,7 @@ import pauseIcon from '../../assets/icons/ic_pause.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
 
-const PloggingScreen = () => {
+const PloggingScreen = ({navigation}) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(true); // 타이머가 실행 중인지 확인하는 상태
 
@@ -63,7 +63,10 @@ const PloggingScreen = () => {
 
       {/* 하단 버튼 */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.endButton}>
+        <TouchableOpacity 
+          style={styles.endButton}
+          onPress={() => navigation.navigate("Home")} 
+        >
           <Image source={stopIcon} style={{width:21, height:21}}/>        
           <Text style={styles.endButtonText}>끝내기</Text>
         </TouchableOpacity>
