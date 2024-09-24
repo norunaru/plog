@@ -8,7 +8,18 @@ import DetailScreen from './src/screens/DetailScreen';
 import CommunityScreen from './src/screens/CommunityScreen';
 import RecommendScreen from './src/screens/RecommendScreen';
 import CourseDetailScreen from './src/screens/CourseDetailScreen';
-import Icon from 'react-native-vector-icons/Ionicons';
+import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
+import CustomCourseRecDetail from './src/screens/CustomCourseRecDetailScreen';
+import PloggingScreen from './src/screens/PloggingScreen';
+import {Image} from 'react-native';
+
+import homeBlack from './assets/icons/homeBlack.png';
+import homeGray from './assets/icons/homeGray.png';
+import communityBlack from './assets/icons/communityBlack.png';
+import communityGray from './assets/icons/communityGray.png';
+import MyBlack from './assets/icons/myBlack.png';
+import MyGray from './assets/icons/myGray.png';
+import WritingScreen from './src/screens/WritingScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -19,23 +30,33 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
-        tabBarIcon: ({color, size}) => {
-          let iconName;
+        tabBarIcon: ({focused}) => {
+          let iconSource;
 
+          // 각 탭에 맞는 이미지 경로 설정
           if (route.name === 'Home') {
-            iconName = 'home';
+            iconSource = focused ? homeBlack : homeGray;
           } else if (route.name === 'MyPage') {
-            iconName = 'person';
+            iconSource = focused ? MyBlack : MyGray;
           } else if (route.name === 'Community') {
-            iconName = 'chatbubbles';
+            iconSource = focused ? communityBlack : communityGray;
           }
 
-          return <Icon name={iconName} size={size} color={color} />;
+          // Image 컴포넌트를 사용하여 커스텀 이미지 렌더링
+          return (
+            <Image
+              source={iconSource}
+              style={{width: 38, height: 41}} // 이미지 크기 조정
+              resizeMode="contain" // 이미지의 크기가 변해도 비율 유지
+            />
+          );
         },
+        tabBarShowLabel: false, // 탭 레이블 숨기기
+        headerShown: false,
       })}>
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="MyPage" component={MyPageScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
+      <Tab.Screen name="MyPage" component={MyPageScreen} />
     </Tab.Navigator>
   );
 }
@@ -53,6 +74,28 @@ export default function App() {
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
         <Stack.Screen name="Detail" component={DetailScreen} />
+        <Stack.Screen 
+          name="CustomCourseRec" 
+          component={CustomCourseRecScreen} 
+          options={{
+            title:'OO님에게 추천드려요',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen 
+          name="CustomCourseRecDetail" 
+          component={CustomCourseRecDetail} 
+          options={{
+            title:'코스 상세정보',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen 
+          name="Plogging" 
+          component={PloggingScreen} 
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="Writing" component={WritingScreen} />
         <Stack.Screen name="Recommend" component={RecommendScreen} />
         <Stack.Screen name="CourseDetail" component={CourseDetailScreen}/>
       </Stack.Navigator>
