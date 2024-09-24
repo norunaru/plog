@@ -50,8 +50,12 @@ export default function HomeScreen({navigation}) {
 
       <Text>Home Screen</Text>
       <Button
-        title="Go to Details"
+        title="to detail page"
         onPress={() => navigation.navigate('Detail')}
+      />
+      <Button
+        title="일지 작성으로"
+        onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
       />
     </SafeAreaView>
   );

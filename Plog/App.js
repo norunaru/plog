@@ -18,6 +18,7 @@ import communityBlack from './assets/icons/communityBlack.png';
 import communityGray from './assets/icons/communityGray.png';
 import MyBlack from './assets/icons/myBlack.png';
 import MyGray from './assets/icons/myGray.png';
+import WritingScreen from './src/screens/WritingScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -93,6 +94,7 @@ export default function App() {
           component={PloggingScreen} 
           options={{headerShown: false}}
         />
+        <Stack.Screen name="Writing" component={WritingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
