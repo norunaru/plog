@@ -6,6 +6,7 @@ import {
   Image,
   Button,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import TopBar from '../components/TopBar';
 import Weather from '../components/Weather';
@@ -20,13 +21,15 @@ export default function HomeScreen({navigation}) {
       <View style={styles.Wrapper}>
         <Weather />
         <View style={styles.BottomWrapper}>
-          <View style={styles.GreenBox}>
-            <Text style={styles.heading}>
-              맞춤형{'\n'}플로깅 코스{'\n'}추천받기
-            </Text>
-            {/* 스타일이 적용된 텍스트 */}
-            <Image source={running} style={styles.bg} />
-          </View>
+        <TouchableOpacity
+          style={styles.GreenBox}
+          onPress={() => navigation.navigate('CustomCourseRec')}
+        >
+          <Text style={styles.heading} >
+            맞춤형{'\n'}플로깅 코스{'\n'}추천받기
+          </Text>
+          <Image source={running} style={styles.bg} />
+        </TouchableOpacity>
           <View style={styles.RightColumn}>
             <View style={styles.SmallBox}>
               <Image style={styles.icon} source={locationCourse} />
