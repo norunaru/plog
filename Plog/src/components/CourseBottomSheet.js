@@ -19,17 +19,19 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const CourseBottomSheet = () => {
   const [expanded, setExpanded] = useState(false);
-  const animation = useRef(new Animated.Value(responsiveHeight(15))).current;
+  const animation = useRef(new Animated.Value(130)).current;
+  const scrollViewRef = useRef(null);
 
   const toggleSheet = () => {
     if (expanded) {
       // 바텀 시트 닫기
       Animated.timing(animation, {
-        toValue: responsiveHeight(16.5),
+        toValue: 130,
         duration: 300,
         useNativeDriver: false,
       }).start(() => {
         setExpanded(false);
+        scrollViewRef.current?.scrollTo({ y: 0, animated: false });
       });
     } else {
       // 바텀 시트 열기
@@ -66,6 +68,7 @@ const CourseBottomSheet = () => {
         <View style={styles.dragHandle} />
       </TouchableOpacity>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.courseList}
         scrollEnabled={expanded}
         showsVerticalScrollIndicator={false}
