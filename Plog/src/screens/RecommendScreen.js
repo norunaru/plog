@@ -1,9 +1,13 @@
-import React from "react";
-import { View, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image, Platform, Alert } from 'react-native';
 import CourseBottomSheet from "../components/CourseBottomSheet";
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import Geolocation from "react-native-geolocation-service";
+import { request, PERMISSIONS } from 'react-native-permissions';
 
 const RecommendScreen = () => {
+    const [currentPosition, setCurrentPosition] = useState(null); // 현재 위치 저장
+
     const locations = [
         {
             latitude: 36.35095911742538,
@@ -37,37 +41,66 @@ const RecommendScreen = () => {
         },
     ];
 
+    useEffect(() => {
+        const requestLocationPermission = async () => {
+            const permission = await request(
+                Platform.OS === 'ios' 
+                    ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE 
+                    : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+            );
+
+            if (permission === 'granted') {
+                Geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        setCurrentPosition({
+                            latitude,
+                            longitude,
+                            latitudeDelta: 0.07, // 초기 확대 수준 설정
+                            longitudeDelta: 0.07,
+                        });
+                    },
+                    (error) => {
+                        Alert.alert("Error", "현재 위치를 가져오는 데 실패했습니다.");
+                        console.error(error);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                );
+            } else {
+                Alert.alert("Permission Denied", "위치 권한이 필요합니다.");
+            }
+        };
+
+        requestLocationPermission();
+    }, []);
+
     return (
         <View style={styles.mapView}>
-            <MapView 
-                provider={PROVIDER_GOOGLE}
-                style={styles.mapImg}
-                // initialRegion={{
-                //     latitude: 36.35471684260257,
-                //     longitude: 127.30130916149847,
-                //     latitudeDelta: 0.07,
-                //     longitudeDelta: 0.07,
-                // }}
-                showsUserLocation={true} // 현재 위치를 보여줍니다
-                followsUserLocation={true} // 사용자의 움직임을 추적합니다
-            >
-                {locations.map((location, index) => (
-                    <Marker
-                        key={index}
-                        coordinate={{
-                            latitude: location.latitude,
-                            longitude: location.longitude,
-                        }}
-                        title={location.title}
-                        description={location.description}
-                    >
-                        <Image
-                            source={require('../../assets/images/spot.png')} 
-                            style={styles.marker} 
-                        />
-                    </Marker>
-                ))}
-            </MapView>
+            {currentPosition && (
+                <MapView 
+                    provider={PROVIDER_GOOGLE}
+                    style={styles.mapImg}
+                    initialRegion={currentPosition}
+                    showsUserLocation={true} // 현재 위치에 블루 도트 표시
+                >
+                    {locations.map((location, index) => (
+                        <Marker
+                            key={index}
+                            coordinate={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                            }}
+                            title={location.title}
+                            description={location.description}
+                        >
+                            <Image
+                                source={require('../../assets/images/spot.png')} 
+                                style={styles.marker} 
+                            />
+                        </Marker>
+                    ))}
+                </MapView>
+            )}
             <CourseBottomSheet />
         </View>
     );
