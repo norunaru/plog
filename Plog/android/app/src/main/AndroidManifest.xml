@@ -15,9 +15,11 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="aendegzo5d" />
+      # 구글 지도 API 설정
+      <meta-data
+	      android:name="com.google.android.geo.API_KEY"
+	      android:value="AIzaSyBZLJ_2QlrsNa6XvOjItboaG88czC2aaJg"/>
+      <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
       <activity
         android:name=".MainActivity"
