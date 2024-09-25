@@ -22,6 +22,7 @@ import userImg from '../../assets/images/btn_photo_add.png';
 
 const WritingScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [writtenText, setWrittenText] = useState('');
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}
@@ -88,6 +89,9 @@ const WritingScreen = ({navigation}) => {
             style={styles.memo}
             multiline={true} // 여러 줄 입력 가능하게 설정
             textAlignVertical="top"
+            onChangeText={text => setWrittenText(text)} // 변경된 부분
+            value={writtenText} // 추가된 부분: 입력된 텍스트 상태값 반영
+            maxLength={255}
           />
           <Image source={userImg} style={styles.uploadImg} />
           <Image source={photoAdd} style={styles.icon} />
