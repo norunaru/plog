@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native';
-import heartImage from '../../assets/icons/likeGray.png';
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import likeGray from '../../assets/icons/likeGray.png';
+import likeColor from '../../assets/icons/likeColor.png';
 
 const { width } = Dimensions.get('window');
 const titleText = 'A코스입니다';
@@ -10,11 +11,13 @@ const displayTitleText = titleText.length > MAX_LENGTH
     : titleText;
 
 const CustomCourseRecCard = () => {
+  const [isLiked, setIsLiked] = useState(false);
+
   return (
     <View style={styles.courseCard}>
       {/* 지도 이미지 */}
-      <Image
-        source={{ uri: 'https://via.placeholder.com/300' }} // 임시 이미지 URL
+      <Image 
+        source={require('../../assets/images/mapmap.png')}
         style={styles.mapImage}
       />
 
@@ -25,7 +28,16 @@ const CustomCourseRecCard = () => {
                   {displayTitleText}
             </Text>
             {/* 하트 이미지 */}
-            <Image source={heartImage} style={styles.heartImg} />
+            <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
+              <Image 
+                source={
+                  isLiked
+                    ? likeColor
+                    : likeGray
+                }
+                style={styles.heartImg}
+              />
+            </TouchableOpacity>
         </View>
 
 

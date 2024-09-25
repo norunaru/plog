@@ -9,7 +9,6 @@ import CommunityScreen from './src/screens/CommunityScreen';
 import RecommendScreen from './src/screens/RecommendScreen';
 import CourseDetailScreen from './src/screens/CourseDetailScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
-import CustomCourseRecDetail from './src/screens/CustomCourseRecDetailScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
 import {Image} from 'react-native';
 
@@ -83,8 +82,8 @@ export default function App() {
           }}
         />
         <Stack.Screen 
-          name="CustomCourseRecDetail" 
-          component={CustomCourseRecDetail} 
+          name="CourseDetail" 
+          component={CourseDetailScreen} 
           options={{
             title:'코스 상세정보',
             headerTitleAlign: 'center',
@@ -97,7 +96,6 @@ export default function App() {
         />
         <Stack.Screen name="Writing" component={WritingScreen} />
         <Stack.Screen name="Recommend" component={RecommendScreen} />
-        <Stack.Screen name="CourseDetail" component={CourseDetailScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

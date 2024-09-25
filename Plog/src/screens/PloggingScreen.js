@@ -45,6 +45,10 @@ const PloggingScreen = ({navigation}) => {
 
       {/* 지도 이미지 (임시 배경 색으로 대체) */}
       <View style={styles.mapContainer}>
+        <Image 
+          source={require('../../assets/images/mapmap.png')}
+          style={styles.mapImage}
+        />
       </View>
 
       {/* 이동 거리와 칼로리 정보 */}
@@ -94,7 +98,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 60,
+    marginTop: 40,
     textAlign: 'center',
   },
   timerContainer: {
@@ -118,14 +122,14 @@ const styles = StyleSheet.create({
   mapContainer: {
     marginTop: 20,
     width: '90%',
-    height: 340,
+    height: 300,
     backgroundColor: '#DFE4E7',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   mapImage: {
-    width: '90%',
+    width: '110%',
     height: '90%',
   },
   infoContainer: {
