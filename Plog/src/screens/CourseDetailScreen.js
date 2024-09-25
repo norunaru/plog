@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
 import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
 
-const CourseDetailScreen = () => {
+const CourseDetailScreen = ({navigation}) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const tags = [
@@ -69,9 +69,12 @@ const CourseDetailScreen = () => {
             style={styles.like}
           />
         </TouchableOpacity>
-        <View style={styles.start}>
+        <TouchableOpacity
+            style={styles.start}
+            onPress={() => navigation.navigate('Plogging')}
+        >
           <Text style={styles.startText}>플로깅 시작</Text>
-        </View>
+        </TouchableOpacity>
       </View>
       
     </View>
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     height: responsiveHeight(40),
   },
   title: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsiveFontSize(2.2),
     color: '#0F1012',
     fontWeight: 'bold',
     marginTop: 20,
@@ -99,6 +102,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: 20,
+    marginTop: 4,
   },
   tag: {
     backgroundColor: '#E7F7EF',
@@ -112,12 +116,12 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#017978',
-    fontSize: responsiveFontSize(1.2),
+    fontSize: responsiveFontSize(1.5),
     fontWeight: '500',
   },
   content: {
     marginHorizontal: 20,
-    marginVertical: 20,
+    marginVertical: 14,
   },
   infoItem: {
     height: 56,
@@ -135,15 +139,16 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   infoText: {
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsiveFontSize(1.8),
     color: '#0F1012',
     marginRight: 4,
     fontWeight: '500',
   },
   infoValue: {
-    fontSize: responsiveFontSize(1.3),
+    fontSize: responsiveFontSize(1.6),
     color: '#3F3F47',
     fontWeight: '400',
+    marginLeft: 3,
   },
   footer: {
     flexDirection: 'row',
@@ -155,8 +160,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   like: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
   },
   start: {
     flex: 1,
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
   },
   startText: {
     color: '#FFFFFF',
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(1.9),
     fontWeight: 'bold',
   },
 });
