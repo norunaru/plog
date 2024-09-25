@@ -20,6 +20,7 @@ import communityGray from './assets/icons/communityGray.png';
 import MyBlack from './assets/icons/myBlack.png';
 import MyGray from './assets/icons/myGray.png';
 import WritingScreen from './src/screens/WritingScreen';
+import ViewReviewScreen from './src/screens/ViewReviewScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -74,30 +75,31 @@ export default function App() {
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
         <Stack.Screen name="Detail" component={DetailScreen} />
-        <Stack.Screen 
-          name="CustomCourseRec" 
-          component={CustomCourseRecScreen} 
+        <Stack.Screen
+          name="CustomCourseRec"
+          component={CustomCourseRecScreen}
           options={{
-            title:'OO님에게 추천드려요',
+            title: 'OO님에게 추천드려요',
             headerTitleAlign: 'center',
           }}
         />
-        <Stack.Screen 
-          name="CustomCourseRecDetail" 
-          component={CustomCourseRecDetail} 
+        <Stack.Screen
+          name="CustomCourseRecDetail"
+          component={CustomCourseRecDetail}
           options={{
-            title:'코스 상세정보',
+            title: '코스 상세정보',
             headerTitleAlign: 'center',
           }}
         />
-        <Stack.Screen 
-          name="Plogging" 
-          component={PloggingScreen} 
+        <Stack.Screen
+          name="Plogging"
+          component={PloggingScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen name="Writing" component={WritingScreen} />
         <Stack.Screen name="Recommend" component={RecommendScreen} />
-        <Stack.Screen name="CourseDetail" component={CourseDetailScreen}/>
+        <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+        <Stack.Screen name="ViewReview" component={ViewReviewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
