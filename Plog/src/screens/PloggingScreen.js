@@ -28,9 +28,9 @@ const PloggingScreen = ({navigation}) => {
 
   // 시간을 "00:00" 형식으로 변환하는 함수
   const formatTime = (secs) => {
-    const minutes = Math.floor(secs / 60);
-    const seconds = secs % 60;
-    return `${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    const time = parseInt(secs / 60) + ':' + parseInt(secs % 60)
+
+    return time.replace(/\b(\d)\b/g, '0$1');
   };
 
   return (
