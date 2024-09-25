@@ -1,6 +1,5 @@
 package com.plog.backend.domain.member.entity;
 
-import com.plog.backend.domain.member.dto.request.MemberJoinRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,44 +22,38 @@ import org.hibernate.annotations.DynamicUpdate;
 @Getter
 @DynamicInsert
 @DynamicUpdate
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "member")
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @NotNull
     @Column(name = "email")
     private String email;
 
-    @NotNull
-    @Column(name = "password")
-    private String password;
-
-    @NotNull
     @Column(name = "name")
     private String name;
 
     @Column(name = "nickname")
     private String nickname;
 
-    @NotNull
     @Column(name = "gender")
     private Integer gender;
 
-    @NotNull
     @Column(name = "birth", columnDefinition = "DATE")
     private LocalDate birth;
 
-    @NotNull
     @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
     @Column(name = "role", length = 20)
-    @ColumnDefault("'customer'")
+    @ColumnDefault("'user'")
     private String role;
 
     @Column(name = "reg_date", columnDefinition = "TIMESTAMP")
@@ -69,18 +63,26 @@ public class Member {
     @ColumnDefault("0")
     private Integer isResign;
 
-    @Builder(builderMethodName = "signupBuilder")
-    public Member(MemberJoinRequestDto memberJoinRequestDto) {
-        this.email = memberJoinRequestDto.getEmail();
-        this.password = memberJoinRequestDto.getPassword();
-        this.name = memberJoinRequestDto.getName();
-        this.nickname = memberJoinRequestDto.getNickname();
-        this.gender = memberJoinRequestDto.getGender();
-        this.birth = memberJoinRequestDto.getBirth();
-        this.phoneNumber = memberJoinRequestDto.getPhoneNumber();
-        this.role = "default";
-        this.regDate = LocalDateTime.now();
-        this.isResign = 0;
-    }
+    @Column(name = "is_first")
+    @ColumnDefault("false")
+    private Boolean isFirst;
+
+    @Column(name = "activity_time")
+    private Integer activityTime;
+
+    @Column(name = "flogging_time")
+    private Integer floggingTime;
+
+    @Column(name = "reward")
+    private Integer reward;
+
+    @Column(name = "region_type")
+    private Integer region_type;
+
+    @Column(name = "region_lat", columnDefinition = "real")
+    private Float regionLat;
+
+    @Column(name = "region_lon", columnDefinition = "real")
+    private Float regionLon;
 
 }

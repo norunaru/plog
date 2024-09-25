@@ -10,7 +10,6 @@ import lombok.Data;
 public class MemberJoinRequestDto {
 
     private String email;
-    private String password;
     private String name;
     private String nickname;
     private Integer gender;

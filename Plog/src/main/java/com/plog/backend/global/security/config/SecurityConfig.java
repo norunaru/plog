@@ -8,6 +8,7 @@ import com.plog.backend.global.security.CustomUserDetailsService;
 import com.plog.backend.global.security.util.JwtUtil;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;

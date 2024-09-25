@@ -5,6 +5,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,14 +21,17 @@ public class JwtUtil {
 
     private final Key key;
     private final long accessTokenExpirationTime;
+    private final long refreshTokenExpirationTime;
 
     public JwtUtil(
         @Value("${jwt.secret}") String secretKey,
-        @Value("${jwt.expiration_time}") long accessTokenExpirationTime
+        @Value("${jwt.expiration_time}") long accessTokenExpirationTime,
+        @Value("${jwt.refresh_expiration_time}") long refreshExpirationTime
     ) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.accessTokenExpirationTime = accessTokenExpirationTime;
+        this.refreshTokenExpirationTime = refreshExpirationTime;
     }
 
     /**
@@ -39,6 +44,20 @@ public class JwtUtil {
         return createToken(member, accessTokenExpirationTime);
     }
 
+    public String createRefreshToken() {
+        return createRefreshTokenImpl(refreshTokenExpirationTime);
+    }
+
+    private String createRefreshTokenImpl(Long expirationTime) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+            .setClaims(claims)  // 클레임에 정보를 추가할 필요가 없으므로 비워둡니다.
+            .setIssuedAt(new Date(System.currentTimeMillis()))  // 발급 시간
+            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))  // 만료 시간
+            .signWith(key, SignatureAlgorithm.HS256)  // 서명 알고리즘과 비밀키
+            .compact();  // 토큰 생성
+    }
+
     /**
      * JWT 생성
      *
@@ -48,9 +67,20 @@ public class JwtUtil {
      */
     private String createToken(MemberDto member, long expirationTime) {
         Claims claims = Jwts.claims();
-        claims.put("user_id", member.getEmail());
-        claims.put("user_nickname", member.getNickname());
+        claims.put("email", member.getEmail());
+        claims.put("nickname", member.getNickname());
         claims.put("role", member.getRole());
+        claims.put("name", member.getName());
+        claims.put("gender", member.getGender());
+        claims.put("birth", member.getBirth());
+        claims.put("phone", member.getPhoneNumber());
+        claims.put("is_first", member.getIsFirst());
+        claims.put("activity_time", member.getActivityTime());
+        claims.put("flogging_time", member.getFloggingTime());
+        claims.put("reward", member.getReward());
+        claims.put("region_type", member.getRegionType());
+        claims.put("region_lat", member.getRegionLat());
+        claims.put("region_lon", member.getRegionLon());
 
         ZonedDateTime nowTime = ZonedDateTime.now();
         ZonedDateTime tokenValidityTime = nowTime.plusSeconds(expirationTime);
@@ -69,8 +99,8 @@ public class JwtUtil {
      * @param token
      * @return ID string
      */
-    public String getId(String token) {
-        return parseClaims(token).get("user_id", String.class);
+    public String getEmail(String token) {
+        return parseClaims(token).get("email", String.class);
     }
 
     /**
