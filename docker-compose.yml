@@ -4,6 +4,7 @@ services:
     image: spring-app
     environment:
       - TZ=Asia/Seoul
+    privileged: true
     networks:
       - app-network
 networks:
