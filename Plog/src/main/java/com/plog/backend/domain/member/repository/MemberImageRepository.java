@@ -4,7 +4,7 @@ import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.entity.MemberImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberImageRepository extends JpaRepository<MemberImage, Integer> {
+public interface MemberImageRepository extends JpaRepository<MemberImage, Long> {
 
     MemberImage findByMember(Member member);
 }

@@ -23,7 +23,8 @@ public record CustomUserDetails(MemberDto member) implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+//        member.getPassword()
+        return "";
     }
 
     @Override
