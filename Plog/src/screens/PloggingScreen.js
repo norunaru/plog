@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import running from '../../assets/images/running.png'; // 실제 이미지 경로를 넣으세요
 import timerIcon from '../../assets/icons/ic_time.png';
 import startIcon from '../../assets/icons/ic_start.png';
 import stopIcon from '../../assets/icons/ic_stop.png';
 import pauseIcon from '../../assets/icons/ic_pause.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
+import Modal from '../components/Modal';
 
 const PloggingScreen = ({navigation}) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(true); // 타이머가 실행 중인지 확인하는 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 타이머 설정 (1초마다 업데이트)
   useEffect(() => {
@@ -34,6 +35,20 @@ const PloggingScreen = ({navigation}) => {
 
   return (
     <View style={styles.wrap}>
+      {isModalOpen ? (
+        <Modal
+          onClose={() => setIsModalOpen(false)}
+          boldText={'플로깅을 끝내시겠어요?'}
+          subText={
+            '현재 진행한 코스까지만 기록돼요'
+          }
+          whiteBtnFn={() => setIsModalOpen(false)}
+          greenBtnFn={() => navigation.navigate('Home')}
+          greenBtnText={'끝내기'}
+          whiteBtnText={'계속하기'}
+        />
+      ) : null}
+
       {/* 상단 텍스트 */}
       <Text style={styles.topText}>A코스에서 플로깅 하고있어요</Text>
       
@@ -45,6 +60,10 @@ const PloggingScreen = ({navigation}) => {
 
       {/* 지도 이미지 (임시 배경 색으로 대체) */}
       <View style={styles.mapContainer}>
+        <Image 
+          source={require('../../assets/images/mapmap.png')}
+          style={styles.mapImage}
+        />
       </View>
 
       {/* 이동 거리와 칼로리 정보 */}
@@ -65,7 +84,7 @@ const PloggingScreen = ({navigation}) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.endButton}
-          onPress={() => navigation.navigate("Home")} 
+          onPress={() => setIsModalOpen(true)}
         >
           <Image source={stopIcon} style={{width:21, height:21}}/>        
           <Text style={styles.endButtonText}>끝내기</Text>
@@ -94,7 +113,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 60,
+    marginTop: 40,
     textAlign: 'center',
   },
   timerContainer: {
@@ -118,14 +137,14 @@ const styles = StyleSheet.create({
   mapContainer: {
     marginTop: 20,
     width: '90%',
-    height: 340,
+    height: 300,
     backgroundColor: '#DFE4E7',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   mapImage: {
-    width: '90%',
+    width: '110%',
     height: '90%',
   },
   infoContainer: {
