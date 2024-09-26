@@ -21,6 +21,7 @@ import MyBlack from './assets/icons/myBlack.png';
 import MyGray from './assets/icons/myGray.png';
 import WritingScreen from './src/screens/WritingScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import ViewReviewScreen from './src/screens/ViewReviewScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -100,6 +101,7 @@ export default function App() {
         <Stack.Screen name="Recommend" component={RecommendScreen} />
         <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Review" component={ViewReviewScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

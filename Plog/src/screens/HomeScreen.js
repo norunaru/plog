@@ -66,6 +66,7 @@ export default function HomeScreen({navigation}) {
         onPress={() => navigation.navigate('CourseDetail')}
       />
       <Button title="Login" onPress={() => navigation.navigate('Login')} />
+      <Button title="Review" onPress={() => navigation.navigate('Review')} />
     </SafeAreaView>
   );
 }
