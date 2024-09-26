@@ -84,8 +84,8 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="CourseDetail" 
-          component={CourseDetailScreen} 
+          name="CourseDetail"
+          component={CourseDetailScreen}
           options={{
             title: '코스 상세정보',
             headerTitleAlign: 'center',
@@ -97,7 +97,11 @@ export default function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen name="Writing" component={WritingScreen} />
-        <Stack.Screen name="Recommend" component={RecommendScreen} />
+        <Stack.Screen
+          name="Recommend"
+          component={RecommendScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Review" component={ViewReviewScreen} />
       </Stack.Navigator>
