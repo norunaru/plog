@@ -1,4 +1,4 @@
-package com.plog.backend.global.refreshtoken.entity;
+package com.plog.backend.global.token.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -64,7 +64,7 @@ public class Member {
     private Integer isResign;
 
     @Column(name = "is_first")
-    @ColumnDefault("false")
+    @ColumnDefault("true")
     private Boolean isFirst;
 
     @Column(name = "activity_time")
