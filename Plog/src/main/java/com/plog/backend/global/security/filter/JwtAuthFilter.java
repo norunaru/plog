@@ -4,12 +4,15 @@ package com.plog.backend.global.security.filter;
 import com.plog.backend.domain.member.dto.MemberDto;
 import com.plog.backend.global.security.CustomUserDetailsService;
 import com.plog.backend.global.security.util.JwtUtil;
+import com.plog.backend.global.token.repository.AccessTokenBlackListRepository;
+import com.plog.backend.global.token.repository.RefreshTokenBlackListRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,14 +27,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
-    private ModelMapper mapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
         String refreshTokenHeader = request.getHeader("Refresh-Token");
-
+        ModelMapper mapper = new ModelMapper();
         // JWT가 헤더에 존재 하는 경우
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String accessToken = authorizationHeader.substring(7);

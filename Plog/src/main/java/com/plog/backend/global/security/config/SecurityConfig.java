@@ -34,6 +34,7 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
+
     private static final String[] AUTH_PERMIT_PATH_LIST = {
         "/", "/api/members"
     };
