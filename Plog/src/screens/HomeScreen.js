@@ -13,6 +13,7 @@ import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
 import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
+import LoginScreen from './LoginScreen';
 
 export default function HomeScreen({navigation}) {
   return (
@@ -21,15 +22,14 @@ export default function HomeScreen({navigation}) {
       <View style={styles.Wrapper}>
         <Weather />
         <View style={styles.BottomWrapper}>
-        <TouchableOpacity
-          style={styles.GreenBox}
-          onPress={() => navigation.navigate('CustomCourseRec')}
-        >
-          <Text style={styles.heading} >
-            맞춤형{'\n'}플로깅 코스{'\n'}추천받기
-          </Text>
-          <Image source={running} style={styles.bg} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.GreenBox}
+            onPress={() => navigation.navigate('CustomCourseRec')}>
+            <Text style={styles.heading}>
+              맞춤형{'\n'}플로깅 코스{'\n'}추천받기
+            </Text>
+            <Image source={running} style={styles.bg} />
+          </TouchableOpacity>
           <View style={styles.RightColumn}>
             <View style={styles.SmallBox}>
               <Image style={styles.icon} source={locationCourse} />
@@ -57,14 +57,15 @@ export default function HomeScreen({navigation}) {
         title="일지 작성으로"
         onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
       />
-      <Button 
+      <Button
         title="Recommend"
         onPress={() => navigation.navigate('Recommend')}
       />
-      <Button 
+      <Button
         title="CourseDetail"
         onPress={() => navigation.navigate('CourseDetail')}
       />
+      <Button title="Login" onPress={() => navigation.navigate('Login')} />
     </SafeAreaView>
   );
 }
