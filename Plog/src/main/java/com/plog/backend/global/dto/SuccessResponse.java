@@ -31,8 +31,12 @@ public class SuccessResponse<D> {
         return new SuccessResponse<>(HttpStatus.OK, DEFAULT_SUCCESS_MESSAGE_OK);
     }
 
-    public static <D> SuccessResponse<D> created(D data) {
+    public static <D> SuccessResponse<D> created() {
         return new SuccessResponse<>(HttpStatus.CREATED, DEFAULT_SUCCESS_MESSAGE_CREATED);
+    }
+
+    public static <D> SuccessResponse<D> created(D data) {
+        return new SuccessResponse<>(HttpStatus.CREATED, DEFAULT_SUCCESS_MESSAGE_CREATED, data);
     }
 
     public static SuccessResponse<?> update() {

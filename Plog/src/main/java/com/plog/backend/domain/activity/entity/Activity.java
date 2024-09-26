@@ -2,6 +2,7 @@ package com.plog.backend.domain.activity.entity;
 
 import com.plog.backend.domain.member.entity.Member;
 import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
+import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -20,6 +23,8 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,23 +42,23 @@ public class Activity {
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
-    @Type(value = DoubleArrayType.class)
+    @Type(value = FloatArrayType.class)
     @NotNull
-    @Column(name = "lat", columnDefinition = "double precision[]")
-    private Double[] lat;
+    @Column(name = "lat", columnDefinition = "real[]")
+    private Float[] lat;
 
-    @Type(value = DoubleArrayType.class)
+    @Type(value = FloatArrayType.class)
     @NotNull
-    @Column(name = "lon", columnDefinition = "double precision[]")
-    private Double[] lon;
-
-    @NotNull
-    @Column(name = "distance", columnDefinition = "double precision")
-    private Double distance;
+    @Column(name = "lon", columnDefinition = "real[]")
+    private Float[] lon;
 
     @NotNull
-    @Column(name = "time", columnDefinition = "double precision")
-    private Double time;
+    @Column(name = "distance", columnDefinition = "real")
+    private Float distance;
+
+    @NotNull
+    @Column(name = "time", columnDefinition = "real")
+    private Float time;
 
     @NotNull
     @Column(name = "review", columnDefinition = "TEXT")
