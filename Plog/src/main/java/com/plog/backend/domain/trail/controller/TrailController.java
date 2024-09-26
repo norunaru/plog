@@ -18,4 +18,10 @@ public class TrailController {
     public SuccessResponse<?> trail() {
         return SuccessResponse.ok(trailService.getAllTrails());
     }
+
+    @GetMapping("/center")
+    public SuccessResponse<?> center() {
+        trailService.createTrailCenter();
+        return SuccessResponse.ok();
+    }
 }
