@@ -7,4 +7,6 @@ import java.util.List;
 public interface TrailService {
 
     TrailListResponseDto getAllTrails();
+
+    void createTrailCenter();
 }

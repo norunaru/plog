@@ -32,4 +32,30 @@ public class TrailServiceImpl implements TrailService {
             .trails(trailResponseDtos)  // 변환된 리스트를 설정
             .build();
     }
+
+    /*
+    1. trail 불러오기
+    2. trail의 위도 경도 값을 활용하여 중심 좌표 계산하기
+    3. 저장하기
+     */
+    @Override
+    public void createTrailCenter() {
+        List<Trail> trails = trailRepository.findAll();
+
+        for(Trail trail : trails) {
+            Float[] lonArr = trail.getLon();
+            Float[] latArr = trail.getLat();
+
+            float lonSum = 0;
+            for(Float lon : lonArr) {
+                lonSum += lon;
+            }
+            float latSum = 0;
+            for(Float lat : latArr) {
+                latSum += lat;
+            }
+            trail.setCenter(new Float[] {latSum/latArr.length, lonSum/lonArr.length});
+            trailRepository.save(trail);
+        }
+    }
 }

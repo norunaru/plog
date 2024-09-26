@@ -8,11 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -20,6 +16,7 @@ import org.hibernate.annotations.Type;
 @Builder
 @Entity
 @Getter
+@Setter
 @DynamicInsert
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,4 +66,9 @@ public class Trail {
     @NotNull
     @Column(name = "lon", columnDefinition = "real[]")
     private Float[] lon;
+
+    @Type(value = FloatArrayType.class)
+    @NotNull
+    @Column(name = "center", columnDefinition = "real[]")
+    private Float[] center;
 }
