@@ -76,6 +76,7 @@ public class Member {
     @Column(name = "reward")
     private Integer reward;
 
+    // city : 0, ocean : 1, lake : 2, park : 3
     @Column(name = "region_type")
     private Integer region_type;
 

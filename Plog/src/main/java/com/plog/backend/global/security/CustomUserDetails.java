@@ -51,4 +51,8 @@ public record CustomUserDetails(MemberDto member) implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getUserId() {
+        return member.getId();
+    }
 }
