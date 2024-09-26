@@ -5,5 +5,5 @@
 
 <resources>
     <string name="app_name">Plog</string>
-    <string name="kakao_app_key">@string/kakao_app_key</string>
+    <string name="kakao_app_key">6a6ccfa004ee2adaa15f08d3e2bb3d25</string>
 </resources>
