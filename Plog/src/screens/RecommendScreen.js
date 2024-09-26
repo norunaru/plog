@@ -77,7 +77,7 @@ const RecommendScreen = ({navigation}) => {
 
   return (
     <View style={styles.mapView}>
-      <RecommendHeader navigation={navigation} />
+      <RecommendHeader navigation={navigation} headerText={'대전 유성구'} />
       {currentPosition && (
         <MapView
           provider={PROVIDER_GOOGLE}

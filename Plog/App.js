@@ -89,6 +89,7 @@ export default function App() {
           options={{
             title: '코스 상세정보',
             headerTitleAlign: 'center',
+            headerShown: false,
           }}
         />
         <Stack.Screen

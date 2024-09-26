@@ -13,7 +13,7 @@ import {
 import chevronLeft from '../../../assets/icons/ic_back.png';
 import location from '../../../assets/icons/ic_location.png';
 
-const RecommendHeader = ({navigation}) => {
+const RecommendHeader = ({navigation, headerText}) => {
   return (
     <View style={styles.headerWrap}>
       <Pressable onPress={() => navigation.navigate('Home')}>
@@ -36,7 +36,7 @@ const RecommendHeader = ({navigation}) => {
             height: '100%',
             fontWeight: 'bold',
           }}>
-          대전 유성구
+          {headerText}
         </Text>
       </View>
       <View></View>
