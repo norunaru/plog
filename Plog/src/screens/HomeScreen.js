@@ -31,12 +31,14 @@ export default function HomeScreen({navigation}) {
             <Image source={running} style={styles.bg} />
           </TouchableOpacity>
           <View style={styles.RightColumn}>
-            <View style={styles.SmallBox}>
+            <TouchableOpacity 
+              style={styles.SmallBox}
+              onPress={() => navigation.navigate('Recommend')}>
               <Image style={styles.icon} source={locationCourse} />
               <Text style={styles.heading2}>
                 내 위치 기반{'\n'}플로깅 코스 확인하기
               </Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.SmallBox}>
               <Image style={styles.icon} source={music} />
               <Text style={styles.heading2}>
@@ -56,14 +58,6 @@ export default function HomeScreen({navigation}) {
       <Button
         title="일지 작성으로"
         onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
-      />
-      <Button
-        title="Recommend"
-        onPress={() => navigation.navigate('Recommend')}
-      />
-      <Button
-        title="CourseDetail"
-        onPress={() => navigation.navigate('CourseDetail')}
       />
       <Button title="Login" onPress={() => navigation.navigate('Login')} />
       <Button title="Review" onPress={() => navigation.navigate('Review')} />
