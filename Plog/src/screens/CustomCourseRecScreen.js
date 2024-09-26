@@ -7,12 +7,20 @@ const CustomCourseRecScreen = ({navigation}) => {
     <View>
       <ScrollView>
       <TouchableOpacity
-          onPress={() => navigation.navigate('CustomCourseRecDetail')}
+          onPress={() => navigation.navigate('CourseDetail')}
       >
         <CustomCourseRecCard />
       </TouchableOpacity>
+      <TouchableOpacity
+          onPress={() => navigation.navigate('CourseDetail')}
+      >
         <CustomCourseRecCard />
+      </TouchableOpacity>
+      <TouchableOpacity
+          onPress={() => navigation.navigate('CourseDetail')}
+      >
         <CustomCourseRecCard />
+      </TouchableOpacity>
       </ScrollView>
     </View>
   );
