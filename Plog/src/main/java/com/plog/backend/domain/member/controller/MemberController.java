@@ -1,6 +1,5 @@
 package com.plog.backend.domain.member.controller;
 
-import com.plog.backend.domain.member.dto.MemberDto;
 import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import com.plog.backend.domain.member.dto.response.MemberLoginResponseDto;
 import com.plog.backend.domain.member.dto.request.MemberLoginRequestDto;
