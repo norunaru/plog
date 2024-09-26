@@ -1,5 +1,6 @@
 package com.plog.backend.domain.trail.entity;
 
+import com.sun.jdi.BooleanType;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
