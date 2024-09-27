@@ -1,6 +1,7 @@
 package com.plog.backend.domain.activity.controller;
 
 import com.plog.backend.domain.activity.dto.request.ActivitySaveRequestDto;
+import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.service.ActivityService;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.dto.SuccessResponse;
@@ -27,7 +28,7 @@ public class ActivityController {
     @PostMapping("")
     @Operation(summary = "플로깅 일지 기록", description = "플로깅 일지 기록(저장) API")
     public SuccessResponse<?> save(@RequestBody ActivitySaveRequestDto activitySaveRequestDto) {
-        activityService.save(activitySaveRequestDto);
+        activityService.save(activitySaveRequestDto, MemberInfo.getUserId());
         return SuccessResponse.created();
     }
 
@@ -43,5 +44,11 @@ public class ActivityController {
         return SuccessResponse.ok(activityService.findActivityById(id));
     }
 
-
+    @PostMapping("/update")
+    @Operation(summary = "Activity 수정", description = "Activity Id 로 일지 수정 API")
+    public SuccessResponse<?> modify(
+        @RequestBody ActivityUpdateRequestDto activityUpdateRequestDto) {
+        activityService.updateActivity(activityUpdateRequestDto, MemberInfo.getUserId());
+        return SuccessResponse.update();
+    }
 }

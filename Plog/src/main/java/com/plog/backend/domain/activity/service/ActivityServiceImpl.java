@@ -1,5 +1,6 @@
 package com.plog.backend.domain.activity.service;
 
+import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
 import com.plog.backend.domain.activity.dto.request.ActivitySaveRequestDto;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,13 +30,11 @@ public class ActivityServiceImpl implements ActivityService {
     private final ModelMapper mapper;
 
     @Override
-    public void save(ActivitySaveRequestDto activity) {
+    public void save(ActivitySaveRequestDto activity, Long memberId) {
         // 1. memberId로 Member 조회
-        Member member = memberRepository.findById(activity.getMemberId())
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(
-                () -> new IllegalArgumentException("Invalid member ID: " + activity.getMemberId()));
-
-        log.info("조회 member: {}", member);
+                () -> new IllegalArgumentException("Invalid member ID: " + memberId));
         // 2. Activity 엔티티를 생성하여 저장
         Activity newActivity = Activity.builder()
             .member(member)
@@ -84,5 +85,36 @@ public class ActivityServiceImpl implements ActivityService {
         // 예외처리 시간 남으면 만들면 좋음
         Activity activity = activityRepository.findById(id).orElseThrow();
         return mapper.map(activity, ActivityFindByIdResponseDto.class);
+    }
+
+    @Override
+    public void updateActivity(ActivityUpdateRequestDto activity, Long memberId) {
+        // 1. memberId로 Member 조회
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(
+                () -> new IllegalArgumentException("Invalid member ID: " + memberId));
+
+        // 2. Activity 엔티티를 생성하여 저장
+        Activity newActivity = Activity.builder()
+            .member(member)
+            .title(activity.getTitle())
+            .review(activity.getReview())
+            .score(activity.getScore())
+            .build();
+        // 3. Activity 저장
+        activityRepository.save(newActivity);
+
+        // 4. ActivityImage 생성 및 저장 (여러 장의 이미지 처리)
+        if (activity.getActivityImages() != null) {
+            for (ActivityImage image : activity.getActivityImages()) {
+                ActivityImage activityImage = ActivityImage.builder()
+                    .activity(newActivity)
+                    .savedUrl(image.getSavedUrl())
+                    .savedPath(image.getSavedPath())
+                    .build();
+                // 이미지 저장
+                activityImageRepository.save(activityImage);
+            }
+        }
     }
 }

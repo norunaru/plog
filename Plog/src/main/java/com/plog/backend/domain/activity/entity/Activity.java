@@ -2,6 +2,7 @@ package com.plog.backend.domain.activity.entity;
 
 import static jakarta.persistence.CascadeType.ALL;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plog.backend.domain.member.entity.Member;
 import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
@@ -44,6 +45,7 @@ public class Activity {
     @Column(name = "id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @NotNull
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -81,6 +83,7 @@ public class Activity {
     @Column(name = "score", columnDefinition = "real")
     private Float score;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true)
     List<ActivityImage> reviewImages;
 

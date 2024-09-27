@@ -1,7 +1,6 @@
-package com.plog.backend.domain.activity.dto.response;
+package com.plog.backend.domain.activity.dto.request;
 
 import com.plog.backend.domain.activity.entity.ActivityImage;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,18 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActivityFindByIdResponseDto {
+public class ActivityUpdateRequestDto {
 
     private Long id;
     private String title;
-    private Float[] lat;
-    private Float[] lon;
-    private Float totalDistance;
-    private Float totalKcal;
-    private Float totalTime;
-    private LocalDateTime creationDate;
-    private String locationName;
     private String review;
-    private Double score;
+    private Float score;
     private List<ActivityImage> activityImages;
 }

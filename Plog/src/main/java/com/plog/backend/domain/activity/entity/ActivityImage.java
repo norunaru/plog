@@ -2,6 +2,7 @@ package com.plog.backend.domain.activity.entity;
 
 import static jakarta.persistence.FetchType.LAZY;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +35,7 @@ public class ActivityImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "activity_id")
     private Activity activity;
