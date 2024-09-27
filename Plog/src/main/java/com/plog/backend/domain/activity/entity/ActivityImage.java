@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -46,4 +47,7 @@ public class ActivityImage {
     @Column(name = "saved_path")
     private String savedPath;
 
+    public void update(Activity activity) {
+        this.activity = activity;
+    }
 }

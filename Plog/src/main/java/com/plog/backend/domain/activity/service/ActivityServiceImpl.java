@@ -1,5 +1,7 @@
 package com.plog.backend.domain.activity.service;
 
+import com.plog.backend.domain.activity.dto.ActivityDto;
+import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
@@ -88,33 +90,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void updateActivity(ActivityUpdateRequestDto activity, Long memberId) {
+    public void updateActivity(ActivityUpdateRequestDto activityDto, Long memberId) {
         // 1. memberId로 Member 조회
         Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid member ID: " + memberId));
+
+        // 2. 기존 Activity 조회
+        Activity existingActivity = activityRepository.findById(activityDto.getId())
             .orElseThrow(
-                () -> new IllegalArgumentException("Invalid member ID: " + memberId));
+                () -> new IllegalArgumentException("Invalid activity ID: " + activityDto.getId()));
 
-        // 2. Activity 엔티티를 생성하여 저장
-        Activity newActivity = Activity.builder()
-            .member(member)
-            .title(activity.getTitle())
-            .review(activity.getReview())
-            .score(activity.getScore())
-            .build();
-        // 3. Activity 저장
-        activityRepository.save(newActivity);
+        // 3. Activity 엔티티 업데이트
+        existingActivity.update(activityDto);
 
-        // 4. ActivityImage 생성 및 저장 (여러 장의 이미지 처리)
-        if (activity.getActivityImages() != null) {
-            for (ActivityImage image : activity.getActivityImages()) {
-                ActivityImage activityImage = ActivityImage.builder()
-                    .activity(newActivity)
-                    .savedUrl(image.getSavedUrl())
-                    .savedPath(image.getSavedPath())
-                    .build();
-                // 이미지 저장
-                activityImageRepository.save(activityImage);
-            }
-        }
+        // 4. Activity 저장
+        activityRepository.save(existingActivity);
     }
 }
