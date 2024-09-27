@@ -1,31 +1,296 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, ActivityIndicator, PermissionsAndroid, Platform } from 'react-native';
+import axios from 'axios';
+import Geolocation from 'react-native-geolocation-service';
+import { WEATHER_API_KEY, FINEDUST_API_KEY } from '@env';
+import sunnyIcon from '../../assets/weathers/sunny.png'; // 맑음
+import manyCloudsIcon from '../../assets/weathers/cloudy.png'; // 구름 많음
+import cloudyIcon from '../../assets/weathers/clouds.png'; // 흐림
+import rainyIcon from '../../assets/weathers/rainy.png'; // 비
+import snowyIcon from '../../assets/weathers/snowy.png'; // 눈
+
+// Lambert 좌표 변환 함수
+const latLonToGrid = (lon, lat) => {
+  const map = {
+    Re: 6371.00877, // 지구 반경 (km)
+    grid: 5.0, // 격자 간격 (km)
+    slat1: 30.0, // 표준 위도 1
+    slat2: 60.0, // 표준 위도 2
+    olon: 126.0, // 기준 경도
+    olat: 38.0, // 기준 위도
+    xo: 43, // 기준점 X 좌표 (격자)
+    yo: 136, // 기준점 Y 좌표 (격자)
+  };
+
+  const PI = Math.asin(1.0) * 2.0;
+  const DEGRAD = PI / 180.0;
+
+  let re = map.Re / map.grid;
+  let slat1 = map.slat1 * DEGRAD;
+  let slat2 = map.slat2 * DEGRAD;
+  let olon = map.olon * DEGRAD;
+  let olat = map.olat * DEGRAD;
+
+  let sn = Math.tan(PI * 0.25 + slat2 * 0.5) / Math.tan(PI * 0.25 + slat1 * 0.5);
+  sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+  let sf = Math.tan(PI * 0.25 + slat1 * 0.5);
+  sf = (Math.pow(sf, sn) * Math.cos(slat1)) / sn;
+  let ro = Math.tan(PI * 0.25 + olat * 0.5);
+  ro = (re * sf) / Math.pow(ro, sn);
+
+  let ra = Math.tan(PI * 0.25 + lat * DEGRAD * 0.5);
+  ra = re * sf / Math.pow(ra, sn);
+  let theta = lon * DEGRAD - olon;
+  if (theta > PI) theta -= 2.0 * PI;
+  if (theta < -PI) theta += 2.0 * PI;
+  theta *= sn;
+  let x = ra * Math.sin(theta) + map.xo;
+  let y = ro - ra * Math.cos(theta) + map.yo;
+
+  return { x: Math.floor(x + 1.5), y: Math.floor(y + 1.5) };
+};
 
 const Weather = () => {
+  const [weather, setWeather] = useState(null);
+  const [pm10, setPm10] = useState(null);
+  const [pm10Grade, setPm10Grade] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    const fetchWeatherData = async (nx, ny) => {
+      try {
+        const base_date = getCurrentDate();
+        const base_time = getBaseTime();
+
+        const response = await axios.get(
+          'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst',
+          {
+            params: {
+              serviceKey: WEATHER_API_KEY,
+              numOfRows: 60,
+              pageNo: 1,
+              dataType: 'JSON',
+              base_date,
+              base_time,
+              nx,
+              ny,
+            },
+          }
+        );
+
+        const items = response.data.response.body.items.item;
+        const temperature = items.find(item => item.category === 'T1H')?.fcstValue;
+        const skyCondition = getSkyCondition(items);
+        const humidity = items.find(item => item.category === 'REH')?.fcstValue;
+
+        setWeather({
+          temperature,
+          skyCondition,
+          humidity,
+        });
+        setLoading(false);
+      } catch (error) {
+        console.log('Error:', error.response?.data || error.message);
+        setErrorMsg('날씨 정보를 가져오는 데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
+    const fetchFineDustData = async (stationName) => {
+      try {
+        const response = await axios.get(
+          'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty',
+          {
+            params: {
+              serviceKey: FINEDUST_API_KEY,
+              numOfRows: 20,
+              pageNo: 1,
+              stationName,
+              dataTerm: 'DAILY',
+              ver: '1.3',
+              returnType: 'json',
+            },
+          }
+        );
+
+        const pm10Value = response.data.response.body.items[0].pm10Value;
+        const pm10GradeValue = response.data.response.body.items[0].pm10Grade;
+        setPm10(pm10Value);
+        setPm10Grade(pm10GradeValue);
+      } catch (error) {
+        console.log('Error fetching fine dust data:', error.response?.data || error.message);
+        setErrorMsg('미세먼지 정보를 가져오는 데 실패했습니다.');
+        setLoading(false);
+      }
+    };
+
+    const requestLocationPermission = async () => {
+      try {
+        if (Platform.OS === 'android') {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+          );
+          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+            setErrorMsg('위치 권한이 필요합니다.');
+            return;
+          }
+        }
+
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            console.log('현재 위치:', { latitude, longitude });  // 위도, 경도 출력
+            const { x: nx, y: ny } = latLonToGrid(longitude, latitude); // 위경도 -> 격자 좌표 변환
+            fetchWeatherData(nx, ny);
+            fetchFineDustData('종로구'); // 종로구를 예시로 사용
+          },
+          (error) => {
+            console.log(error);
+            setErrorMsg('위치 정보를 가져오는 데 실패했습니다.');
+            setLoading(false);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+        
+      } catch (error) {
+        setErrorMsg('위치 권한 요청 중 문제가 발생했습니다.');
+      }
+    };
+
+    requestLocationPermission();
+  }, []);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+    return `${year}${month}${day}`;
+  };
+
+  const getBaseTime = () => {
+    const now = new Date();
+    now.setHours(now.getHours() - 1);
+    const hour = ('0' + now.getHours()).slice(-2);
+    return `${hour}30`;
+  };
+
+  const getSkyCondition = (items) => {
+    const ptyItem = items.find(item => item.category === 'PTY');
+    const skyItem = items.find(item => item.category === 'SKY');
+
+    if (ptyItem) {
+      const ptyValue = ptyItem.fcstValue;
+      if ([1, 5, 6].includes(parseInt(ptyValue))) {
+        return '비';
+      } else if ([2, 3, 7].includes(parseInt(ptyValue))) {
+        return '눈';
+      }
+    }
+
+    switch (skyItem?.fcstValue) {
+      case '1':
+        return '맑음';
+      case '3':
+        return '구름 많음';
+      case '4':
+        return '흐림';
+      default:
+        return '정보 없음';
+    }
+  };
+
+  const getWeatherIcon = (skyCondition) => {
+    switch (skyCondition) {
+      case '맑음':
+        return sunnyIcon;
+      case '구름 많음':
+        return manyCloudsIcon;
+      case '흐림':
+        return cloudyIcon;
+      case '비':
+        return rainyIcon;
+      case '눈':
+        return snowyIcon;
+      default:
+        return null;
+    }
+  };
+
+  const getPm10GradeText = (grade) => {
+    switch (grade) {
+      case '1':
+        return '좋음';
+      case '2':
+        return '보통';
+      case '3':
+        return '나쁨';
+      case '4':
+        return '매우 나쁨';
+      default:
+        return '정보 없음';
+    }
+  };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (errorMsg) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text>{errorMsg}</Text>
+      </View>
+    );
+  }
+
+  const weatherIcon = getWeatherIcon(weather.skyCondition);
+
+  // 섭씨를 화씨로 변환
+  const toFahrenheit = (celsius) => (celsius * 9/5) + 32;
+
   return (
     <View style={styles.box}>
       <View style={styles.fontBox}>
         <Text style={styles.font}>대기환경</Text>
       </View>
       <View style={styles.weatherBox}>
-        <Image
-          source={require('../../assets/images/ic_weather.png')}
-          style={styles.imageBox}
-        />
+        {weatherIcon && (
+          <Image
+            source={weatherIcon}
+            style={styles.imageBox}
+          />
+        )}
         <View style={styles.contentBox}>
           <View style={styles.title}>
-            <Text style={styles.titleFont}>맑음</Text>
+            <Text style={styles.titleFont}>{weather.skyCondition}</Text>
           </View>
           <View style={styles.content}>
             <Text style={[styles.contentFont, styles.space]}>
-              현재 기온 <Text style={styles.gray}>|</Text> 27℃ (80.6℉)
+              현재 기온 <Text style={styles.gray}> | </Text> {weather.temperature}℃ ({toFahrenheit(weather.temperature).toFixed(1)}℉)
             </Text>
             <Text style={[styles.contentFont, styles.space]}>
-              현재 습도 <Text style={styles.gray}>|</Text> 70%
+              현재 습도 <Text style={styles.gray}> | </Text> {weather.humidity}%
             </Text>
             <Text style={styles.contentFont}>
-              미세 먼지 <Text style={styles.gray}>|</Text>{' '}
-              <Text style={styles.orange}>보통</Text> (77CAI)
+              미세 먼지 <Text style={styles.gray}> | </Text>{' '}
+              <Text style={[
+                pm10 !== null
+                  ? getPm10GradeText(pm10Grade) === '좋음'
+                    ? styles.blue
+                    : getPm10GradeText(pm10Grade) === '보통'
+                    ? styles.orange
+                    : getPm10GradeText(pm10Grade) === '나쁨'
+                    ? styles.red
+                    : getPm10GradeText(pm10Grade) === '매우 나쁨'
+                    ? styles.red
+                    : styles.default
+                  : styles.default
+              ]}>
+                {pm10 !== null ? getPm10GradeText(pm10Grade) : '정보 없음'}
+              </Text>{' '}
+              <Text>{pm10 !== null ? `(${pm10}㎍/m³)` : '정보 없음'}</Text>
             </Text>
           </View>
         </View>
@@ -45,7 +310,7 @@ const styles = StyleSheet.create({
   fontBox: {
     position: 'absolute',
     height: 21,
-    left: 16,
+    left: 23,
     top: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -66,20 +331,23 @@ const styles = StyleSheet.create({
   imageBox: {
     position: 'absolute',
     top: 2,
+    left: 8,
     width: 100,
     height: 100,
   },
   contentBox: {
     position: 'absolute',
-    left: 120,
+    left: 140,
     width: 148,
     height: 104,
     paddingVertical: 8,
   },
   title: {
     position: 'absolute',
-    width: 55,
-    height: 26,
+    top: -7,
+    left: -3,
+    width: 65,
+    height: 30,
     backgroundColor: '#1ECD90',
     borderRadius: 14,
     justifyContent: 'center',
@@ -93,9 +361,9 @@ const styles = StyleSheet.create({
   },
   content: {
     position: 'absolute',
-    width: 148,
+    width: 170,
     height: 70,
-    top: 34,
+    top: 32,
   },
   contentFont: {
     fontSize: 13,
@@ -107,9 +375,23 @@ const styles = StyleSheet.create({
   },
   orange: {
     color: '#FFA600',
+    fontWeight: 'bold',
+  },
+  blue: {
+    color: '#4879FF',
+    fontWeight: 'bold',
+  },
+  red: {
+    color: '#FF5168',
+    fontWeight: 'bold',
   },
   space: {
-    marginBottom: 8,
+    marginBottom: 7,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
