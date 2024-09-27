@@ -31,7 +31,7 @@ export default function HomeScreen({navigation}) {
             <Image source={running} style={styles.bg} />
           </TouchableOpacity>
           <View style={styles.RightColumn}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.SmallBox}
               onPress={() => navigation.navigate('Recommend')}>
               <Image style={styles.icon} source={locationCourse} />
