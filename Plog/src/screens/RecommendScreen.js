@@ -4,9 +4,10 @@ import CourseBottomSheet from "../components/CourseBottomSheet";
 import MapView, { PROVIDER_GOOGLE, Marker, Polygon } from 'react-native-maps';
 import Geolocation from "react-native-geolocation-service";
 import { request, PERMISSIONS } from 'react-native-permissions';
+import RecommendHeader from '../components/headers/RecommendHeader';
 
-const RecommendScreen = () => {
-    const [currentPosition, setCurrentPosition] = useState(null); // 현재 위치 저장
+const RecommendScreen = ({navigation}) => {
+  const [currentPosition, setCurrentPosition] = useState(null); // 현재 위치 저장
     const [selectedMarkerId, setSelectedMarkerId] = useState(null); // 선택된 마커 ID 저장
     const [selectedCourse, setSelectedCourse] = useState(null); // 선택된 코스 정보 저장
     const mapRef = useRef(null); // 지도 참조
@@ -175,6 +176,7 @@ const RecommendScreen = () => {
 
     return (
         <View style={styles.mapView}>
+          <RecommendHeader navigation={navigation} headerText={'대전 유성구'} />
             {currentPosition && (
                 <MapView 
                     provider={PROVIDER_GOOGLE}
@@ -223,18 +225,18 @@ const RecommendScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    mapView: {
-        flex: 1,
-    },
-    mapImg: {
-        flex: 1,
-        width: '100%',
-        height: '100%',
-    },
-    marker: {
-        width: 50,
-        height: 50,
-    }
+  mapView: {
+    flex: 1,
+  },
+  mapImg: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  marker: {
+    width: 50,
+    height: 50,
+  },
 });
 
 export default RecommendScreen;

@@ -1,23 +1,29 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import RecommendHeader from '../components/headers/RecommendHeader';
 
-
-const CourseDetailScreen = ({ route, navigation }) => {
+const CourseDetailScreen = ({route, navigation}) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const tags = [
-    { id: 1, name: '도심' },
-    { id: 2, name: '태그2' },
-    { id: 3, name: '태그3' },
-    { id: 4, name: '태그4' },
+    {id: 1, name: '도심'},
+    {id: 2, name: '태그2'},
+    {id: 3, name: '태그3'},
+    {id: 4, name: '태그4'},
   ];
 
   const courses = [
-    { id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분' },
+    {id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분'},
   ];
   
   const course = courses[0]
@@ -27,8 +33,9 @@ const CourseDetailScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={require('../../assets/images/course1.png')}
+      <RecommendHeader navigation={navigation} headerText={'코스 상세정보'} />
+      <Image
+        source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}
       />
 
@@ -63,7 +70,7 @@ const CourseDetailScreen = ({ route, navigation }) => {
 
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
-          <Image 
+          <Image
             source={
               isLiked
                 ? require('../../assets/icons/likeColor.png')
@@ -73,13 +80,11 @@ const CourseDetailScreen = ({ route, navigation }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-            style={styles.start}
-            onPress={() => navigation.navigate('Plogging')}
-        >
+          style={styles.start}
+          onPress={() => navigation.navigate('Plogging')}>
           <Text style={styles.startText}>플로깅 시작</Text>
         </TouchableOpacity>
       </View>
-      
     </View>
   );
 };
@@ -87,7 +92,7 @@ const CourseDetailScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   courseMap: {
     width: '100%',
