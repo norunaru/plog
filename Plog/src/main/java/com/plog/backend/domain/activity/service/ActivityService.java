@@ -1,13 +1,15 @@
 package com.plog.backend.domain.activity.service;
 
+import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
+import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
 import com.plog.backend.domain.activity.dto.request.ActivitySaveRequestDto;
-import com.plog.backend.domain.activity.dto.response.ActivityFindResponseDto;
+import java.util.List;
 
 public interface ActivityService {
 
     void save(ActivitySaveRequestDto activity);
 
-    ActivityFindResponseDto findAllActivity();
+    List<ActivityFindByMemberIdResponseDto> findActivityByMemberId(Long id);
 
-    ActivityFindResponseDto findActivityById(Long id);
+    ActivityFindByIdResponseDto findActivityById(Long id);
 }
