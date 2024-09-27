@@ -17,6 +17,7 @@ import music from '../../assets/icons/ic_music.png';
 import LoginScreen from './LoginScreen';
 import running from '../../assets/images/img_home_running.png';
 import FriendCard from '../components/cards/FriendCard';
+import chevronRight from '../../assets/icons/Union.png';
 
 export default function MyPageScreen() {
   return (
@@ -64,6 +65,42 @@ export default function MyPageScreen() {
             </View>
           </ScrollView>
         </View>
+        <View style={styles.optionWrap}>
+          <Pressable>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>프로필 수정</Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+          <Pressable>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>
+                나의 플로깅 기록
+              </Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+          <Pressable>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>
+                찜한 플로깅 코스
+              </Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+          <Pressable>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>공지사항</Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+          <Pressable>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>로그아웃</Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -106,5 +143,20 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flexDirection: 'row',
     marginTop: 8,
+  },
+  optionWrap: {
+    padding: 20,
+  },
+  option: {
+    height: 52,
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
 });
