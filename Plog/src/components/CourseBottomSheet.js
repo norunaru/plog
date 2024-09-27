@@ -14,13 +14,15 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import { useNavigation } from '@react-navigation/native';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const CourseBottomSheet = () => {
+const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) => {
   const [expanded, setExpanded] = useState(false);
   const animation = useRef(new Animated.Value(130)).current;
   const scrollViewRef = useRef(null);
+  const navigation = useNavigation();
 
   const toggleSheet = () => {
     if (expanded) {
@@ -35,6 +37,7 @@ const CourseBottomSheet = () => {
       });
     } else {
       // 바텀 시트 열기
+      resetSelectedCourse();
       setExpanded(true);
       Animated.timing(animation, {
         toValue: SCREEN_HEIGHT * 0.5,
@@ -44,26 +47,13 @@ const CourseBottomSheet = () => {
     }
   };
 
-  const courses = [
-    { id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분' },
-    { id: 2, name: 'B코스', distance: '5km', time: '3시간 ~ 3시간 30분' },
-    { id: 3, name: 'C코스', distance: '7km', time: '4시간 ~ 4시간 30분' },
-    { id: 4, name: 'D코스', distance: '8km', time: '5시간 ~ 5시간 30분' },
-    { id: 5, name: 'E코스', distance: '9km', time: '6시간 ~ 6시간 30분' },
-    { id: 6, name: 'F코스', distance: '10km', time: '7시간 ~ 7시간 30분' },
-    { id: 7, name: 'G코스', distance: '11km', time: '8시간 ~ 8시간 30분' },
-  ];
-
-  // 표시할 코스들: 확장 여부에 따라 결정
-  const displayedCourses = expanded ? courses : courses.slice(0, 1);
+  const handleCourseDetailPress = (courseId) => {
+    // 코스 디테일 화면으로 이동하면서 courseId를 전달
+    navigation.navigate('CourseDetail', { courseId });
+  };
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        { height: animation },
-      ]}
-    >
+    <Animated.View style={[styles.container, { height: animation }]}>
       <TouchableOpacity onPress={toggleSheet}>
         <View style={styles.dragHandle} />
       </TouchableOpacity>
@@ -73,36 +63,63 @@ const CourseBottomSheet = () => {
         scrollEnabled={expanded}
         showsVerticalScrollIndicator={false}
       >
-        {displayedCourses.map(course => (
-          <View 
-          key={course.id} 
-          style={styles.courseItem}
-          >
-            <Text style={styles.courseName}>{course.name}</Text>
-            {/* 코스 상세 정보 */}
-            <View style={styles.content}>
-              {/* 활동거리 */}
-              <View style={styles.infoItem}>
-                <Image
-                  source={require('../../assets/icons/distance.png')}
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.infoText}>활동거리</Text>
-                <Text style={styles.infoValue}>{course.distance}</Text>
+        {selectedCourse && !expanded ? (
+          // 마커를 눌렀을 때 선택된 코스만 보여줌
+          <TouchableOpacity onPress={() => handleCourseDetailPress(selectedCourse.id)}>
+            <View key={selectedCourse.id} style={styles.courseItem}>
+              <Text style={styles.courseName}>{selectedCourse.title}</Text>
+              <View style={styles.content}>
+                <View style={styles.infoItem}>
+                  <Image
+                    source={require('../../assets/icons/distance.png')}
+                    style={styles.infoIcon}
+                  />
+                  <Text style={styles.infoText}>활동거리</Text>
+                  <Text style={styles.infoValue}>{selectedCourse.distance}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                  <Image
+                    source={require('../../assets/icons/ic_time.png')}
+                    style={styles.infoIcon}
+                  />
+                  <Text style={styles.infoText}>예상시간</Text>
+                  <Text style={styles.infoValue}>{selectedCourse.time}</Text>
+                </View>
               </View>
-              {/* 예상시간 */}
-              <View style={styles.infoItem}>
-                <Image
-                  source={require('../../assets/icons/ic_time.png')}
-                  style={styles.infoIcon}
-                />
-                <Text style={styles.infoText}>예상시간</Text>
-                <Text style={styles.infoValue}>{course.time}</Text>
-              </View>
+              <View style={styles.separator} />
             </View>
-            <View style={styles.separator} />
-          </View>
-        ))}
+          </TouchableOpacity>
+        ) : (
+          // 바텀 시트를 열면 모든 코스를 보여줌
+          locations.map((location) => (
+            <TouchableOpacity
+              key={location.id}
+              style={styles.courseItem}
+              onPress={() => handleCourseDetailPress(location.id)}
+            >
+              <Text style={styles.courseName}>{location.title}</Text>
+              <View style={styles.content}>
+                <View style={styles.infoItem}>
+                  <Image
+                    source={require('../../assets/icons/distance.png')}
+                    style={styles.infoIcon}
+                  />
+                  <Text style={styles.infoText}>활동거리</Text>
+                  <Text style={styles.infoValue}>{location.distance}</Text>
+                </View>
+                <View style={styles.infoItem}>
+                  <Image
+                    source={require('../../assets/icons/ic_time.png')}
+                    style={styles.infoIcon}
+                  />
+                  <Text style={styles.infoText}>예상시간</Text>
+                  <Text style={styles.infoValue}>{location.time}</Text>
+                </View>
+              </View>
+              <View style={styles.separator} />
+            </TouchableOpacity>
+          ))
+        )}
       </ScrollView>
     </Animated.View>
   );

@@ -13,7 +13,6 @@ import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
 import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
-import LoginScreen from './LoginScreen';
 
 export default function HomeScreen({navigation}) {
   return (
