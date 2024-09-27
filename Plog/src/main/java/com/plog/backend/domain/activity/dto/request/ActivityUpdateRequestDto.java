@@ -1,5 +1,6 @@
 package com.plog.backend.domain.activity.dto.request;
 
+import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import com.plog.backend.domain.activity.entity.ActivityImage;
 import java.util.List;
 import lombok.AccessLevel;

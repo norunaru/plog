@@ -3,8 +3,9 @@ package com.plog.backend.domain.activity.entity;
 import static jakarta.persistence.CascadeType.ALL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.plog.backend.domain.activity.dto.ActivityImageDto;
+import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.member.entity.Member;
-import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.awt.Image;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +85,28 @@ public class Activity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true)
-    List<ActivityImage> reviewImages;
+    private List<ActivityImage> activityImages = new ArrayList<>();
 
+    public void update(ActivityUpdateRequestDto activityUpdateRequestDto) {
+        this.title = activityUpdateRequestDto.getTitle();
+        this.score = activityUpdateRequestDto.getScore();
+
+        // 기존 activityImages 컬렉션을 clear하여 모든 이미지를 제거하고 새로 추가
+        this.activityImages.clear();
+
+        // 새로운 이미지를 추가
+        for (ActivityImage imageDto : activityUpdateRequestDto.getActivityImages()) {
+            ActivityImage newImage = ActivityImage.builder()
+                .savedUrl(imageDto.getSavedUrl())
+                .savedPath(imageDto.getSavedPath())
+                .build();
+
+            this.addImage(newImage); // 이미지 추가
+        }
+    }
+
+    public void addImage(ActivityImage image) {
+        image.update(this);  // 양방향 관계 설정
+        this.activityImages.add(image); // 기존 컬렉션에 이미지 추가
+    }
 }
