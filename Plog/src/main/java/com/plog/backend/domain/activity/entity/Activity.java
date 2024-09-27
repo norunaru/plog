@@ -1,5 +1,7 @@
 package com.plog.backend.domain.activity.entity;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 import com.plog.backend.domain.member.entity.Member;
 import io.hypersistence.utils.hibernate.type.array.DoubleArrayType;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
@@ -10,8 +12,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.awt.Image;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,30 +49,39 @@ public class Activity {
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
+    @Column(name = "title", columnDefinition = "TEXT")
+    private String title;
+
     @Type(value = FloatArrayType.class)
-    @NotNull
     @Column(name = "lat", columnDefinition = "real[]")
     private Float[] lat;
 
     @Type(value = FloatArrayType.class)
-    @NotNull
     @Column(name = "lon", columnDefinition = "real[]")
     private Float[] lon;
 
-    @NotNull
-    @Column(name = "distance", columnDefinition = "real")
-    private Float distance;
+    @Column(name = "total_distance", columnDefinition = "real")
+    private Float totalDistance;
 
-    @NotNull
-    @Column(name = "time", columnDefinition = "real")
-    private Float time;
+    @Column(name = "total_kcal", columnDefinition = "real")
+    private Float totalKcal;
 
-    @NotNull
+    @Column(name = "total_time", columnDefinition = "real")
+    private Float totalTime;
+
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+    private LocalDateTime creationDate;
+
+    @Column(name = "location_name", columnDefinition = "TEXT")
+    private String locationName;
+
     @Column(name = "review", columnDefinition = "TEXT")
     private String review;
 
-    @NotNull
-    @Column(name = "score", columnDefinition = "double precision")
-    private Double score;
+    @Column(name = "score", columnDefinition = "real")
+    private Float score;
+
+    @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true)
+    List<ActivityImage> reviewImages;
 
 }

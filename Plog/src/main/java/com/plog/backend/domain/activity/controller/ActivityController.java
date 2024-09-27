@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,19 +31,17 @@ public class ActivityController {
         return SuccessResponse.created();
     }
 
-//    @GetMapping("")
-//    @Operation(summary = "플로깅 일지 전체 조회(모든 데이터 조회)", description = "플로깅 일지 전체 조회 (모든 데이터 조회) API")
-//    public SuccessResponse<?> findAll() {
-//        return SuccessResponse.ok(activityService.findAllActivity());
-//    }
-
-    @GetMapping("/")
-    @Operation(summary = "해당 멤버 일지 전체 조회", description = "email로 해당 일지 전체 조회 API")
-    public SuccessResponse<?> findByEmail() {
-        log.info("어떤 값이 나올까요 {}", MemberInfo.getEmail());
-        log.info("어떤 값이 나올까요 {}", MemberInfo.getUserId());
-
-        return SuccessResponse.ok(activityService.findActivityById(MemberInfo.getUserId()));
+    @GetMapping("")
+    @Operation(summary = "해당 멤버 일지 전체 조회", description = "member_id로 해당 일지 전체 조회 API")
+    public SuccessResponse<?> findByMemberId() {
+        return SuccessResponse.ok(activityService.findActivityByMemberId(MemberInfo.getUserId()));
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Activity 상세 조회", description = "Activity Id 로 일지 상세 조회 API")
+    public SuccessResponse<?> findById(@PathVariable Long id) {
+        return SuccessResponse.ok(activityService.findActivityById(id));
+    }
+
 
 }
