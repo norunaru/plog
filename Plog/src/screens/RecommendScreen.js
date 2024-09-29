@@ -19,18 +19,16 @@ const RecommendScreen = ({navigation}) => {
         {   
             id: 1,
             title: "A코스",
-            description: "우온",
+            description: "광안리술집거리",
             distance: "1km",
             time: "1시간",
             polygon: [
-                { latitude: 36.35095911742538, longitude: 127.29764060849232 },
-                { latitude: 36.34907816763211, longitude: 127.2966308312807 },
-                { latitude: 36.34856020267517, longitude: 127.29835558562381 },
-                { latitude: 36.348125273713386, longitude: 127.29930083144488 },
-                { latitude: 36.34752851862595, longitude: 127.30008948578379 },
-                { latitude: 36.34794134794121, longitude: 127.30077061204628 },
-                { latitude: 36.34909797783236, longitude: 127.29952735836476 },
-                { latitude: 36.35048906542153, longitude: 127.29821811996614 },
+                { latitude: 35.14917739495361, longitude: 129.11321930097876 },
+                { latitude: 35.15036630774272, longitude: 129.11118733468828 },
+                { latitude: 35.15710548879839, longitude: 129.11333661270717 },
+                { latitude: 35.15598399778852, longitude: 129.11563379902572 },
+                { latitude: 35.15547344956876, longitude: 129.1159716983688 },
+                { latitude: 35.15497055435774, longitude: 129.11793372323893 },
             ]
         },
         {
@@ -192,7 +190,7 @@ const RecommendScreen = ({navigation}) => {
                                 <MemoizedPolygon
                                     coordinates={location.polygon}
                                     strokeColor="#7BE6B4"
-                                    fillColor="#E7F7EF"
+                                    fillColor="rgba(231, 247, 239, 0.5)"
                                     strokeWidth={2}
                                 />
                                 <MemoizedMarker

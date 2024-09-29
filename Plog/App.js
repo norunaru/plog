@@ -97,7 +97,15 @@ export default function App() {
           component={PloggingScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="Writing" component={WritingScreen} />
+        <Stack.Screen 
+          name="Writing" 
+          component={WritingScreen} 
+          options={{
+            title: '일지 작성',
+            headerTitleAlign: 'center',
+            headerBackVisible: false,
+          }}
+        />
         <Stack.Screen
           name="Recommend"
           component={RecommendScreen}

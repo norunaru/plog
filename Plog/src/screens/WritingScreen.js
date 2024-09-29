@@ -58,7 +58,10 @@ const WritingScreen = ({navigation}) => {
         </View>
         {/* 지도, 정보 박스 */}
         <View>
-          <View style={styles.map}></View>
+          <Image
+            source={require('../../assets/images/mapmap.png')}
+            style={styles.map}
+          />
           <View style={styles.detail}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image source={distance} style={styles.icon} />
@@ -98,7 +101,7 @@ const WritingScreen = ({navigation}) => {
               <Text style={styles.btnText}>다음에 작성</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
             {/* "저장하기" 버튼 */}
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
