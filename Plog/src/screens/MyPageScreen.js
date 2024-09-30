@@ -19,7 +19,7 @@ import running from '../../assets/images/img_home_running.png';
 import FriendCard from '../components/cards/FriendCard';
 import chevronRight from '../../assets/icons/Union.png';
 
-export default function MyPageScreen() {
+export default function MyPageScreen({navigation}) {
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 60}}>
       <TopBar />
@@ -72,7 +72,7 @@ export default function MyPageScreen() {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate('PloggingRecord')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>
                 나의 플로깅 기록
