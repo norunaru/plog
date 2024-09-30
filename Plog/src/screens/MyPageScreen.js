@@ -19,7 +19,7 @@ import running from '../../assets/images/img_home_running.png';
 import FriendCard from '../components/cards/FriendCard';
 import chevronRight from '../../assets/icons/Union.png';
 
-export default function MyPageScreen() {
+export default function MyPageScreen({navigation}) {
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 60}}>
       <TopBar />
@@ -53,7 +53,10 @@ export default function MyPageScreen() {
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
               플로거 친구들
             </Text>
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('ManageFriend');
+              }}>
               <Text style={{color: '#4879FF', fontSize: 11}}>친구관리</Text>
             </Pressable>
           </View>
