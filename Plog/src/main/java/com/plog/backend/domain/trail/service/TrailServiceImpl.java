@@ -7,6 +7,7 @@ import com.plog.backend.domain.member.entity.MemberScore;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.domain.member.repository.MemberScoreRepository;
 import com.plog.backend.domain.trail.dto.TrailDto;
+import com.plog.backend.domain.trail.dto.response.Coordinate;
 import com.plog.backend.domain.trail.dto.response.TrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailRecommendDto;
 import com.plog.backend.domain.trail.entity.LikeTrail;
@@ -206,11 +207,15 @@ public class TrailServiceImpl implements TrailService {
                 if(likeTrail==null){
                     like=false;
                 }
+                Coordinate[] polygon = new Coordinate[trail.getLat().length];
+                for(int i = 0; i < polygon.length; i++) {
+                    polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+                }
+
                 TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
                         .id(trail.getId())
                         .area(trail.getArea())
-                        .lat(trail.getLat())
-                        .lon(trail.getLon())
+                        .polygon(polygon)
                         .title(trail.getName())
                         .time(time)
                         .tags(tag)
@@ -263,11 +268,16 @@ public class TrailServiceImpl implements TrailService {
                 if(likeTrail==null){
                     like=false;
                 }
+
+                Coordinate[] polygon = new Coordinate[trail.getLat().length];
+                for(int i = 0; i < polygon.length; i++) {
+                    polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+                }
+
                 TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
                         .id(trail.getId())
                         .area(trail.getArea())
-                        .lat(trail.getLat())
-                        .lon(trail.getLon())
+                        .polygon(polygon)
                         .title(trail.getName())
                         .time(time)
                         .tags(tag)

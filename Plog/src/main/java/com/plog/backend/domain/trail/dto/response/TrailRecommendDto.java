@@ -11,8 +11,7 @@ import lombok.Data;
 public class TrailRecommendDto {
     private Long id;
     private String title;
-    private Float[] lon;
-    private Float[] lat;
+    private Coordinate[] polygon;
     private Float area;
     private int time;
     private Boolean like;
