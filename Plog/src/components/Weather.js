@@ -62,7 +62,7 @@ const Weather = () => {
       try {
         const base_date = getCurrentDate();
         const base_time = getBaseTime();
-
+    
         const response = await axios.get(
           'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst',
           {
@@ -78,17 +78,22 @@ const Weather = () => {
             },
           }
         );
-
-        const items = response.data.response.body.items.item;
-        const temperature = items.find(item => item.category === 'T1H')?.fcstValue;
-        const skyCondition = getSkyCondition(items);
-        const humidity = items.find(item => item.category === 'REH')?.fcstValue;
-
-        setWeather({
-          temperature,
-          skyCondition,
-          humidity,
-        });
+    
+        if (response.data?.response?.body?.items) {
+          const items = response.data.response.body.items.item;
+          const temperature = items.find(item => item.category === 'T1H')?.fcstValue;
+          const skyCondition = getSkyCondition(items);
+          const humidity = items.find(item => item.category === 'REH')?.fcstValue;
+    
+          setWeather({
+            temperature,
+            skyCondition,
+            humidity,
+          });
+        } else {
+          throw new Error('데이터 구조가 예상과 다릅니다.');
+        }
+    
         setLoading(false);
       } catch (error) {
         console.log('Error:', error.response?.data || error.message);
@@ -96,6 +101,8 @@ const Weather = () => {
         setLoading(false);
       }
     };
+    
+    
 
     const fetchFineDustData = async (stationName) => {
       try {
@@ -104,7 +111,7 @@ const Weather = () => {
           {
             params: {
               serviceKey: FINEDUST_API_KEY,
-              numOfRows: 20,
+              numOfRows: 2,
               pageNo: 1,
               stationName,
               dataTerm: 'DAILY',
@@ -140,7 +147,7 @@ const Weather = () => {
         Geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
-            console.log('현재 위치:', { latitude, longitude });  // 위도, 경도 출력
+            // console.log('현재 위치:', { latitude, longitude });  // 위도, 경도 출력
             const { x: nx, y: ny } = latLonToGrid(longitude, latitude); // 위경도 -> 격자 좌표 변환
             fetchWeatherData(nx, ny);
             fetchFineDustData('종로구'); // 종로구를 예시로 사용
@@ -171,9 +178,16 @@ const Weather = () => {
 
   const getBaseTime = () => {
     const now = new Date();
-    now.setHours(now.getHours() - 1);
-    const hour = ('0' + now.getHours()).slice(-2);
-    return `${hour}30`;
+    const hour = now.getHours();
+    let baseTime;
+  
+    if (now.getMinutes() < 45) {
+      baseTime = `${('0' + (hour - 1)).slice(-2)}30`; 
+    } else {
+      baseTime = `${('0' + hour).slice(-2)}30`;
+    }
+  
+    return baseTime;
   };
 
   const getSkyCondition = (items) => {
