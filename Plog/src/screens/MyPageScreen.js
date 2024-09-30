@@ -11,10 +11,6 @@ import {
   Pressable,
 } from 'react-native';
 import TopBar from '../components/TopBar';
-import Weather from '../components/Weather';
-import locationCourse from '../../assets/icons/locationCourse.png';
-import music from '../../assets/icons/ic_music.png';
-import LoginScreen from './LoginScreen';
 import running from '../../assets/images/img_home_running.png';
 import FriendCard from '../components/cards/FriendCard';
 import chevronRight from '../../assets/icons/Union.png';
