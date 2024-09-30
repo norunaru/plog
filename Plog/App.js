@@ -10,6 +10,8 @@ import RecommendScreen from './src/screens/RecommendScreen';
 import CourseDetailScreen from './src/screens/CourseDetailScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
+import LoginMainScreen from './src/screens/LoginMainScreen';
+import SurveyScreen from './src/screens/SurveyScreen';
 import {Image} from 'react-native';
 
 import homeBlack from './assets/icons/homeBlack.png';
@@ -113,6 +115,16 @@ export default function App() {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Review" component={ViewReviewScreen} />
+        <Stack.Screen 
+          name="LoginMain" 
+          component={LoginMainScreen} 
+          options={{headerShown: false}}  
+        />
+        <Stack.Screen 
+          name="Survey"
+          component={SurveyScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
