@@ -1,5 +1,7 @@
 package com.plog.backend.domain.trail.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.entity.MemberScore;
 import com.plog.backend.domain.member.repository.MemberRepository;
@@ -12,14 +14,15 @@ import com.plog.backend.domain.trail.entity.Trail;
 import com.plog.backend.domain.trail.repository.LikeTrailRepository;
 import com.plog.backend.domain.trail.repository.TrailRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 
 @Service
@@ -85,12 +88,122 @@ public class TrailServiceImpl implements TrailService {
     @Override
     public List<TrailRecommendDto> getRecommendedTrail(Long memberId){
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        Double[] scores = memberScore.getScore();
+        Double[] scores = memberScore.getScore();;
         int count = 0;
         for(Double score : scores) {
-            if(score>0) count++;
+            if(score>=3) count++;
         }
         if(count>5) {
+            // 우선순위 큐를 사용하여 가장 큰 3개의 값을 저장하는 방법 (작은 값이 먼저 제거됨)
+            PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> Double.compare(scores[b], scores[a]));
+
+            // 모든 점수의 인덱스를 힙에 추가
+            for (int i = 0; i < scores.length; i++) {
+                maxHeap.offer(i);
+            }
+
+            // 최대 3개의 인덱스를 담을 리스트
+            List<Integer> top3Indices = new ArrayList<>();
+
+            // 상위 3개의 인덱스를 큐에서 꺼냄
+            for (int i = 0; i < 3 && !maxHeap.isEmpty(); i++) {
+                top3Indices.add(maxHeap.poll());
+            }
+            // RestTemplate 객체 생성
+            RestTemplate restTemplate = new RestTemplate();
+
+            // 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+            // ObjectMapper를 사용하여 top3Indices를 JSON 문자열로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            String requestBody = null;
+            try {
+                requestBody = objectMapper.writeValueAsString(top3Indices);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("충분한 평가 데이터가 존재하지 않습니다.");
+            }
+
+            // HttpEntity 객체에 헤더와 바디를 설정
+            HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+            // URL 설정
+            String url = "http://j11b205.p.ssafy.io/trails/recommend/";
+
+            // POST 요청 보내기
+            ResponseEntity<Long[]> idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
+
+            System.out.println(Arrays.toString(idArray.getBody()));
+
+            List<Trail> recommendedTrails = new ArrayList<>();
+
+            for(Long id : idArray.getBody()) {
+                recommendedTrails.add(trailRepository.findById(id).orElseThrow());
+            }
+
+            // 응답 결과 출력
+            List<TrailRecommendDto> response = new ArrayList<>();
+            for(Trail trail : recommendedTrails) {
+                int time = (int) (trail.getArea()/500);
+                String tag = "";
+                if(time>100) {
+                    tag += "#고급 ";
+                } else if(time>50) {
+                    tag += "#중급 ";
+                } else{
+                    tag += "#초급 ";
+                }
+                int type = 5;
+                if(trail.getCity()>0.5){
+                    type = 0;
+                }
+                if(trail.getOcean()>0.5){
+                    type = 1;
+                }
+                if(trail.getLake()>0.5){
+                    type = 2;
+                }
+                if(trail.getPark()>0.5){
+                    type = 3;
+                }
+                switch (type){
+                    case 0: {
+                        tag += "#도심";
+                        break;
+                    }
+                    case 1: {
+                        tag += "#바다";
+                        break;
+                    }
+                    case 2: {
+                        tag += "#강";
+                        break;
+                    }
+                    case 3: {
+                        tag += "#공원";
+                        break;
+                    }
+                }
+                LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+                boolean like = true;
+                if(likeTrail==null){
+                    like=false;
+                }
+                TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
+                        .id(trail.getId())
+                        .area(trail.getArea())
+                        .lat(trail.getLat())
+                        .lon(trail.getLon())
+                        .title(trail.getName())
+                        .time(time)
+                        .tags(tag)
+                        .like(like)
+                        .build();
+                response.add(trailRecommendDto);
+            }
+            return response;
 
         } else {
             Member member = memberRepository.findById(memberId).orElseThrow();
@@ -149,6 +262,5 @@ public class TrailServiceImpl implements TrailService {
             }
             return response;
         }
-        return null;
     }
 }
