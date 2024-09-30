@@ -94,6 +94,7 @@ public class TrailServiceImpl implements TrailService {
             if(score>=3) count++;
         }
         if(count>5) {
+            // 사용자가 높게 평가한 플로깅 코스와 유사한 코스 추천
             // 우선순위 큐를 사용하여 가장 큰 3개의 값을 저장하는 방법 (작은 값이 먼저 제거됨)
             PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> Double.compare(scores[b], scores[a]));
 
@@ -135,9 +136,23 @@ public class TrailServiceImpl implements TrailService {
             // POST 요청 보내기
             ResponseEntity<Long[]> idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
 
-            System.out.println(Arrays.toString(idArray.getBody()));
-
             List<Trail> recommendedTrails = new ArrayList<>();
+
+            for(Long id : idArray.getBody()) {
+                recommendedTrails.add(trailRepository.findById(id).orElseThrow());
+            }
+
+
+            // 사용자와 유사한 사람들이 선호하는 코스 추천
+            // HttpEntity 객체에 헤더와 바디를 설정
+            entity = new HttpEntity<>(headers);
+
+            // URL 설정
+            url = "http://j11b205.p.ssafy.io/users/recommend/?user_id="+memberId;
+
+            // POST 요청 보내기
+            idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
+
 
             for(Long id : idArray.getBody()) {
                 recommendedTrails.add(trailRepository.findById(id).orElseThrow());
