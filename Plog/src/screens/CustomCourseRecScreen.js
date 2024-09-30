@@ -3,21 +3,27 @@ import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomCourseRecCard from '../components/CustomCourseRecCard'
 
 const CustomCourseRecScreen = ({navigation}) => {
+  const handleCourseDetailPress = (courseId) => {
+    // 코스 디테일 화면으로 이동하면서 courseId를 전달
+    navigation.navigate('CourseDetail', { courseId });
+  };
+
+
   return (
     <View>
       <ScrollView>
       <TouchableOpacity
-          onPress={() => navigation.navigate('CourseDetail')}
+          onPress={() => handleCourseDetailPress(1)}
       >
         <CustomCourseRecCard />
       </TouchableOpacity>
       <TouchableOpacity
-          onPress={() => navigation.navigate('CourseDetail')}
+          onPress={() => handleCourseDetailPress(2)}
       >
         <CustomCourseRecCard />
       </TouchableOpacity>
       <TouchableOpacity
-          onPress={() => navigation.navigate('CourseDetail')}
+          onPress={() => handleCourseDetailPress(3)}
       >
         <CustomCourseRecCard />
       </TouchableOpacity>

@@ -16,7 +16,7 @@ import location from '../../../assets/icons/ic_location.png';
 const RecommendHeader = ({navigation, headerText}) => {
   return (
     <View style={styles.headerWrap}>
-      <Pressable onPress={() => navigation.navigate('Home')}>
+      <Pressable onPress={() => navigation.goBack()}>
         <Image source={chevronLeft} style={styles.chevron} />
       </Pressable>
       <View

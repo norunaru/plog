@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import {
@@ -13,7 +12,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import RecommendHeader from '../components/headers/RecommendHeader';
 
-const CourseDetailScreen = ({navigation}) => {
+const CourseDetailScreen = ({route, navigation}) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const tags = [
@@ -26,8 +25,11 @@ const CourseDetailScreen = ({navigation}) => {
   const courses = [
     {id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분'},
   ];
+  
+  const course = courses[0]
 
-  const course = courses[0];
+  // 추후 아이디로 api 요청
+  const { courseId } = route.params;
 
   return (
     <View style={styles.container}>
@@ -37,7 +39,7 @@ const CourseDetailScreen = ({navigation}) => {
         style={styles.courseMap}
       />
 
-      <Text style={styles.title}>{course.name}입니다</Text>
+      <Text style={styles.title}>{courseId}입니다</Text>
 
       <View style={styles.tagBox}>
         {tags.map(tag => (

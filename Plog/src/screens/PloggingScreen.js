@@ -43,7 +43,7 @@ const PloggingScreen = ({navigation}) => {
             '현재 진행한 코스까지만 기록돼요'
           }
           whiteBtnFn={() => setIsModalOpen(false)}
-          greenBtnFn={() => navigation.navigate('Home')}
+          greenBtnFn={() => navigation.navigate('Writing')}
           greenBtnText={'끝내기'}
           whiteBtnText={'계속하기'}
         />
