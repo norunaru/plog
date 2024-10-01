@@ -37,6 +37,7 @@ const LoginMainScreen = () => {
                     <Text style={styles.highlightedText}>플로그</Text>
                     와 함께
                 </Text>
+                <Text style={styles.bottomText}>플로깅은 조깅하면서 쓰레기를 줍는 행동을 말해요</Text>
             </View>
             <View style={styles.login}>
                 <ImageBackground
@@ -44,9 +45,8 @@ const LoginMainScreen = () => {
                     style={styles.balloon}
                     resizeMode="contain">
                     <View style={styles.balloonTextContainer}>
-                        <Text style={styles.balloonText}>플로깅은 조깅하면서 쓰레기를 줍는 행동을 말해요.</Text>
                         <Text style={styles.balloonText}>오늘은 집 주변을 산책하며 쓰레기도 줍고</Text>
-                        <Text style={styles.balloonText}>플로깅 코스를 저장하고 추천받는 건 어떨까요?</Text>
+                        <Text style={styles.balloonText}>나만의 플로깅 코스를 저장하고 추천받는 건 어떨까요?</Text>
                     </View>
                 </ImageBackground>
                 <Image 
@@ -78,16 +78,22 @@ const styles = StyleSheet.create({
     header: {
         width: responsiveWidth(80),
         height: responsiveHeight(10),
-        top: responsiveHeight(15.8),
+        top: responsiveHeight(19.5),
         textAlign: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
     },
     headerText: {
         fontSize: responsiveFontSize(3.5),
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#0F1012',
-
+    },
+    bottomText: {
+        color: '#66666D',
+        fontSize: responsiveFontSize(1.3),
+        fontWeight: '500',
+        marginTop: responsiveHeight(1.2),
     },
     highlightedText: {
         color: '#1ECD90',
@@ -106,14 +112,14 @@ const styles = StyleSheet.create({
         top: responsiveHeight(-1.5),
     },
     balloonText: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(1.5),
         fontWeight: '500',
         color: '#0F1012',
         textAlign: 'center',
         lineHeight: responsiveHeight(2.5),
     },
     loginImg: {
-        width: responsiveWidth(55),
+        width: responsiveWidth(60),
         height: responsiveHeight(20),
         marginTop: responsiveHeight(25)
     },

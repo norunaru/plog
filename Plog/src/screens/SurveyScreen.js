@@ -6,54 +6,67 @@ import {
     responsiveFontSize,
   } from 'react-native-responsive-dimensions';
 
-import { useNavigation } from '@react-navigation/native';
-
-const SurveyScreen = () => {
+const SurveyScreen = ({navigation}) => {
 
     return (
         <View style={styles.surveyView}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>플로깅을 하기 전,</Text>
-                <Text style={styles.headerText}>
-                    <Text style={styles.highlightedText}>선호도 조사</Text>
-                    를 하는 건 어때요?
-                </Text>
+            <View style={styles.title}>
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>플로깅을 하기 전,</Text>
+                    <Text style={styles.headerText}>
+                        <Text style={styles.highlightedText}>선호도 조사</Text>
+                        를 해보세요!
+                    </Text>
+                </View>
+                <View style={styles.contentBox}>
+                    <View style={styles.textBox}>
+                        <View style={styles.checkBox}>
+                            <Image 
+                                source={require('../../assets/icons/ic_check.png')}
+                                style={styles.checkImg}
+                            />
+                            <Text style={styles.checkText}>
+                                빅데이터 시스템을 통해{'\n'}
+                                힐링하며 할 수 있는 플로깅 코스를 제안해드려요.
+                            </Text>
+                        </View>
+                        <View style={styles.checkBox}>
+                            <Image 
+                                source={require('../../assets/icons/ic_check.png')}
+                                style={styles.checkImg}
+                            />
+                            <Text style={styles.checkText}>
+                                휴지통과 사용자의 별점 취향기반으로{'\n'}
+                                플로깅코스를 추천해드려요.
+                            </Text>
+                        </View>
+                        <View style={styles.checkBox}>
+                            <Image 
+                                source={require('../../assets/icons/ic_check.png')}
+                                style={styles.checkImg}
+                            />
+                            <Text style={styles.checkText}>
+                                선호도 조사를 통해{'\n'}
+                                더욱 개인화된 서비스를 즐길 수 있어요.
+                            </Text>
+                        </View>
+                    </View>   
+                </View>
             </View>
-            <View style={styles.contentBox}>
-                <View style={styles.checkBox}>
-                    <Image 
-                        source={require('../../assets/icons/ic_check.png')}
-                        style={styles.checkImg}
-                    />
-                    <Text style={styles.checkText}>
-                        빅데이터 시스템을 통해{'\n'}
-                        힐링하며 할 수 있는 플로깅 코스를 제안해드려요.
-                    </Text>
-                </View>
-                <View style={styles.checkBox}>
-                    <Image 
-                        source={require('../../assets/icons/ic_check.png')}
-                        style={styles.checkImg}
-                    />
-                    <Text style={styles.checkText}>
-                        휴지통과 사용자의 별점 취향기반으로{'\n'}
-                        플로깅코스를 추천해드려요.
-                    </Text>
-                </View>
-                <View style={styles.checkBox}>
-                    <Image 
-                        source={require('../../assets/icons/ic_check.png')}
-                        style={styles.checkImg}
-                    />
-                    <Text style={styles.checkText}>
-                        선호도 조사를 통해{'\n'}
-                        더욱 개인화된 서비스를 즐길 수 있어요.
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.btnBox}>
+            <View style={styles.footer}>
                 <View style={styles.nextBtn}>
-                    <Text style={styles.nextText}>다음에 할게요</Text>
+                    <Text 
+                        style={styles.nextText}
+                        onPress={() => navigation.navigate('Home')}>
+                        다음에 할게요
+                    </Text>
+                </View>
+                <View style={styles.preferBtn}>
+                    <Text 
+                        style={styles.preferText}
+                        onPress={() => navigation.navigate('Question')}>
+                        선호도 조사 하러가기
+                    </Text>
                 </View>
             </View>
         </View>
@@ -64,6 +77,8 @@ const styles = StyleSheet.create({
     surveyView: {
         flex: 1,
         backgroundColor: "#fff",
+    },
+    title: {
         alignItems: 'center',
     },
     header: {
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerText: {
-        fontSize: responsiveFontSize(3),
+        fontSize: responsiveFontSize(3.5),
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#0F1012',
@@ -87,14 +102,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#F7F7F7',
         borderRadius: 16,
         width: responsiveWidth(80),
-        height: responsiveHeight(25),
-        marginTop: responsiveHeight(27),
-        flexDirection: 'column',
-        justifyContent: 'space-around',
+        height: responsiveHeight(22),
+        marginTop: responsiveHeight(25),
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    textBox: {
+        width: responsiveWidth(70),
+        height: responsiveHeight(18),
+        justifyContent: 'space-between',
     },
     checkBox: {
         flexDirection: 'row',
-        marginLeft: responsiveWidth(3),
         alignItems: 'center',
     },
     checkImg: {
@@ -105,22 +124,46 @@ const styles = StyleSheet.create({
     checkText: {
         fontSize: responsiveFontSize(1.4),
         fontWeight: '500',
-        color: '#0F1012',
+        color: '#3F3F47',
         lineHeight: responsiveHeight(2.2),
     },
-    btnBox: {
+    footer: {
         flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        paddingHorizontal: responsiveWidth(10),
+        bottom: responsiveHeight(6),
+        width: '100%',
     },
     nextBtn: {
         borderRadius: 30,
         borderWidth: 1,
         borderColor: '#1ECD90',
+        width: responsiveWidth(32),
+        height: responsiveHeight(6),
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: responsiveWidth(3),
     },
     nextText: {
         color: '#1ECD90',
-        fontSize: responsiveFontSize(1.6),
+        fontSize: responsiveFontSize(1.8),
         fontWeight: 'bold',
-    }
+    },
+    preferBtn: {
+        width: responsiveWidth(52),
+        height: responsiveHeight(6),
+        borderRadius: 30,
+        backgroundColor: '#1ECD90',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    preferText: {
+        color: '#fff',
+        fontSize: responsiveFontSize(1.8),
+        fontWeight: 'bold',
+    },
 });
 
 export default SurveyScreen;

@@ -12,6 +12,7 @@ import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
 import LoginMainScreen from './src/screens/LoginMainScreen';
 import SurveyScreen from './src/screens/SurveyScreen';
+import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
 import {Image} from 'react-native';
 
 import homeBlack from './assets/icons/homeBlack.png';
@@ -124,6 +125,10 @@ export default function App() {
           name="Survey"
           component={SurveyScreen}
           options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="Question"
+          component={SurveyQuestionScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
