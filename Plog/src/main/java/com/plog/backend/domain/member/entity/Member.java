@@ -1,5 +1,6 @@
 package com.plog.backend.domain.member.entity;
 
+import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -37,20 +39,11 @@ public class Member {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "gender")
-    private Integer gender;
-
-    @Column(name = "birth", columnDefinition = "DATE")
-    private LocalDate birth;
-
-    @Column(name = "phone_number", length = 50)
-    private String phoneNumber;
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
 
     @Column(name = "role", length = 20)
     @ColumnDefault("'user'")
@@ -73,9 +66,6 @@ public class Member {
     @Column(name = "flogging_time")
     private Integer floggingTime;
 
-    @Column(name = "reward")
-    private Integer reward;
-
     // city : 0, ocean : 1, lake : 2, park : 3
     @Column(name = "region_type")
     private Integer region_type;
@@ -86,4 +76,11 @@ public class Member {
     @Column(name = "region_lon", columnDefinition = "real")
     private Float regionLon;
 
+    public void updateFields(MemberSurveyRequestDto memberSurveyRequestDto) {
+        this.activityTime = memberSurveyRequestDto.getActivityTime();
+        this.floggingTime = memberSurveyRequestDto.getFloggingTime();
+        this.region_type = memberSurveyRequestDto.getRegion_type();
+        this.regionLat = memberSurveyRequestDto.getRegionLat();
+        this.regionLon = memberSurveyRequestDto.getRegionLon();
+    }
 }
