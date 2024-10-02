@@ -7,6 +7,9 @@ import com.plog.backend.domain.member.service.MemberService;
 import com.plog.backend.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +26,6 @@ public class MemberController {
     @Operation(summary = "로그인", description = "로그인 할 때 사용하는 API")
     public SuccessResponse<?> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
         MemberLoginResponseDto loginResponseDto = memberService.login(memberLoginRequestDto);
-        if (loginResponseDto.getIsFirstLogin() == 1) {
-            return SuccessResponse.created(loginResponseDto);
-        }
         return SuccessResponse.ok(loginResponseDto);
     }
 
@@ -41,7 +41,8 @@ public class MemberController {
         return SuccessResponse.ok();
     }
 
-    @PostMapping("/survey")
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/survey")
     @Operation(summary = "설문 조사", description = "설문 조사 정보 등록 할 때 사용하는 API")
     public SuccessResponse<?> survey(@RequestBody MemberSurveyRequestDto memberSurveyRequestDto) {
         memberService.updateMemberSurvey(memberSurveyRequestDto);
