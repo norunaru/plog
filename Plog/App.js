@@ -22,6 +22,7 @@ import WritingScreen from './src/screens/WritingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ViewReviewScreen from './src/screens/ViewReviewScreen';
 import ManageFriendScreen from './src/screens/ManageFriendScreen';
+import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -117,6 +118,11 @@ export default function App() {
         <Stack.Screen
           name="ManageFriend"
           component={ManageFriendScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DeleteFriend"
+          component={DeleteFriendScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

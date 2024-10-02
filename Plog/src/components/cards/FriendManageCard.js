@@ -8,29 +8,48 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import jaejun from '../../../assets/images/재준소.webp';
 import yonghoon from '../../../assets/images/용훈.jpg';
 import gawon from '../../../assets/images/가원.webp';
+import minus from '../../../assets/icons/ic_minus.png';
+import Modal from '../../components/Modal.js';
 
 export default function FriendManageCard({
   name,
   profileURL,
   level,
   ploggingCnt,
+  deleteOn,
+  deleteFn,
 }) {
   return (
     <View style={styles.wrap}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image style={styles.profileImg} source={''} />
-        <View style={{}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.name}>{name}</Text>
-            <View style={styles.levelBadge}>
-              <Text style={styles.levelText}>{level}레벨</Text>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 1,
+          }}>
+          <View style={{}}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.name}>{name}</Text>
+              <View style={styles.levelBadge}>
+                <Text style={styles.levelText}>{level}레벨</Text>
+              </View>
             </View>
+            <Text style={styles.plogCnt}>{ploggingCnt}번의 플로깅</Text>
           </View>
-          <Text style={styles.plogCnt}>{ploggingCnt}번의 플로깅</Text>
+
+          {deleteOn ? (
+            <Pressable onPress={() => deleteFn()}>
+              <Image source={minus} style={{width: 24, height: 24}} />
+            </Pressable>
+          ) : null}
         </View>
       </View>
     </View>
