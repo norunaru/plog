@@ -7,6 +7,7 @@ import com.plog.backend.domain.member.entity.MemberScore;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.domain.member.repository.MemberScoreRepository;
 import com.plog.backend.domain.trail.dto.TrailDto;
+import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
 import com.plog.backend.domain.trail.dto.response.Coordinate;
 import com.plog.backend.domain.trail.dto.response.TrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailRecommendDto;
@@ -287,5 +288,78 @@ public class TrailServiceImpl implements TrailService {
             }
             return response;
         }
+    }
+
+    @Override
+    public List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId, TrailPositionRequestDto trailPositionRequestDto){
+        System.out.println(trailPositionRequestDto.getLatitude());
+        System.out.println(trailPositionRequestDto.getLongitude());
+        List<Trail> recommendedTrails = trailRepository.findTrailsWithinDistance(trailPositionRequestDto.getLatitude(), trailPositionRequestDto.getLongitude(),10f);
+
+        // 응답 결과 출력
+        List<TrailRecommendDto> response = new ArrayList<>();
+        for(Trail trail : recommendedTrails) {
+            int time = (int) (trail.getArea()/500);
+            String tag = "";
+            if(time>100) {
+                tag += "#고급 ";
+            } else if(time>50) {
+                tag += "#중급 ";
+            } else{
+                tag += "#초급 ";
+            }
+            int type = 5;
+            if(trail.getCity()>0.5){
+                type = 0;
+            }
+            if(trail.getOcean()>0.5){
+                type = 1;
+            }
+            if(trail.getLake()>0.5){
+                type = 2;
+            }
+            if(trail.getPark()>0.5){
+                type = 3;
+            }
+            switch (type){
+                case 0: {
+                    tag += "#도심";
+                    break;
+                }
+                case 1: {
+                    tag += "#바다";
+                    break;
+                }
+                case 2: {
+                    tag += "#강";
+                    break;
+                }
+                case 3: {
+                    tag += "#공원";
+                    break;
+                }
+            }
+            LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+            boolean like = true;
+            if(likeTrail==null){
+                like=false;
+            }
+            Coordinate[] polygon = new Coordinate[trail.getLat().length];
+            for(int i = 0; i < polygon.length; i++) {
+                polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+            }
+
+            TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
+                    .id(trail.getId())
+                    .area(trail.getArea())
+                    .polygon(polygon)
+                    .title(trail.getName())
+                    .time(time)
+                    .tags(tag)
+                    .like(like)
+                    .build();
+            response.add(trailRecommendDto);
+        }
+        return response;
     }
 }

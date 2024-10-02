@@ -1,5 +1,6 @@
 package com.plog.backend.domain.trail.service;
 
+import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
 import com.plog.backend.domain.trail.dto.response.TrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailRecommendDto;
 import com.plog.backend.domain.trail.entity.Trail;
@@ -12,4 +13,6 @@ public interface TrailService {
     void createTrailCenter();
 
     List<TrailRecommendDto> getRecommendedTrail(Long memberId);
+
+    List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId, TrailPositionRequestDto trailPositionRequestDto);
 }

@@ -22,4 +22,15 @@ public interface TrailRepository extends JpaRepository<Trail, Long> {
                                       @Param("lon") Float lon,
                                       @Param("type") Integer type,
                                       Pageable pageable);
+    // Haversine 공식 사용: 주어진 위도, 경도(lat, lon)에서 5km 내에 있는 Trail 조회
+    @Query(value = "SELECT * FROM trail t " +
+            "WHERE " +
+            "(6371 * acos(cos(radians(:lat)) * cos(radians(t.center[1])) " +
+            "* cos(radians(t.center[2]) - radians(:lon)) + sin(radians(:lat)) * sin(radians(t.center[1])))) < :distance",
+            nativeQuery = true)
+    List<Trail> findTrailsWithinDistance(
+            @Param("lat") Float lat,
+            @Param("lon") Float lon,
+            @Param("distance") Float distance
+    );
 }
