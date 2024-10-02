@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import RecommendHeader from '../components/headers/RecommendHeader';
 import ChevronLeft from '../../assets/calendar/left.png';
 import ChevronRight from '../../assets/calendar/right.png';
 import notebookIcon from '../../assets/icons/ic_notebook.png'
@@ -24,7 +25,7 @@ LocaleConfig.locales['ko'] = {
 
 LocaleConfig.defaultLocale = 'ko';
 
-const PloggingRecordScreen = () => {
+const PloggingRecordScreen = ({navigation}) => {
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
 
@@ -89,31 +90,34 @@ const PloggingRecordScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Calendar
-        onDayPress={(day) => setSelectedDate(day.dateString)}
-        markedDates={getMarkedDates()}
-        monthFormat={'M월'}
-        renderArrow={(direction) =>
-          direction === 'left' ? (
-            <Image source={ChevronLeft} style={styles.arrowIcon} />
-          ) : (
-            <Image source={ChevronRight} style={styles.arrowIcon} />
-          )
-        }
-        enableSwipeMonths={true}
-        theme={{
-          todayTextColor: '#1ECD90',
-          monthTextColor: 'black',
-          textMonthFontSize: 18,
-          textMonthFontWeight: 'bold',
-          textDayHeaderColor: '#9B9BA3',
-          textDayHeaderFontWeight: 'bold',
-          textDayFontWeight: 'semiBold',
-          textDayFontSize: 15,
-          textDayHeaderFontSize: 15,
-          textSectionTitleColor: 'black',
-        }}
-      />
+      <RecommendHeader navigation={navigation} headerText={'나의 플로깅 기록'} />
+      <View>
+        <Calendar
+          onDayPress={(day) => setSelectedDate(day.dateString)}
+          markedDates={getMarkedDates()}
+          monthFormat={'M월'}
+          renderArrow={(direction) =>
+            direction === 'left' ? (
+              <Image source={ChevronLeft} style={styles.arrowIcon} />
+            ) : (
+              <Image source={ChevronRight} style={styles.arrowIcon} />
+            )
+          }
+          enableSwipeMonths={true}
+          theme={{
+            todayTextColor: '#1ECD90',
+            monthTextColor: 'black',
+            textMonthFontSize: 18,
+            textMonthFontWeight: 'bold',
+            textDayHeaderColor: '#9B9BA3',
+            textDayHeaderFontWeight: 'bold',
+            textDayFontWeight: 'semiBold',
+            textDayFontSize: 15,
+            textDayHeaderFontSize: 15,
+            textSectionTitleColor: 'black',
+          }}
+        />
+      </View>
       <View style={styles.separator} />    
       <View style={styles.contentBox}>
         <Image source={notebookIcon} style={styles.imageBox} />
@@ -143,6 +147,7 @@ const PloggingRecordScreen = () => {
         )}
         keyExtractor={item => item.id}
       />
+
     </View>
   );
 };
@@ -151,7 +156,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
   },
   arrowIcon: {
     width: 8,
@@ -160,22 +164,26 @@ const styles = StyleSheet.create({
   },
   separator: {
     position: 'absolute',
-    top: 330, 
-    height: 4,
-    width: '150%',
+    top: 375, 
+    height: 3,
+    width: '100%',
     backgroundColor: '#ECECEC',
-    marginVertical: 16,
+    marginVertical: 18,
     elevation: 1,
   },  
+  contentContainer: {
+    paddingHorizontal: 20,
+  },
   contentBox: {
     flexDirection: 'column',
-    marginTop: 30,
-    marginBottom: 20,
+    marginTop: 34,
+    marginBottom: 22,
+    paddingHorizontal: 20,
   },
   imageBox: {
     position: 'absolute',
     top: 2,
-    left: 8,
+    left: 28,
     width: 34,
     height: 34,
   },
@@ -202,6 +210,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     paddingBottom: 16,
+    marginHorizontal: 20,
   },
   image: {
     width: '100%',

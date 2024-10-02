@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomCourseRecCard from '../components/CustomCourseRecCard'
+import RecommendHeader from '../components/headers/RecommendHeader';
 
 const CustomCourseRecScreen = ({navigation}) => {
   const handleCourseDetailPress = (courseId) => {
@@ -11,6 +12,8 @@ const CustomCourseRecScreen = ({navigation}) => {
 
   return (
     <View>
+      <RecommendHeader navigation={navigation} headerText={'OO님에게 추천드려요'} />
+    
       <ScrollView>
       <TouchableOpacity
           onPress={() => handleCourseDetailPress(1)}
