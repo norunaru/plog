@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import RecommendHeader from '../components/headers/RecommendHeader';
 import ChevronLeft from '../../assets/calendar/left.png';
 import ChevronRight from '../../assets/calendar/right.png';
-import notebookIcon from '../../assets/icons/ic_notebook.png'
-import locationIcon from '../../assets/icons/ic_location.png'
-import detailIcon from '../../assets/icons/ic_enter.png'
-import mapImg from '../../assets/images/mapmap.png'
+import notebookIcon from '../../assets/icons/ic_notebook.png';
+import locationIcon from '../../assets/icons/ic_location.png';
+import detailIcon from '../../assets/icons/ic_enter.png';
+import mapImg from '../../assets/images/mapmap.png';
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -25,7 +25,7 @@ LocaleConfig.locales['ko'] = {
 
 LocaleConfig.defaultLocale = 'ko';
 
-const PloggingRecordScreen = ({navigation}) => {
+const PloggingRecordScreen = ({ navigation }) => {
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
 
@@ -86,7 +86,7 @@ const PloggingRecordScreen = ({navigation}) => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${month}월 ${day}일`;
-  };  
+  };
 
   return (
     <View style={styles.container}>
@@ -118,7 +118,7 @@ const PloggingRecordScreen = ({navigation}) => {
           }}
         />
       </View>
-      <View style={styles.separator} />    
+      <View style={styles.separator} />
       <View style={styles.contentBox}>
         <Image source={notebookIcon} style={styles.imageBox} />
         <View style={styles.textBox}>
@@ -129,13 +129,15 @@ const PloggingRecordScreen = ({navigation}) => {
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
-          <View style={styles.recordItem}>
-            <Image source={item.image} style={styles.image} />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CourseDetail', { id: item.id })}>
+            <View style={styles.recordItem}>
+              <Image source={item.image} style={styles.image} />
               <View style={styles.contContainer}>
                 <View style={styles.textContainer}>
-                <Text style={styles.title}>
-                  {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
-                </Text>
+                  <Text style={styles.title}>
+                    {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
+                  </Text>
                   <View style={styles.locationContainer}>
                     <Image source={locationIcon} style={styles.locationImage} />
                     <Text style={styles.location}>{item.location}</Text>
@@ -143,11 +145,11 @@ const PloggingRecordScreen = ({navigation}) => {
                 </View>
                 <Image source={detailIcon} style={styles.detailIcon} />
               </View>
-          </View>
+            </View>
+          </TouchableOpacity>
         )}
         keyExtractor={item => item.id}
       />
-
     </View>
   );
 };
@@ -164,13 +166,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     position: 'absolute',
-    top: 375, 
+    top: 375,
     height: 3,
     width: '100%',
     backgroundColor: '#ECECEC',
     marginVertical: 18,
     elevation: 1,
-  },  
+  },
   contentContainer: {
     paddingHorizontal: 20,
   },
