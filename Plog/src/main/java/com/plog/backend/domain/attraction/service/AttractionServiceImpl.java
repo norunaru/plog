@@ -1,5 +1,6 @@
 package com.plog.backend.domain.attraction.service;
 
+import com.plog.backend.domain.attraction.dto.response.AttractionResponseDto;
 import com.plog.backend.domain.attraction.entity.Attraction;
 import com.plog.backend.domain.attraction.repository.AttractionRepository;
 import org.json.JSONArray;
@@ -47,5 +48,20 @@ public class AttractionServiceImpl implements AttractionService {
             // Save to repository
             attractionRepository.save(attraction);
         }
+    }
+
+    @Override
+    public AttractionResponseDto getRandomAttraction() {
+        Attraction attraction = attractionRepository.findRandomAttraction();
+        AttractionResponseDto attractionResponseDto = AttractionResponseDto.builder()
+                .id(attraction.getId())
+                .address(attraction.getAddress())
+                .type(attraction.getType())
+                .image(attraction.getImage())
+                .name(attraction.getName())
+                .lon(attraction.getLon())
+                .lat(attraction.getLat())
+                .build();
+        return attractionResponseDto;
     }
 }
