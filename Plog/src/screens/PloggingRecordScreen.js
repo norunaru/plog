@@ -3,6 +3,10 @@ import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import ChevronLeft from '../../assets/calendar/left.png';
 import ChevronRight from '../../assets/calendar/right.png';
+import notebookIcon from '../../assets/icons/ic_notebook.png'
+import locationIcon from '../../assets/icons/ic_location.png'
+import detailIcon from '../../assets/icons/ic_enter.png'
+import mapImg from '../../assets/images/mapmap.png'
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -30,28 +34,28 @@ const PloggingRecordScreen = () => {
       date: '2024-10-03',
       title: '이 산책로 너무 마음에 든다',
       location: '잠실 한강 공원',
-      image: 'https://example.com/plogging-route-1.png',
+      image: mapImg,
     },
     {
       id: '2',
       date: '2024-10-03',
-      title: '조용한 아침 산책',
+      title: '조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 ',
       location: '남산 둘레길',
-      image: 'https://example.com/plogging-route-2.png',
+      image: mapImg,
     },
     {
       id: '3',
       date: '2024-09-30',
       title: '이 산책로 너무 마음에 든다',
       location: '잠실 한강 공원',
-      image: 'https://example.com/plogging-route-1.png',
+      image: mapImg,
     },
     {
       id: '4',
       date: '2024-10-01',
       title: '조용한 아침 산책',
       location: '남산 둘레길',
-      image: 'https://example.com/plogging-route-2.png',
+      image: mapImg,
     },
   ];
 
@@ -63,25 +67,31 @@ const PloggingRecordScreen = () => {
     ploggingData.forEach(item => {
       markedDates[item.date] = {
         marked: true,
-        dotColor: '#1ECD90', // 기본 점 색상
+        dotColor: '#1ECD90',
       };
     });
 
-    // 선택된 날짜에 대한 설정
     markedDates[selectedDate] = {
       selected: true,
-      selectedColor: '#1ECD90', // 선택된 날짜의 배경색
-      dotColor: '#fff', // 선택된 날짜의 점 색상
+      selectedColor: '#1ECD90',
+      dotColor: selectedDate === today ? 'white' : '#1ECD90',
     };
 
     return markedDates;
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${month}월 ${day}일`;
+  };  
+
   return (
     <View style={styles.container}>
       <Calendar
         onDayPress={(day) => setSelectedDate(day.dateString)}
-        markedDates={getMarkedDates()} // 모든 날짜에 대해 기록이 있는 경우 점 표시
+        markedDates={getMarkedDates()}
         monthFormat={'M월'}
         renderArrow={(direction) =>
           direction === 'left' ? (
@@ -92,11 +102,11 @@ const PloggingRecordScreen = () => {
         }
         enableSwipeMonths={true}
         theme={{
-          todayTextColor: '#1ECD90', // 오늘 날짜의 글자 색을 #1ECD90으로
+          todayTextColor: '#1ECD90',
           monthTextColor: 'black',
           textMonthFontSize: 18,
           textMonthFontWeight: 'bold',
-          textDayHeaderColor: '#9B9BA3', // 요일 색상
+          textDayHeaderColor: '#9B9BA3',
           textDayHeaderFontWeight: 'bold',
           textDayFontWeight: 'semiBold',
           textDayFontSize: 15,
@@ -104,16 +114,31 @@ const PloggingRecordScreen = () => {
           textSectionTitleColor: 'black',
         }}
       />
-      <Text style={styles.selectedDateText}>{selectedDate} 의 플로깅</Text>
+      <View style={styles.separator} />    
+      <View style={styles.contentBox}>
+        <Image source={notebookIcon} style={styles.imageBox} />
+        <View style={styles.textBox}>
+          <Text style={styles.selectedDateText}>{formatDate(selectedDate)}</Text>
+          <Text style={styles.ploggingText}>의 플로깅</Text>
+        </View>
+      </View>
       <FlatList
         data={filteredData}
         renderItem={({ item }) => (
           <View style={styles.recordItem}>
-            <Image source={{ uri: item.image }} style={styles.image} />
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.location}>{item.location}</Text>
-            </View>
+            <Image source={item.image} style={styles.image} />
+              <View style={styles.contContainer}>
+                <View style={styles.textContainer}>
+                <Text style={styles.title}>
+                  {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
+                </Text>
+                  <View style={styles.locationContainer}>
+                    <Image source={locationIcon} style={styles.locationImage} />
+                    <Text style={styles.location}>{item.location}</Text>
+                  </View>
+                </View>
+                <Image source={detailIcon} style={styles.detailIcon} />
+              </View>
           </View>
         )}
         keyExtractor={item => item.id}
@@ -133,35 +158,87 @@ const styles = StyleSheet.create({
     height: 9,
     marginHorizontal: 45,
   },
+  separator: {
+    position: 'absolute',
+    top: 330, 
+    height: 4,
+    width: '150%',
+    backgroundColor: '#ECECEC',
+    marginVertical: 16,
+    elevation: 1,
+  },  
+  contentBox: {
+    flexDirection: 'column',
+    marginTop: 30,
+    marginBottom: 20,
+  },
+  imageBox: {
+    position: 'absolute',
+    top: 2,
+    left: 8,
+    width: 34,
+    height: 34,
+  },
+  textBox: {
+    flexDirection: 'row',
+  },
   selectedDateText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 16,
+    color: 'black',
+    marginLeft: 50,
+    marginTop: 4,
+  },
+  ploggingText: {
+    fontSize: 18,
+    color: 'black',
+    marginTop: 4,
   },
   recordItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: '#f9f9f9',
+    flexDirection: 'column',
+    marginBottom: 10,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    paddingBottom: 16,
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 16,
+    width: '100%',
+    height: 160,
+    marginBottom: 10,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  contContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   textContainer: {
-    flex: 1,
+    marginLeft: 20,
+  },
+  detailIcon: {
+    height: 26,
+    width: 26,
   },
   title: {
+    width: 310,
+    marginTop: 10,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  locationImage: {
+    height: 22,
+    width: 22,
   },
   location: {
     fontSize: 14,
     color: 'gray',
+    marginLeft: 6,
   },
 });
 
