@@ -27,5 +27,4 @@ public class ActivityDto {
     private String review;
     private Float score;
     private List<ActivityImage> activityImages;
-
 }

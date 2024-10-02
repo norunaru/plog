@@ -1,6 +1,5 @@
 package com.plog.backend.domain.activity.dto.request;
 
-import com.plog.backend.domain.activity.entity.ActivityImage;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -8,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -27,7 +27,7 @@ public class ActivitySaveRequestDto {
     private Float totalKcal;
     private LocalDateTime creationDate;
     private String locationName;
-    private List<ActivityImage> activityImages;
+    private List<MultipartFile> images;
 
 }
 
