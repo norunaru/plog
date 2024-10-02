@@ -42,4 +42,20 @@ public class TrailController {
     public SuccessResponse<?> postion(@RequestBody TrailPositionRequestDto trailPositionRequestDto) {
         return SuccessResponse.ok(trailService.getRecommendedByPositionTrail(MemberInfo.getUserId(),trailPositionRequestDto));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/like/{trailId}")
+    @Operation(summary = "좋아요 API", description = "토큰과 trailID 전달")
+    public SuccessResponse<?> like(@PathVariable(name = "trailId") Long trailId) {
+        trailService.like(MemberInfo.getUserId(), trailId);
+        return SuccessResponse.ok();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/unlike/{trailId}")
+    @Operation(summary = "좋아요 취소 API", description = "토큰과 trailID 전달")
+    public SuccessResponse<?> unlike(@PathVariable(name = "trailId") Long trailId) {
+        trailService.unlike(MemberInfo.getUserId(), trailId);
+        return SuccessResponse.ok();
+    }
 }

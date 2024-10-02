@@ -2,8 +2,14 @@ package com.plog.backend.domain.trail.entity;
 
 import com.plog.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "like_trail")
 public class LikeTrail {
     @Id
