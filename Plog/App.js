@@ -11,7 +11,6 @@ import CourseDetailScreen from './src/screens/CourseDetailScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
 import {Image} from 'react-native';
-
 import homeBlack from './assets/icons/homeBlack.png';
 import homeGray from './assets/icons/homeGray.png';
 import communityBlack from './assets/icons/communityBlack.png';
@@ -23,6 +22,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import ViewReviewScreen from './src/screens/ViewReviewScreen';
 import ManageFriendScreen from './src/screens/ManageFriendScreen';
 import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
+import ModifyInfoScreen from './src/screens/ModifyInfoScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -123,6 +123,11 @@ export default function App() {
         <Stack.Screen
           name="DeleteFriend"
           component={DeleteFriendScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ModifyInfo"
+          component={ModifyInfoScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
