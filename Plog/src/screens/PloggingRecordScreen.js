@@ -88,6 +88,11 @@ const PloggingRecordScreen = ({ navigation }) => {
     return `${month}월 ${day}일`;
   };
 
+  const handleCourseDetailPress = (courseId) => {
+    // 코스 디테일 화면으로 이동하면서 courseId를 전달
+    navigation.navigate('CourseDetail', { courseId });
+  };
+
   return (
     <View style={styles.container}>
       <RecommendHeader navigation={navigation} headerText={'나의 플로깅 기록'} />
@@ -130,7 +135,7 @@ const PloggingRecordScreen = ({ navigation }) => {
         data={filteredData}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('CourseDetail', { id: item.id })}>
+            onPress={() => handleCourseDetailPress(item.id)}>
             <View style={styles.recordItem}>
               <Image source={item.image} style={styles.image} />
               <View style={styles.contContainer}>
