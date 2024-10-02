@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
 import {
     responsiveWidth,
     responsiveHeight,
@@ -54,20 +54,23 @@ const SurveyScreen = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.footer}>
-                <View style={styles.nextBtn}>
+                <Pressable style={styles.nextBtn}>
                     <Text 
                         style={styles.nextText}
-                        onPress={() => navigation.navigate('Home')}>
+                        onPress={() => navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'Tabs' }],
+                          })}>
                         다음에 할게요
                     </Text>
-                </View>
-                <View style={styles.preferBtn}>
+                </Pressable>
+                <Pressable style={styles.preferBtn}>
                     <Text 
                         style={styles.preferText}
                         onPress={() => navigation.navigate('Question')}>
                         선호도 조사 하러가기
                     </Text>
-                </View>
+                </Pressable>
             </View>
         </View>
     );

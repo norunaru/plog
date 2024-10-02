@@ -4,14 +4,9 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  ScrollView,
-  Animated,
   Pressable,
 } from 'react-native';
 import chevronLeft from '../../../assets/icons/ic_back.png';
-import location from '../../../assets/icons/ic_location.png';
 
 const RecommendHeader = ({navigation, headerText}) => {
   return (
@@ -25,16 +20,16 @@ const RecommendHeader = ({navigation, headerText}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {/* <Image
-          style={{width: 16, height: 16, marginRight: 8}}
-          source={location}
-        /> */}
+        <Image 
+          source={require('../../../assets/icons/ic_location.png')}
+          style={styles.headerIcon}
+        />
         <Text
           style={{
             color: 'black',
             fontSize: 16,
             height: '100%',
-            fontWeight: 'bold',
+            fontWeight: '400',
           }}>
           {headerText}
         </Text>
@@ -59,6 +54,12 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  headerIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+    marginTop: 3,
+  }
 });
 
 export default RecommendHeader;

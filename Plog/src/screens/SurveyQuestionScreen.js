@@ -5,8 +5,11 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import SurveyQuestionHeader from "../components/headers/SurveyQuestionHeader";
+import CloseModal from "../components/modals/CloseModal";
 
-const SurveyQuestionScreen = () => {
+const SurveyQuestionScreen = ({navigation}) => {
+  const [isModalVisible, setModalVisible] = useState(false)
   const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -15,49 +18,42 @@ const SurveyQuestionScreen = () => {
     {
       id: 1,
       question: "선호하는 플로깅 시간대가 \n언제인가요?",
-      options: ["30분 미만", "30분 이상 1시간 미만", "1시간 이상"],
+      options: ["아침", "점심", "저녁"],
     },
     {
       id: 2,
-      question: "1플로깅할 때 \n중요한 요소는 무엇인가요?",
-      options: ["청결한 환경", "안전한 경로", "경치"],
+      question: "선호하는 플로깅 적정 활동시간은 \n어느정도 인가요?",
+      options: ["30분 미만", "30분 이상 1시간 미만", "1시간 이상"],
     },
     {
       id: 3,
-      question: "2플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
+      question: "플로깅 하고 싶은 장소는 \n어떤 곳인가요?",
+      options: ["도심", "바다 또는 강", "공원"],
     },
     {
       id: 4,
-      question: "3플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
+      question: "다음 중 누구와 함께 플로깅을 \n함께 하고 싶으신가요?",
+      options: ["혼자서", "친구 또는 가족과 함께", "새로운 사람들과 함께"],
     },
     {
       id: 5,
-      question: "4플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
-    },
-    {
-      id: 6,
-      question: "5플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
-    },
-    {
-      id: 7,
-      question: "6플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
-    },
-    {
-      id: 8,
-      question: "7플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
-    },
-    {
-      id: 9,
-      question: "8플로깅 코스에서 \n선호하는 난이도는?",
-      options: ["쉬움", "보통", "어려움"],
+      question: "현재 주거하고 있는 지역과 \n선호 환경이 어디인가요?",
+      options: ["서울특별시 용산구 청파동"],
     },
   ];
+  
+  const handleBackPress = () => {
+    if (step > 1) {
+      setStep(step - 1);
+      setSelectedOption(answers[step - 1] || null); // 이전에 선택한 옵션 유지
+    } else {
+      navigation.goBack(); // 첫 번째 질문에서 뒤로가면 이전 화면으로
+    }
+  };
+  
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const totalSteps = questions.length;
 
@@ -66,6 +62,8 @@ const SurveyQuestionScreen = () => {
   };
 
   const handleNextStep = () => {
+    if (!selectedOption) return;
+
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
       [step]: selectedOption,
@@ -75,7 +73,7 @@ const SurveyQuestionScreen = () => {
       setStep(step + 1);
       setSelectedOption(null);
     } else {
-      Alert.alert("완료")
+      navigation.navigate("SurveyResult", { answers });
     }
   };
 
@@ -83,6 +81,17 @@ const SurveyQuestionScreen = () => {
 
   return (
     <View style={styles.container}>
+        <SurveyQuestionHeader 
+          onBackPress={handleBackPress}
+          onClosePress={toggleModal}
+        />
+
+        <CloseModal 
+          isVisible={isModalVisible}
+          onClose={toggleModal}
+          onExit={() => navigation.navigate('LoginMain')}
+        />
+        
         <View style={styles.progressBarContainer}>
           <View style={[styles.progressBar, { width: `${progressPercentage}%` }]}/>
         </View>
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
     width: responsiveWidth(90),
     paddingVertical: responsiveHeight(2.3),
     paddingHorizontal: responsiveWidth(7),
-    marginVertical: responsiveHeight(0.8),
+    marginVertical: responsiveHeight(1.2),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -189,17 +198,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   optionText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.6),
     color: '#202025',
     fontWeight: '400',
   },
   selectedOptionText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.6),
     color: '#202025',
     fontWeight: '400',
   },
   unselectedOptionText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(1.6),
     color: '#9B9BA3',
     fontWeight: '400',
   },
