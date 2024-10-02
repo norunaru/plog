@@ -111,9 +111,7 @@ def cluster_and_visualize_trails(db: Session, n_clusters: int = 5):
         models.TrailNormal.trail_id == models.TrailCluster.trail_id
     ).all()
 
-    cluster_labels = []
-    for trail_normal, trail_cluster in trail_cluster_data:
-        cluster_labels.append(trail_cluster.cluster_id)
+    cluster_labels = [trail_cluster.cluster_id for trail_normal, trail_cluster in trail_cluster_data]
 
     # 4. 클러스터링 시각화
     visualize_clustered_trails(trails, cluster_labels)
