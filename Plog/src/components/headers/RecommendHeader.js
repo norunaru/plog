@@ -4,43 +4,22 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  ScrollView,
-  Animated,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import chevronLeft from '../../../assets/icons/ic_back.png';
 import location from '../../../assets/icons/ic_location.png';
 
 const RecommendHeader = ({navigation, headerText}) => {
   return (
-    <View style={styles.headerWrap}>
+    <SafeAreaView style={styles.headerWrap}>
       <Pressable onPress={() => navigation.goBack()}>
         <Image source={chevronLeft} style={styles.chevron} />
       </Pressable>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {/* <Image
-          style={{width: 16, height: 16, marginRight: 8}}
-          source={location}
-        /> */}
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 16,
-            height: '100%',
-            fontWeight: 'bold',
-          }}>
-          {headerText}
-        </Text>
-      </View>
-      <View></View>
-    </View>
+      <Text style={styles.headerText}>
+        {headerText}
+      </Text>
+    </SafeAreaView>
   );
 };
 
@@ -53,13 +32,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#D9D9D9',
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#E8E8E8',
+    // justifyContent: 'space-between',
+    // borderBottomWidth: 1,
+    // borderColor: '#D9D9D9',
   },
   chevron: {
     width: 24,
     height: 24,
+  },
+  headerText: {
+    color: 'black',
+    fontSize: 18,
+    height: '100%',
+    fontWeight: 'semiBold',
+    textAlign: 'center',   
+    flex: 1,
+    lineHeight: 45,
+    marginLeft: -10,
   },
 });
 

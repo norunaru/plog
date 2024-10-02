@@ -82,15 +82,14 @@ export default function App() {
           name="CustomCourseRec"
           component={CustomCourseRecScreen}
           options={{
-            title: 'OO님에게 추천드려요',
             headerTitleAlign: 'center',
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="CourseDetail"
           component={CourseDetailScreen}
           options={{
-            title: '코스 상세정보',
             headerTitleAlign: 'center',
             headerShown: false,
           }}
@@ -104,9 +103,8 @@ export default function App() {
           name="PloggingRecord"
           component={PloggingRecordScreen}
           options={{
-            title: '나의 플로깅 기록',
             headerTitleAlign: 'center',
-            headerBackVisible: false,
+            headerShown: false,
           }}
         />
         <Stack.Screen 
