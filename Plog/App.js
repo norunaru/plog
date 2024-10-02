@@ -10,6 +10,7 @@ import RecommendScreen from './src/screens/RecommendScreen';
 import CourseDetailScreen from './src/screens/CourseDetailScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
+import PloggingRecordScreen from './src/screens/PloggingRecordScreen';
 import {Image} from 'react-native';
 
 import homeBlack from './assets/icons/homeBlack.png';
@@ -100,8 +101,17 @@ export default function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Writing"
-          component={WritingScreen}
+          name="PloggingRecord"
+          component={PloggingRecordScreen}
+          options={{
+            title: '나의 플로깅 기록',
+            headerTitleAlign: 'center',
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen 
+          name="Writing" 
+          component={WritingScreen} 
           options={{
             title: '일지 작성',
             headerTitleAlign: 'center',
