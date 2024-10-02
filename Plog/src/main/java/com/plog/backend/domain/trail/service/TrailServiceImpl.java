@@ -362,4 +362,15 @@ public class TrailServiceImpl implements TrailService {
         }
         return response;
     }
+
+    @Override
+    public void like(Long memberId, Long trailId) {
+        likeTrailRepository.save(LikeTrail.builder().trail(trailRepository.findById(trailId).orElseThrow()).member(memberRepository.findById(memberId).orElseThrow()).build());
+    }
+
+    @Override
+    public void unlike(Long memberId, Long trailId) {
+        LikeTrail trail = likeTrailRepository.findByTrailIdAndMemberId(trailId,memberId);
+        likeTrailRepository.delete(trail);
+    }
 }

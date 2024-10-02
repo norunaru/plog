@@ -15,4 +15,8 @@ public interface TrailService {
     List<TrailRecommendDto> getRecommendedTrail(Long memberId);
 
     List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId, TrailPositionRequestDto trailPositionRequestDto);
+
+    void like(Long memberId,Long trailId);
+
+    void unlike(Long memberId, Long trailId);
 }
