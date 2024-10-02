@@ -12,6 +12,9 @@ import com.plog.backend.domain.activity.repository.ActivityImageRepository;
 import com.plog.backend.domain.activity.repository.ActivityRepository;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.repository.MemberRepository;
+import com.plog.backend.global.s3.service.S3Service;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Transactional
 @Slf4j
@@ -30,13 +34,27 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityImageRepository activityImageRepository;
     private final MemberRepository memberRepository;
     private final ModelMapper mapper;
+    private final S3Service s3Service;
 
     @Override
-    public void save(ActivitySaveRequestDto activity, Long memberId) {
+    public void save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
+
+        // S3에 이미지 업로드
+        List<MultipartFile> images = activity.getImages();
+        List<String> imageUrls = new ArrayList<>();
+
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                // 각 파일을 S3에 업로드하고, URL을 리스트에 추가
+                String imageUrl = s3Service.uploadFile(image);
+                imageUrls.add(imageUrl);
+            }
+        }
+
         // 1. memberId로 Member 조회
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(
-                () -> new IllegalArgumentException("Invalid member ID: " + memberId));
+            .orElseThrow(() -> new IllegalArgumentException("Invalid member ID: " + memberId));
+
         // 2. Activity 엔티티를 생성하여 저장
         Activity newActivity = Activity.builder()
             .member(member)
@@ -51,35 +69,33 @@ public class ActivityServiceImpl implements ActivityService {
             .review(activity.getReview())
             .score(activity.getScore())
             .build();
-        // 3. Activity 저장
-        activityRepository.save(newActivity);
 
-        // 4. ActivityImage 생성 및 저장 (여러 장의 이미지 처리)
-        if (activity.getActivityImages() != null) {
-            for (ActivityImage image : activity.getActivityImages()) {
-                ActivityImage activityImage = ActivityImage.builder()
-                    .activity(newActivity)
-                    .savedUrl(image.getSavedUrl())
-                    .savedPath(image.getSavedPath())
-                    .build();
-                // 이미지 저장
-                activityImageRepository.save(activityImage);
-            }
+        // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
+        List<ActivityImage> activityImages = new ArrayList<>();
+        for (String url : imageUrls) {
+            ActivityImage activityImage = ActivityImage.builder()
+                .savedUrl(url)
+                .activity(newActivity)  // 연관된 Activity 설정
+                .build();
+            activityImages.add(activityImage);
         }
+
+        // Activity 객체에 ActivityImage 설정
+        newActivity.setActivityImages(activityImages);
+
+        // 4. Activity와 ActivityImage 둘 다 저장 (Cascade 설정을 통해 자동으로 ActivityImage도 저장)
+        activityRepository.save(newActivity);
     }
+
 
     @Override
     public List<ActivityFindByMemberIdResponseDto> findActivityByMemberId(Long id) {
         List<Activity> activities = activityRepository.findAllByMemberId(id);
 
-        return activities.stream()
-            .map(activity -> ActivityFindByMemberIdResponseDto.builder()
-                .id(activity.getId())
-                .title(activity.getTitle())
-                .locationName(activity.getLocationName())
-                .creationDate(activity.getCreationDate())
-                .build())
-            .collect(Collectors.toList());
+        return activities.stream().map(
+            activity -> ActivityFindByMemberIdResponseDto.builder().id(activity.getId())
+                .title(activity.getTitle()).locationName(activity.getLocationName())
+                .creationDate(activity.getCreationDate()).build()).collect(Collectors.toList());
     }
 
     @Override
@@ -90,18 +106,27 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public void updateActivity(ActivityUpdateRequestDto activityDto, Long memberId) {
-        // 1. memberId로 Member 조회
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid member ID: " + memberId));
+    public void updateActivity(ActivityUpdateRequestDto activityDto, Long memberId)
+        throws IOException {
+
+        // S3에 이미지 업로드
+        List<MultipartFile> images = activityDto.getImages();
+        List<String> imageUrls = new ArrayList<>();
+
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                // 각 파일을 S3에 업로드하고, URL을 리스트에 추가
+                String imageUrl = s3Service.uploadFile(image);
+                imageUrls.add(imageUrl);
+            }
+        }
 
         // 2. 기존 Activity 조회
-        Activity existingActivity = activityRepository.findById(activityDto.getId())
-            .orElseThrow(
-                () -> new IllegalArgumentException("Invalid activity ID: " + activityDto.getId()));
+        Activity existingActivity = activityRepository.findById(activityDto.getId()).orElseThrow(
+            () -> new IllegalArgumentException("Invalid activity ID: " + activityDto.getId()));
 
         // 3. Activity 엔티티 업데이트
-        existingActivity.update(activityDto);
+        existingActivity.update(activityDto, imageUrls);
 
         // 4. Activity 저장
         activityRepository.save(existingActivity);

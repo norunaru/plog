@@ -44,9 +44,6 @@ public class ActivityImage {
     @Column(name = "saved_url")
     private String savedUrl;
 
-    @Column(name = "saved_path")
-    private String savedPath;
-
     public void update(Activity activity) {
         this.activity = activity;
     }

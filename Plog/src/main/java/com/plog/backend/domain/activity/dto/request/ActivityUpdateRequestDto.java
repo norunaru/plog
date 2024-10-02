@@ -1,13 +1,12 @@
 package com.plog.backend.domain.activity.dto.request;
 
-import com.plog.backend.domain.activity.dto.ActivityImageDto;
-import com.plog.backend.domain.activity.entity.ActivityImage;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -19,5 +18,5 @@ public class ActivityUpdateRequestDto {
     private String title;
     private String review;
     private Float score;
-    private List<ActivityImage> activityImages;
+    private List<MultipartFile> images;
 }

@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -83,11 +84,12 @@ public class Activity {
     @Column(name = "score", columnDefinition = "real")
     private Float score;
 
+    @Setter
     @JsonIgnore
     @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true)
-    private List<ActivityImage> activityImages = new ArrayList<>();
+    private List<ActivityImage> activityImages;
 
-    public void update(ActivityUpdateRequestDto activityUpdateRequestDto) {
+    public void update(ActivityUpdateRequestDto activityUpdateRequestDto, List<String> savedUrls) {
         this.title = activityUpdateRequestDto.getTitle();
         this.score = activityUpdateRequestDto.getScore();
 
@@ -95,12 +97,10 @@ public class Activity {
         this.activityImages.clear();
 
         // 새로운 이미지를 추가
-        for (ActivityImage imageDto : activityUpdateRequestDto.getActivityImages()) {
+        for (String url : savedUrls) {
             ActivityImage newImage = ActivityImage.builder()
-                .savedUrl(imageDto.getSavedUrl())
-                .savedPath(imageDto.getSavedPath())
+                .savedUrl(url)
                 .build();
-
             this.addImage(newImage); // 이미지 추가
         }
     }
