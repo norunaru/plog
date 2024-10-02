@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1.5,
     borderBottomColor: '#E8E8E8',
+    // justifyContent: 'space-between',
+    // borderBottomWidth: 1,
+    // borderColor: '#D9D9D9',
   },
   chevron: {
     width: 24,

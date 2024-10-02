@@ -53,7 +53,10 @@ export default function MyPageScreen({navigation}) {
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
               플로거 친구들
             </Text>
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('ManageFriend');
+              }}>
               <Text style={{color: '#4879FF', fontSize: 11}}>친구관리</Text>
             </Pressable>
           </View>
