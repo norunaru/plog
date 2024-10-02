@@ -1,11 +1,16 @@
 package com.plog.backend.domain.member.entity;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -16,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -75,6 +81,10 @@ public class Member {
 
     @Column(name = "region_lon", columnDefinition = "real")
     private Float regionLon;
+
+    @Setter
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
+    private MemberScore memberScore;
 
     public void updateFields(MemberSurveyRequestDto memberSurveyRequestDto) {
         this.activityTime = memberSurveyRequestDto.getActivityTime();

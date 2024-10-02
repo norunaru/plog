@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plog.backend.domain.member.dto.MemberDto;
 import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import com.plog.backend.domain.member.dto.response.MemberLoginResponseDto;
+import com.plog.backend.domain.member.entity.MemberScore;
+import com.plog.backend.domain.member.repository.MemberScoreRepository;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.token.entity.RefreshToken;
 import com.plog.backend.global.token.repository.RefreshTokenRepository;
@@ -15,6 +17,7 @@ import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.exception.MemberNotFoundException;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpEntity;
@@ -41,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberLoginResponseDto login(final MemberLoginRequestDto memberLoginRequestDto) {
-        // kakao 토큰을 통해 사용자 id 가져와서 DB에 등록되어 있는지 확인
+        // kakao 토큰을 통해 사용자 정보 가져오기
         String[] kakaoInfo = getKakaoUserInfo(memberLoginRequestDto.getKakaoAccessToken());
         log.info("kakao email: {}", kakaoInfo[0]);
 
@@ -50,28 +53,47 @@ public class MemberServiceImpl implements MemberService {
         boolean isFirstLogin = false;
 
         try {
+            // 기존 회원 조회
             member = findMemberByEmail(kakaoInfo[0]);
         } catch (MemberNotFoundException e) {
-            // 등록되지 않은 사용자
+            // 등록되지 않은 사용자일 경우, 새로운 사용자 생성
             member = Member.builder()
                 .regDate(LocalDateTime.now())
                 .email(kakaoInfo[0])
                 .nickname(kakaoInfo[1])
                 .profileImageUrl(kakaoInfo[2])
                 .build();
+
+            // MemberScore 생성 시 member 설정
+            MemberScore newMemberScore = MemberScore.builder()
+                .score(new Float[100])
+                .member(member) // 여기에서 Member를 설정
+                .build();
+
+            Arrays.fill(newMemberScore.getScore(), 0.0f);
+
+            // 양방향 관계 설정
+            member.setMemberScore(newMemberScore);
+
+            // 회원 저장
             memberRepository.save(member);
             isFirstLogin = true;
             log.info("성공적으로 회원 추가: {}", kakaoInfo[0]);
         }
+
+        // 최초 로그인 여부 설정
         memberLoginResponseDto.setIsFirstLogin(
-            (member.getIsFirst() != null) ? (member.getIsFirst() ? 1 : 0) : (isFirstLogin ? 1 : 0)
+            member.getIsFirst() != null ? (member.getIsFirst() ? 1 : 0) : (isFirstLogin ? 1 : 0)
         );
+
         log.info("member: {}", member);
 
+        // AccessToken 및 RefreshToken 생성
         MemberDto memberDto = mapper.map(member, MemberDto.class);
         memberLoginResponseDto.setAccessToken(jwtUtil.createAccessToken(memberDto));
         memberLoginResponseDto.setRefreshToken(jwtUtil.createRefreshToken());
 
+        // RefreshToken 저장
         refreshTokenRepository.save(
             RefreshToken.builder()
                 .refreshToken(memberLoginResponseDto.getRefreshToken())
@@ -81,6 +103,7 @@ public class MemberServiceImpl implements MemberService {
 
         return memberLoginResponseDto;
     }
+
 
     @Override
     public void updateMemberSurvey(MemberSurveyRequestDto memberSurveyRequestDto) {

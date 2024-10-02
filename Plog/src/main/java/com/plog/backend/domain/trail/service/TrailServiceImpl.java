@@ -90,9 +90,9 @@ public class TrailServiceImpl implements TrailService {
     @Override
     public List<TrailRecommendDto> getRecommendedTrail(Long memberId){
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        Double[] scores = memberScore.getScore();;
+        Float[] scores = memberScore.getScore();;
         int count = 0;
-        for(Double score : scores) {
+        for(Float score : scores) {
             if(score>=3) count++;
         }
         if(count>5) {
