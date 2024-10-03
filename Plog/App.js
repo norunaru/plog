@@ -10,6 +10,9 @@ import RecommendScreen from './src/screens/RecommendScreen';
 import CourseDetailScreen from './src/screens/CourseDetailScreen';
 import CustomCourseRecScreen from './src/screens/CustomCourseRecScreen';
 import PloggingScreen from './src/screens/PloggingScreen';
+import LoginMainScreen from './src/screens/LoginMainScreen';
+import SurveyScreen from './src/screens/SurveyScreen';
+import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
 import {Image} from 'react-native';
 
 import homeBlack from './assets/icons/homeBlack.png';
@@ -22,6 +25,8 @@ import WritingScreen from './src/screens/WritingScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ViewReviewScreen from './src/screens/ViewReviewScreen';
 import ManageFriendScreen from './src/screens/ManageFriendScreen';
+import SurveyFinishScreen from './src/components/SurveyFinishScreen';
+import SurveyResultScreen from './src/components/SurveyResultScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -67,7 +72,9 @@ function TabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="LoginMain"
+      >
         {/* 탭 네비게이터 사용되는 스크린 */}
         <Stack.Screen
           name="Tabs"
@@ -75,6 +82,11 @@ export default function App() {
           options={{headerShown: false}} // 탭 네비게이터 상단에 헤더 표시 안 함
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
+        <Stack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen name="Detail" component={DetailScreen} />
         <Stack.Screen
           name="CustomCourseRec"
@@ -117,6 +129,30 @@ export default function App() {
         <Stack.Screen
           name="ManageFriend"
           component={ManageFriendScreen}
+        />
+        <Stack.Screen 
+          name="LoginMain" 
+          component={LoginMainScreen} 
+          options={{headerShown: false}}  
+        />
+        <Stack.Screen 
+          name="Survey"
+          component={SurveyScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="Question"
+          component={SurveyQuestionScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="SurveyFinish"
+          component={SurveyFinishScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen 
+          name="SurveyResult"
+          component={SurveyResultScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
