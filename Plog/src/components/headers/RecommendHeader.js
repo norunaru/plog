@@ -5,12 +5,13 @@ import {
   Image,
   StyleSheet,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 import chevronLeft from '../../../assets/icons/ic_back.png';
 
 const RecommendHeader = ({navigation, headerText}) => {
   return (
-    <View style={styles.headerWrap}>
+    <SafeAreaView style={styles.headerWrap}>
       <Pressable onPress={() => navigation.goBack()}>
         <Image source={chevronLeft} style={styles.chevron} />
       </Pressable>
@@ -35,7 +36,7 @@ const RecommendHeader = ({navigation, headerText}) => {
         </Text>
       </View>
       <View></View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -48,6 +49,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#E8E8E8',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderColor: '#D9D9D9',

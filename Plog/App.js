@@ -13,6 +13,7 @@ import PloggingScreen from './src/screens/PloggingScreen';
 import LoginMainScreen from './src/screens/LoginMainScreen';
 import SurveyScreen from './src/screens/SurveyScreen';
 import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
+import PloggingRecordScreen from './src/screens/PloggingRecordScreen';
 import {Image} from 'react-native';
 
 import homeBlack from './assets/icons/homeBlack.png';
@@ -27,6 +28,7 @@ import ViewReviewScreen from './src/screens/ViewReviewScreen';
 import ManageFriendScreen from './src/screens/ManageFriendScreen';
 import SurveyFinishScreen from './src/components/SurveyFinishScreen';
 import SurveyResultScreen from './src/components/SurveyResultScreen';
+import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -92,15 +94,14 @@ export default function App() {
           name="CustomCourseRec"
           component={CustomCourseRecScreen}
           options={{
-            title: 'OO님에게 추천드려요',
             headerTitleAlign: 'center',
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="CourseDetail"
           component={CourseDetailScreen}
           options={{
-            title: '코스 상세정보',
             headerTitleAlign: 'center',
             headerShown: false,
           }}
@@ -111,8 +112,16 @@ export default function App() {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Writing"
-          component={WritingScreen}
+          name="PloggingRecord"
+          component={PloggingRecordScreen}
+          options={{
+            headerTitleAlign: 'center',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen 
+          name="Writing" 
+          component={WritingScreen} 
           options={{
             title: '일지 작성',
             headerTitleAlign: 'center',
@@ -153,6 +162,11 @@ export default function App() {
         <Stack.Screen 
           name="SurveyResult"
           component={SurveyResultScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DeleteFriend"
+          component={DeleteFriendScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

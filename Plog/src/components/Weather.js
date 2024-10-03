@@ -93,7 +93,6 @@ const Weather = () => {
         } else {
           throw new Error('데이터 구조가 예상과 다릅니다.');
         }
-    
         setLoading(false);
       } catch (error) {
         console.log('Error:', error.response?.data || error.message);
@@ -101,8 +100,6 @@ const Weather = () => {
         setLoading(false);
       }
     };
-    
-    
 
     const fetchFineDustData = async (stationName) => {
       try {
@@ -248,7 +245,34 @@ const Weather = () => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={{
+        width: '100%',
+        height: 177,
+        paddingVertical: 12,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignContent: 'center',
+      }}>
+        <View style={{
+          position: 'absolute',
+          height: 21,
+          left: 23,
+          top: 16,
+        }}>
+          <Text style={{
+            fontSize: 15,
+            fontWeight: 'bold',
+            color: '#0F1012',
+            lineHeight: 15 * 1.4,
+          }}>
+            대기환경
+          </Text>
+        </View>
+        <ActivityIndicator size="large" color="#1ECD90" />
+      </View>
+    );
   }
 
   if (errorMsg) {
@@ -261,7 +285,6 @@ const Weather = () => {
 
   const weatherIcon = getWeatherIcon(weather.skyCondition);
 
-  // 섭씨를 화씨로 변환
   const toFahrenheit = (celsius) => (celsius * 9/5) + 32;
 
   return (
@@ -270,12 +293,7 @@ const Weather = () => {
         <Text style={styles.font}>대기환경</Text>
       </View>
       <View style={styles.weatherBox}>
-        {weatherIcon && (
-          <Image
-            source={weatherIcon}
-            style={styles.imageBox}
-          />
-        )}
+        {weatherIcon && (<Image source={weatherIcon} style={styles.imageBox} />)}
         <View style={styles.contentBox}>
           <View style={styles.title}>
             <Text style={styles.titleFont}>{weather.skyCondition}</Text>
@@ -326,8 +344,6 @@ const styles = StyleSheet.create({
     height: 21,
     left: 23,
     top: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   font: {
     fontSize: 15,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,8 +13,13 @@ import {
 import RecommendHeader from '../components/headers/RecommendHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
+import nothing from '../../assets/images/nothing.png';
+import yonghoon from '../../assets/images/용훈.jpg';
 
 const ManageFriendScreen = ({navigation}) => {
+  const [typedText, setTypedText] = useState('');
+  const [friend, setFriend] = useState({});
+
   // 더미 데이터 배열 생성
   const dummyFriends = [
     {name: '이재준', level: 6, ploggingCnt: 10},
@@ -34,48 +39,109 @@ const ManageFriendScreen = ({navigation}) => {
           <TextInput
             style={styles.inputBox}
             placeholder="친구의 카카오 이메일을 입력하세요"
+            onChange={text => setTypedText(text)}
           />
           <Pressable>
             <Image source={ic_search} style={styles.searchIcon} />
           </Pressable>
         </View>
 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}>
-          <View style={{flexDirection: 'row'}}>
+        {typedText == '' && Object.keys(friend).length == 0 && (
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    marginRight: 4,
+                  }}>
+                  친구 목록
+                </Text>
+                <Text
+                  style={{color: '#1ECD90', fontSize: 18, fontWeight: 'bold'}}>
+                  {dummyFriends.length}
+                </Text>
+              </View>
+              <Pressable onPress={() => navigation.navigate('DeleteFriend')}>
+                <Text style={{color: '#4879FF'}}>수정</Text>
+              </Pressable>
+            </View>
+
+            <ScrollView>
+              {dummyFriends.map((friend, index) => (
+                <FriendManageCard
+                  key={index}
+                  name={friend.name}
+                  level={friend.level}
+                  ploggingCnt={friend.ploggingCnt}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {typedText !== '' && Object.keys(friend).length === 0 && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image source={nothing} style={{marginTop: 332}} />
+          </View>
+        )}
+
+        {friend.length != 0 && typedText !== '' && (
+          <View
+            style={{
+              width: '100%',
+              padding: 24,
+              borderRadius: 12,
+              backgroundColor: '#F7F7F7',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={yonghoon}
+              style={{width: 90, height: 90, borderRadius: 25, marginBottom: 8}}
+            />
             <Text
               style={{
-                color: 'black',
-                fontSize: 16,
+                marginBottom: 12,
                 fontWeight: 'bold',
-                marginRight: 4,
+                fontSize: 18,
+                color: 'black',
               }}>
-              친구 목록
+              용훈쿼카
             </Text>
-            {/* 친구 목록의 개수를 더미 데이터 배열 길이로 설정 */}
-            <Text style={{color: '#1ECD90', fontSize: 18, fontWeight: 'bold'}}>
-              {dummyFriends.length}
-            </Text>
+            <Pressable
+              style={{
+                borderRadius: 30,
+                height: 52,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#1ECD90',
+                width: '100%',
+              }}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                  color: 'white',
+                }}>
+                친구 추가
+              </Text>
+            </Pressable>
           </View>
-          <Text style={{color: '#4879FF'}}>수정</Text>
-        </View>
-
-        {/* ScrollView로 친구 리스트 스크롤 가능하게 변경 */}
-        <ScrollView>
-          {dummyFriends.map((friend, index) => (
-            <FriendManageCard
-              key={index}
-              name={friend.name}
-              level={friend.level}
-              ploggingCnt={friend.ploggingCnt}
-            />
-          ))}
-        </ScrollView>
+        )}
       </View>
     </View>
   );
