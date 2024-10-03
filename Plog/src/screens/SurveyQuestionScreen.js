@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import {
   responsiveWidth,
@@ -7,12 +7,91 @@ import {
 } from 'react-native-responsive-dimensions';
 import SurveyQuestionHeader from "../components/headers/SurveyQuestionHeader";
 import CloseModal from "../components/modals/CloseModal";
+import RegionModal from "../components/modals/RegionModal";
+import EnvironmentModal from "../components/modals/EnvironmentModal";
 
 const SurveyQuestionScreen = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false)
   const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [navigateToResult, setNavigateToResult] = useState(false);
+
+  const [isCityModalVisible, setCityModalVisible] = useState(false);
+  const [isCountyModalVisible, setCountyModalVisible] = useState(false);
+  const [isTownModalVisible, setTownModalVisible] = useState(false);
+
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedTown, setSelectedTown] = useState("");
+
+  const [isEnvironmentModalVisible, setEnvironmentModalVisible] = useState(false);
+  const [environmentRank, setEnvironmentRank] = useState("");
+  const [firstRank, setFirstRank] = useState("");
+  const [secondRank, setSecondRank] = useState("");
+  const [alreadySelected, setAlreadySelected] = useState(false);
+
+  const cities = ["서울특별시", "경기도", "강원도", "인천광역시", "울산광역시", "대전광역시", "부산광역시", "충청북도", "충청남도", ];
+  const counties = {
+    "서울특별시": ["강남구", "용산구", "종로구"],
+    "경기도": ["성남시", "수원시", "안양시"],
+    "강원도": ["춘천시", "강릉시", "원주시"],
+    // 추가 데이터 생략
+  };
+  const towns = {
+    "강남구": ["압구정동", "청담동", "역삼동"],
+    "용산구": ["이태원동", "한남동", "청파동"],
+    "종로구": ["삼청동", "팔판동", "통인동"],
+    // 추가 데이터 생략
+  };
+
+  const environments = ["산", "하천", "바다", "도심", "공원"];
+
+  const handleCitySelect = (city) => {
+    setSelectedCity(city);
+    setSelectedCounty("");
+    setSelectedTown("");
+  };
+
+  const handleCountySelect = (county) => {
+    setSelectedCounty(county);
+    setSelectedTown("");
+  };
+
+  const handleTownSelect = (town) => {
+    setSelectedTown(town);
+  };
+
+  const handleEnvironmentSelect = (environment) => {
+    if (environmentRank === "1순위") {
+      if (environment === firstRank) {
+        setAlreadySelected(true);
+      } else {
+        setFirstRank(environment);
+        setSecondRank("");
+        setAlreadySelected(false);
+        setEnvironmentModalVisible(false);
+      }
+    } else if (environmentRank === "2순위") {
+      if (environment === firstRank) {
+        setAlreadySelected(true);
+      } else {
+        setSecondRank(environment);
+        setAlreadySelected(false);
+        setEnvironmentModalVisible(false);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setEnvironmentModalVisible(false);
+    setAlreadySelected(false);
+  };
+
+  const handleRankPress = (rank) => {
+    setEnvironmentRank(rank);
+    setEnvironmentModalVisible(true);
+  };
 
   const questions = [
     {
@@ -27,27 +106,28 @@ const SurveyQuestionScreen = ({navigation}) => {
     },
     {
       id: 3,
-      question: "플로깅 하고 싶은 장소는 \n어떤 곳인가요?",
-      options: ["도심", "바다 또는 강", "공원"],
-    },
-    {
-      id: 4,
       question: "다음 중 누구와 함께 플로깅을 \n함께 하고 싶으신가요?",
       options: ["혼자서", "친구 또는 가족과 함께", "새로운 사람들과 함께"],
     },
     {
-      id: 5,
+      id: 4,
       question: "현재 주거하고 있는 지역과 \n선호 환경이 어디인가요?",
-      options: ["서울특별시 용산구 청파동"],
     },
   ];
+
+  useEffect(() => {
+    if (navigateToResult) {
+      setNavigateToResult(false);
+      navigation.navigate("SurveyResult", { answers });
+    }
+  }, [navigateToResult]);
   
   const handleBackPress = () => {
     if (step > 1) {
       setStep(step - 1);
-      setSelectedOption(answers[step - 1] || null); // 이전에 선택한 옵션 유지
+      setSelectedOption(answers[step - 1] || null);
     } else {
-      navigation.goBack(); // 첫 번째 질문에서 뒤로가면 이전 화면으로
+      navigation.goBack();
     }
   };
   
@@ -62,19 +142,31 @@ const SurveyQuestionScreen = ({navigation}) => {
   };
 
   const handleNextStep = () => {
-    if (!selectedOption) return;
-
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [step]: selectedOption,
-    }));
-
-    if (step < totalSteps) {
+    if (step === 4) {
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        4: {
+          city: selectedCity,
+          county: selectedCounty,
+          town: selectedTown,
+          firstEnvironment: firstRank,
+          secondEnvironment: secondRank,
+        },
+      }));
+      setNavigateToResult(true);
+    } else {
+      if (!selectedOption) return;
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [step]: selectedOption,
+      }));
       setStep(step + 1);
       setSelectedOption(null);
-    } else {
-      navigation.navigate("SurveyResult", { answers });
     }
+  };
+
+  const isStep4Complete = () => {
+    return selectedCity && selectedCounty && selectedTown && firstRank && secondRank;
   };
 
   const progressPercentage = (step / totalSteps) * 100;
@@ -101,45 +193,139 @@ const SurveyQuestionScreen = ({navigation}) => {
           <Text style={styles.questionText}>{questions[step -1].question}</Text>
         </View>
 
-        <View style={styles.optionsContainer}>
-          {questions[step -1].options.map((option, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.optionBtn,
-                selectedOption === option && styles.selectedOptionBtn
-              ]}
-              onPress={() => handleOptionSelect(option)}
-            >
-              <Text style={[
-                styles.optionText,
-                selectedOption === option
-                  ? styles.selectedOptionText
-                  : selectedOption === null
-                    ? styles.optionText
-                    : styles.unselectedOptionText
-              ]}>
-                {option}
-              </Text>
-              {selectedOption === option && (
+        {step === 4 ? (
+          <View>
+            <Text style={styles.step4Title}>주거지역</Text>
+            <View style={styles.living}>
+              <TouchableOpacity 
+                style={styles.city }
+                onPress={() => setCityModalVisible(true)}>
+                <Text style={[styles.cityText, selectedCity && styles.selectedText]}>{selectedCity || "도/시"}</Text>
                 <Image 
-                  source={require('../../assets/icons/ic_select.png')}
-                  style={styles.selectIcon}
+                  source={require('../../assets/icons/ic_ditection.png')}
+                  style={styles.cityIcon}
                 />
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.city}
+                onPress={() => selectedCity && setCountyModalVisible(true)}>
+                <Text style={[styles.cityText, selectedCounty && styles.selectedText]}>{selectedCounty || "시/군/구"}</Text>
+                <Image 
+                  source={require('../../assets/icons/ic_ditection.png')}
+                  style={styles.cityIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.city}
+                onPress={() => selectedCounty && setTownModalVisible(true)}>
+                <Text style={[styles.cityText, selectedTown && styles.selectedText]}>{selectedTown || "동/읍/면"}</Text>
+                <Image 
+                  source={require('../../assets/icons/ic_ditection.png')}
+                  style={styles.cityIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.step4Title}>선호 환경</Text>
+            <View style={styles.environment}>
+              <TouchableOpacity 
+                style={styles.rank}
+                onPress={() => handleRankPress("1순위")}>
+                <Text style={[styles.rankText, firstRank && styles.selectedText]}>{firstRank || "1순위"}</Text>
+                <Image 
+                  source={require('../../assets/icons/ic_ditection.png')}
+                  style={styles.rankIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.rank}
+                onPress={() => handleRankPress("2순위")}
+                >
+                <Text style={[styles.rankText, secondRank && styles.selectedText]}>{secondRank || "2순위"}</Text>
+                <Image 
+                  source={require('../../assets/icons/ic_ditection.png')}
+                  style={styles.rankIcon}
+                />
+              </TouchableOpacity>
+
+            </View>
+
+            {/* 모달들 */}
+            <EnvironmentModal
+              isVisible={isEnvironmentModalVisible}
+              onClose={handleModalClose}
+              onSelect={handleEnvironmentSelect}
+              options={environments}
+              selectedValue={firstRank || secondRank}
+              displayRank={firstRank}
+              alreadySelected={alreadySelected}
+            />
+
+            <RegionModal
+              isVisible={isCityModalVisible}
+              onClose={() => setCityModalVisible(false)}
+              onSelect={handleCitySelect}
+              options={cities}
+              selectedValue={selectedCity}
+            />
+
+            <RegionModal
+              isVisible={isCountyModalVisible}
+              onClose={() => setCountyModalVisible(false)}
+              onSelect={handleCountySelect}
+              options={counties[selectedCity] || []}
+              selectedValue={selectedCounty}
+            />
+
+            <RegionModal
+              isVisible={isTownModalVisible}
+              onClose={() => setTownModalVisible(false)}
+              onSelect={handleTownSelect}
+              options={towns[selectedCounty] || []}
+              selectedValue={selectedTown}
+            />
+          </View>
+
+        ) : (
+          <View style={styles.optionsContainer}>
+            {questions[step -1].options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.optionBtn,
+                  selectedOption === option && styles.selectedOptionBtn
+                ]}
+                onPress={() => handleOptionSelect(option)}
+              >
+                <Text style={[
+                  styles.optionText,
+                  selectedOption === option
+                    ? styles.selectedOptionText
+                    : selectedOption === null
+                      ? styles.optionText
+                      : styles.unselectedOptionText
+                ]}>
+                  {option}
+                </Text>
+                {selectedOption === option && (
+                  <Image 
+                    source={require('../../assets/icons/ic_select.png')}
+                    style={styles.selectIcon}
+                  />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         <TouchableOpacity
           style={[
             styles.nextBtn,
-            selectedOption 
-              ? styles.activeNextBtn
+            (step === 4 ? isStep4Complete() : selectedOption) 
+              ? styles.activeNextBtn 
               : styles.inactiveNextBtn
           ]}
           onPress={handleNextStep}
-          disabled={!selectedOption}
+          disabled={!(step === 4 ? isStep4Complete() : selectedOption)}
         >
           <Text style={styles.nextBtnText}>다음</Text>
         </TouchableOpacity>
@@ -200,17 +386,17 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: responsiveFontSize(1.6),
     color: '#202025',
-    fontWeight: '400',
+    fontWeight: '500',
   },
   selectedOptionText: {
     fontSize: responsiveFontSize(1.6),
     color: '#202025',
-    fontWeight: '400',
+    fontWeight: '500',
   },
   unselectedOptionText: {
     fontSize: responsiveFontSize(1.6),
     color: '#9B9BA3',
-    fontWeight: '400',
+    fontWeight: '500',
   },
   selectIcon: {
     width: 24,
@@ -235,6 +421,72 @@ const styles = StyleSheet.create({
       color: '#fff',
       fontSize: responsiveFontSize(2),
       fontWeight: 'bold',
+  },
+  step4Title: {
+    fontSize: responsiveFontSize(2),
+    fontWeight: '500',
+    color: '#202025',
+    marginTop: responsiveHeight(5),
+    marginLeft: responsiveWidth(5),
+  },
+  living: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: responsiveHeight(2),
+  },
+  city: {
+    backgroundColor: '#F7F7F7',
+    borderRadius: 12,
+    width: responsiveWidth(28),
+    height: responsiveHeight(5.5),
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  cityIcon: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    marginLeft: responsiveWidth(21),
+  },
+  cityText: {
+    color: '#9B9BA3',
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    marginLeft: responsiveWidth(3),
+  },
+  environment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    marginTop: responsiveHeight(2),
+  },
+  rank: {
+    backgroundColor: '#F7F7F7',
+    borderRadius: 12,
+    width: responsiveWidth(43),
+    height: responsiveHeight(5.5),
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  rankText: {
+    color: '#9B9BA3',
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    marginLeft: responsiveWidth(5),
+  },
+  rankIcon: {
+    width: 20,
+    height: 20,
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    marginLeft: responsiveWidth(35),
+  },
+  selectedText: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: '#202025',
   },
 });
 

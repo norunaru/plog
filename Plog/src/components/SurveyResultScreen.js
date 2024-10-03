@@ -4,11 +4,13 @@ import { responsiveWidth, responsiveHeight, responsiveFontSize } from 'react-nat
 import SurveyResultHeader from "./headers/SurveyResultHeader";
 
 const SurveyResultScreen = ({ route, navigation }) => {
-  const { answers } = route.params; // 설문 조사 결과를 params로 받아옴
+  const { answers } = route.params;
 
   const handleBackPress = () => {
-      navigation.goBack(); // 첫 번째 질문에서 뒤로가면 이전 화면으로
+      navigation.goBack();
   };
+
+  console.log(answers)
 
   return (
     <View style={styles.container}>
@@ -23,18 +25,18 @@ const SurveyResultScreen = ({ route, navigation }) => {
         <Text style={styles.name}>최승빈님</Text>
         <View style={styles.contentContainer}>
             <View style={styles.subContainer}>
-                <Text style={styles.sub}>선호 시간</Text>
-                <Text style={styles.sub}>활동 시간</Text>
-                <Text style={styles.sub}>선호 장소</Text>
+                <Text style={styles.sub}>선호 시간대</Text>
+                <Text style={styles.sub}>적정 시간</Text>
                 <Text style={styles.sub}>동행 선택</Text>
                 <Text style={styles.sub}>주거 지역</Text>
+                <Text style={styles.sub}>선호 환경</Text>
             </View>
             <View style={styles.answerContainer}>
                 <Text style={styles.content}>{answers[1]}</Text>
                 <Text style={styles.content}>{answers[2]}</Text>
                 <Text style={styles.content}>{answers[3]}</Text>
-                <Text style={styles.content}>{answers[4]}</Text>
-                <Text style={styles.content}>{answers[5]}</Text>
+                <Text style={styles.content}>{answers[4]?.city} {answers[4]?.county} {answers[4]?.town}</Text>
+                <Text style={styles.content}>{answers[4]?.firstEnvironment}/{answers[4]?.secondEnvironment}</Text>
             </View>
         </View>
     </View>
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   titleSub: {
     fontSize: responsiveFontSize(1.8),
     color: '#66666D',
-    fontWeight: '400',
+    fontWeight: '500',
     marginTop: responsiveHeight(1),
   },
   answersContainer: {
@@ -103,14 +105,14 @@ const styles = StyleSheet.create({
   },
   sub: {
     fontSize: responsiveFontSize(1.8),
-    fontWeight: '400',
+    fontWeight: '500',
     color: '#9B9BA3',
     marginRight: responsiveWidth(3),
     lineHeight: responsiveHeight(3.5),
   },
   content: {
     fontSize: responsiveFontSize(1.8),
-    fontWeight: '400',
+    fontWeight: '500',
     color: '#202025',
     lineHeight: responsiveHeight(3.5),
   },

@@ -41,14 +41,14 @@ const styles = StyleSheet.create({
         borderRadius: 24,
     },
     modalTitle: {
-        fontSize: responsiveFontSize(1.6),
+        fontSize: responsiveFontSize(2),
         fontWeight: 'bold',
         color: '#0F1012',
     },
     modalMessage: {
         width: 193,
         height: 34,
-        fontSize: responsiveFontSize(1.2),
+        fontSize: responsiveFontSize(1.3),
         fontWeight: '500',
         textAlign: 'center',
         color: '#66666D'
