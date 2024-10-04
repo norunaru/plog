@@ -80,6 +80,11 @@ public class Member {
     private Float regionLon;
 
     @Setter
+    @Column(name = "exp", columnDefinition = "real")
+    @ColumnDefault("true")
+    private Float exp;
+
+    @Setter
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
     private MemberScore memberScore;
 
