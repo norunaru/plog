@@ -2,7 +2,6 @@ package com.plog.backend.domain.member.entity;
 
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

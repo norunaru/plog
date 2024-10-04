@@ -1,7 +1,5 @@
 package com.plog.backend.domain.member.dto.request;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data

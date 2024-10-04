@@ -7,7 +7,6 @@ import com.plog.backend.domain.member.dto.MemberDto;
 import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import com.plog.backend.domain.member.dto.response.MemberLoginResponseDto;
 import com.plog.backend.domain.member.entity.MemberScore;
-import com.plog.backend.domain.member.repository.MemberScoreRepository;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.token.entity.RefreshToken;
 import com.plog.backend.global.token.repository.RefreshTokenRepository;
