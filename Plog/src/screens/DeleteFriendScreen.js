@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -22,6 +22,7 @@ const DeleteFriendScreen = ({navigation}) => {
   const [friend, setFriend] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState(0);
+  const [isNoticeOn, setIsNoticeOn] = useState(true);
 
   // 더미 데이터 배열 생성
   const dummyFriends = [
@@ -32,6 +33,16 @@ const DeleteFriendScreen = ({navigation}) => {
     {name: '정민수', level: 7, ploggingCnt: 20, id: 5},
     {name: '이상호', level: 3, ploggingCnt: 5, id: 6},
   ];
+
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
 
   return (
     <View style={styles.container}>
@@ -46,6 +57,7 @@ const DeleteFriendScreen = ({navigation}) => {
           whiteBtnFn={() => setIsModalOpen(false)} // 취소 버튼 클릭 시 모달 닫힘
           redBtnFn={() => {
             // 삭제 처리 로직 추가
+            setIsNoticeOn(true);
             setIsModalOpen(false); // 삭제 완료 후 모달 닫힘
           }}
           onClose={() => setIsModalOpen(false)} // 배경 클릭 시 모달 닫힘
@@ -97,6 +109,14 @@ const DeleteFriendScreen = ({navigation}) => {
           </View>
         )}
       </View>
+
+      {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: 13, color: 'white'}}>
+            친구가 삭제되었어요
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -128,6 +148,18 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 24,
     height: 24,
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: 30, // 화면 하단에서 30px 위에 위치
+    alignSelf: 'center', // 가로 중앙에 배치
+    paddingVertical: 16,
+    paddingHorizontal: 30,
+    width: 291,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
   },
 });
 
