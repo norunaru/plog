@@ -67,17 +67,13 @@ public class JwtUtil {
      */
     private String createToken(MemberDto member, long expirationTime) {
         Claims claims = Jwts.claims();
+        claims.put("id", member.getId());
         claims.put("email", member.getEmail());
         claims.put("nickname", member.getNickname());
         claims.put("role", member.getRole());
-        claims.put("name", member.getName());
-        claims.put("gender", member.getGender());
-        claims.put("birth", member.getBirth());
-        claims.put("phone", member.getPhoneNumber());
         claims.put("is_first", member.getIsFirst());
         claims.put("activity_time", member.getActivityTime());
         claims.put("flogging_time", member.getFloggingTime());
-        claims.put("reward", member.getReward());
         claims.put("region_type", member.getRegionType());
         claims.put("region_lat", member.getRegionLat());
         claims.put("region_lon", member.getRegionLon());

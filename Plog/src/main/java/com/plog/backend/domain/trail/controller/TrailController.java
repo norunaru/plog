@@ -4,7 +4,6 @@ import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
 import com.plog.backend.domain.trail.service.TrailService;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.dto.SuccessResponse;
-import com.plog.backend.global.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

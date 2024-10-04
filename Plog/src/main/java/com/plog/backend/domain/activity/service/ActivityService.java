@@ -1,6 +1,5 @@
 package com.plog.backend.domain.activity.service;
 
-import com.plog.backend.domain.activity.dto.ActivityDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
