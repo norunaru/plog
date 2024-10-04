@@ -75,7 +75,7 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate('PloggingRecord')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>
                 나의 플로깅 기록
