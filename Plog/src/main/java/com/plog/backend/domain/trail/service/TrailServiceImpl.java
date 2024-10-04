@@ -163,46 +163,10 @@ public class TrailServiceImpl implements TrailService {
             // 응답 결과 출력
             List<TrailRecommendDto> response = new ArrayList<>();
             for(Trail trail : recommendedTrails) {
-                int time = (int) (trail.getArea()/500);
                 String tag = "";
-                if(time>100) {
-                    tag += "#고급 ";
-                } else if(time>50) {
-                    tag += "#중급 ";
-                } else{
-                    tag += "#초급 ";
-                }
-                int type = 5;
-                if(trail.getCity()>0.5){
-                    type = 0;
-                }
-                if(trail.getOcean()>0.5){
-                    type = 1;
-                }
-                if(trail.getLake()>0.5){
-                    type = 2;
-                }
-                if(trail.getPark()>0.5){
-                    type = 3;
-                }
-                switch (type){
-                    case 0: {
-                        tag += "#도심";
-                        break;
-                    }
-                    case 1: {
-                        tag += "#바다";
-                        break;
-                    }
-                    case 2: {
-                        tag += "#강";
-                        break;
-                    }
-                    case 3: {
-                        tag += "#공원";
-                        break;
-                    }
-                }
+                int time = (int) (trail.getArea()/500);
+                tag += timeToTag(time);
+                tag += trailTotag(trail);
                 LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
                 boolean like = true;
                 if(likeTrail==null){
@@ -231,6 +195,7 @@ public class TrailServiceImpl implements TrailService {
             Float lat = member.getRegionLat();
             Float lon = member.getRegionLon();
             Integer type = member.getRegion_type();
+            Integer floggingTimeType = member.getActivityTime();
             Pageable pageable = PageRequest.of(0, 3);
 
             List<Trail> recommendedTrails = trailRepository.findRecommendedTrails(lat, lon, type, pageable);
@@ -238,32 +203,10 @@ public class TrailServiceImpl implements TrailService {
             List<TrailRecommendDto> response = new ArrayList<>();
             for(Trail trail : recommendedTrails) {
                 int time = (int) (trail.getArea()/500);
+                if(checkFologgingTime(time,floggingTimeType));
                 String tag = "";
-                if(time>100) {
-                    tag += "#고급 ";
-                } else if(time>50) {
-                    tag += "#중급 ";
-                } else{
-                    tag += "#초급 ";
-                }
-                switch (type){
-                    case 0: {
-                        tag += "#도심";
-                        break;
-                    }
-                    case 1: {
-                        tag += "#바다";
-                        break;
-                    }
-                    case 2: {
-                        tag += "#강";
-                        break;
-                    }
-                    case 3: {
-                        tag += "#공원";
-                        break;
-                    }
-                }
+                tag += timeToTag(time);
+                tag += typeTotag(type);
                 LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
                 boolean like = true;
                 if(likeTrail==null){
@@ -301,44 +244,9 @@ public class TrailServiceImpl implements TrailService {
         for(Trail trail : recommendedTrails) {
             int time = (int) (trail.getArea()/500);
             String tag = "";
-            if(time>100) {
-                tag += "#고급 ";
-            } else if(time>50) {
-                tag += "#중급 ";
-            } else{
-                tag += "#초급 ";
-            }
-            int type = 5;
-            if(trail.getCity()>0.5){
-                type = 0;
-            }
-            if(trail.getOcean()>0.5){
-                type = 1;
-            }
-            if(trail.getLake()>0.5){
-                type = 2;
-            }
-            if(trail.getPark()>0.5){
-                type = 3;
-            }
-            switch (type){
-                case 0: {
-                    tag += "#도심";
-                    break;
-                }
-                case 1: {
-                    tag += "#바다";
-                    break;
-                }
-                case 2: {
-                    tag += "#강";
-                    break;
-                }
-                case 3: {
-                    tag += "#공원";
-                    break;
-                }
-            }
+            tag += timeToTag(time);
+            tag += trailTotag(trail);
+
             LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
             boolean like = true;
             if(likeTrail==null){
@@ -361,6 +269,44 @@ public class TrailServiceImpl implements TrailService {
             response.add(trailRecommendDto);
         }
         return response;
+    }
+
+    private String typeTotag(int type) {
+        String[] tags = {"#도심", "#바다", "#강", "#공원"};
+        return tags[type];
+    }
+
+    private String trailTotag(Trail trail) {
+        if(trail.getCity() > 0.5)
+            return "#도심";
+        if(trail.getOcean() > 0.5)
+            return "#바다";
+        if(trail.getLake() > 0.5)
+            return "#강";
+        if(trail.getPark() > 0.5)
+            return "#공원";
+        return "";
+    }
+
+    private String timeToTag(int time) {
+        if(time>60) {
+            return "#고급 ";
+        } else if(time>30) {
+            return "#중급 ";
+        } else{
+            return "#초급 ";
+        }
+    }
+
+    private boolean checkFologgingTime(int time, int type) {
+        if(type == 0) {
+            return time <= 30;
+        } else if(type==1) {
+            if(time < 30) return false;
+            return time <= 60;
+        } else {
+            return time >= 60;
+        }
     }
 
     @Override
