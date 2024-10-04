@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -16,10 +16,32 @@ import pencil from '../../assets/images/btn_edit.png';
 import NicknameModal from '../components/NicknameModal';
 
 const ModifyInfoScreen = ({navigation}) => {
+  const [isModalOpen, setisModalOpen] = useState(false);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
+
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
+
   return (
     <View style={styles.container}>
-      <NicknameModal name={'플로그짱1'} />
       <RecommendHeader navigation={navigation} headerText={'내 정보'} />
+      {isModalOpen ? (
+        <NicknameModal
+          name={'플로그짱1'}
+          onClose={() => setisModalOpen(false)}
+          confirmFn={() => {
+            setisModalOpen(false);
+            setIsNoticeOn(true);
+          }}
+        />
+      ) : null}
       <View style={styles.wrap}>
         <View
           style={{
@@ -30,7 +52,12 @@ const ModifyInfoScreen = ({navigation}) => {
           <Image source={defaultProfile} style={styles.profilePic} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={[styles.nickname, {marginLeft: 28}]}>플로그짱1</Text>
-            <Image source={pencil} />
+            <Pressable
+              onPress={() => {
+                setisModalOpen(true);
+              }}>
+              <Image source={pencil} />
+            </Pressable>
           </View>
         </View>
         <View>
@@ -48,6 +75,23 @@ const ModifyInfoScreen = ({navigation}) => {
           </View>
         </View>
       </View>
+      {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: 13, color: 'white'}}>
+            닉네임이 수정되었어요
+          </Text>
+        </View>
+      ) : null}
+
+      <Pressable style={styles.withdrawalButton}>
+        <Text
+          style={{
+            color: '#9B9BA3',
+            fontSize: 11,
+          }}>
+          회원탈퇴
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -104,6 +148,23 @@ const styles = StyleSheet.create({
   grayText: {
     fontSize: 16,
     color: '#3F3F47',
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: 30, // 화면 하단에서 30px 위에 위치
+    alignSelf: 'center', // 가로 중앙에 배치
+    paddingVertical: 16,
+    paddingHorizontal: 30,
+    width: 291,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+  },
+  withdrawalButton: {
+    position: 'absolute',
+    right: 20, // 화면 우측에서 20px 위치
+    bottom: 30, // 화면 하단에서 30px 위에 위치
   },
 });
 

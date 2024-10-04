@@ -9,6 +9,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  confirmFn,
 } from 'react-native';
 
 const NicknameModal = ({
@@ -20,6 +21,7 @@ const NicknameModal = ({
   whiteBtnText,
   greenBtnText,
   name,
+  confirmFn,
 }) => {
   // 입력된 이름을 상태로 관리
   const [inputName, setInputName] = useState(name || '');
@@ -39,7 +41,7 @@ const NicknameModal = ({
             <Text style={styles.whiteText}>취소</Text>
           </Pressable>
           <Text style={styles.whiteText}>닉네임</Text>
-          <Pressable>
+          <Pressable onPress={confirmFn}>
             <Text style={styles.greenText}>확인</Text>
           </Pressable>
         </View>
