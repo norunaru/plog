@@ -9,19 +9,29 @@ import {
     login,
 } from '@react-native-seoul/kakao-login';
 import { useNavigation } from '@react-navigation/native';
+import { KakaoLogin } from "../../api/login/loginAPI";
+import useStore from '../../store/store';
 
 const LoginMainScreen = () => {
-    const [result, setResult] = useState('');
     const navigation = useNavigation();
+    const setTokens = useStore((state) => state.setTokens);
+    const setUserFromToken = useStore((state) => state.setUserFromToken);
 
     const signInWithKakao = async () => {
         try {
           const token = await login();
-          console.log('로그인 성공', token)
-          setResult(JSON.stringify(token));
 
-          if (token) {
-            navigation.navigate('Survey')
+          if (token && token.accessToken) {
+            const response = await KakaoLogin(token.accessToken)
+            console.log('카카오 응답:', token)
+            console.log('서버 응답:', response);
+
+            if (response.data.accessToken && response.data.refreshToken) {
+                setTokens(response.data.accessToken, response.data.refreshToken);
+                setUserFromToken(response.data.accessToken);
+
+                navigation.navigate('Survey');
+            }
           }
         } catch (err) {
             console.error('login err', err);
