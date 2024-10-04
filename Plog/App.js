@@ -15,7 +15,6 @@ import SurveyScreen from './src/screens/SurveyScreen';
 import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
 import PloggingRecordScreen from './src/screens/PloggingRecordScreen';
 import {Image} from 'react-native';
-
 import homeBlack from './assets/icons/homeBlack.png';
 import homeGray from './assets/icons/homeGray.png';
 import communityBlack from './assets/icons/communityBlack.png';
@@ -29,6 +28,7 @@ import ManageFriendScreen from './src/screens/ManageFriendScreen';
 import SurveyFinishScreen from './src/components/SurveyFinishScreen';
 import SurveyResultScreen from './src/components/SurveyResultScreen';
 import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
+import ModifyInfoScreen from './src/screens/ModifyInfoScreen';
 
 // Tab Navigator와 Stack Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -74,9 +74,7 @@ function TabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="LoginMain"
-      >
+      <Stack.Navigator initialRouteName="LoginMain">
         {/* 탭 네비게이터 사용되는 스크린 */}
         <Stack.Screen
           name="Tabs"
@@ -84,7 +82,7 @@ export default function App() {
           options={{headerShown: false}} // 탭 네비게이터 상단에 헤더 표시 안 함
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
-        <Stack.Screen 
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{headerShown: false}}
@@ -119,9 +117,9 @@ export default function App() {
             headerShown: false,
           }}
         />
-        <Stack.Screen 
-          name="Writing" 
-          component={WritingScreen} 
+        <Stack.Screen
+          name="Writing"
+          component={WritingScreen}
           options={{
             title: '일지 작성',
             headerTitleAlign: 'center',
@@ -135,31 +133,28 @@ export default function App() {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Review" component={ViewReviewScreen} />
+        <Stack.Screen name="ManageFriend" component={ManageFriendScreen} />
         <Stack.Screen
-          name="ManageFriend"
-          component={ManageFriendScreen}
+          name="LoginMain"
+          component={LoginMainScreen}
+          options={{headerShown: false}}
         />
-        <Stack.Screen 
-          name="LoginMain" 
-          component={LoginMainScreen} 
-          options={{headerShown: false}}  
-        />
-        <Stack.Screen 
+        <Stack.Screen
           name="Survey"
           component={SurveyScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="Question"
           component={SurveyQuestionScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="SurveyFinish"
           component={SurveyFinishScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="SurveyResult"
           component={SurveyResultScreen}
           options={{headerShown: false}}
@@ -167,6 +162,11 @@ export default function App() {
         <Stack.Screen
           name="DeleteFriend"
           component={DeleteFriendScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ModifyInfo"
+          component={ModifyInfoScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -19,6 +19,17 @@ import yonghoon from '../../assets/images/용훈.jpg';
 const ManageFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
   const [friend, setFriend] = useState({});
+  const [isNoticeOn, setIsNoticeOn] = useState(true);
+
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
 
   // 더미 데이터 배열 생성
   const dummyFriends = [
@@ -123,6 +134,10 @@ const ManageFriendScreen = ({navigation}) => {
               용훈쿼카
             </Text>
             <Pressable
+              onPress={() => {
+                setIsNoticeOn(true);
+                setTypedText('');
+              }}
               style={{
                 borderRadius: 30,
                 height: 52,
@@ -143,6 +158,14 @@ const ManageFriendScreen = ({navigation}) => {
           </View>
         )}
       </View>
+
+      {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: 13, color: 'white'}}>
+            친구가 추가되었어요
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -174,6 +197,18 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 24,
     height: 24,
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: 30, // 화면 하단에서 30px 위에 위치
+    alignSelf: 'center', // 가로 중앙에 배치
+    paddingVertical: 16,
+    paddingHorizontal: 30,
+    width: 291,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
   },
 });
 
