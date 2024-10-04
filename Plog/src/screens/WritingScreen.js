@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -18,7 +19,7 @@ import distance from '../../assets/icons/distance.png';
 import time from '../../assets/icons/ic_time.png';
 import calorie from '../../assets/icons/ic_calorie.png';
 import Modal from '../components/Modal';
-import {useState} from 'react';
+import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
@@ -26,10 +27,32 @@ const WritingScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0); // 별점 상태
   const [memo, setMemo] = useState(''); // 메모 상태
+  const [selectedImages, setSelectedImages] = useState([]); // 선택된 이미지 상태
 
   // 별 클릭 시 호출되는 함수
   const handleStarPress = index => {
     setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
+  };
+
+  // 이미지 선택 핸들러
+  const handleSelectImages = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo', // 사진만 선택 가능
+        selectionLimit: 3, // 최대 3개 선택 가능
+      },
+      response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.log('ImagePicker Error: ', response.errorMessage);
+        } else {
+          // 선택된 이미지를 상태에 저장
+          const selectedUris = response.assets.map(asset => asset.uri);
+          setSelectedImages(selectedUris);
+        }
+      },
+    );
   };
 
   return (
@@ -126,9 +149,19 @@ const WritingScreen = ({navigation}) => {
             textAlignVertical="top"
           />
         </KeyboardAvoidingView>
-        <Pressable>
+
+        <View style={{flexDirection: 'row', marginBottom: 24}}>
+          {/* 선택한 이미지들을 표시 */}
+          {selectedImages.map((imageUri, index) => (
+            <Image key={index} source={{uri: imageUri}} style={styles.photo} />
+          ))}
+        </View>
+
+        {/* 사진 선택 버튼 */}
+        <Pressable onPress={handleSelectImages}>
           <Image source={photoAdd} style={styles.icon} />
         </Pressable>
+
         <View style={styles.btnWrap}>
           <TouchableOpacity onPress={() => setIsModalOpen(true)}>
             <View style={styles.whiteBtn}>
@@ -251,5 +284,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 29,
+  },
+  photo: {
+    backgroundColor: 'gray',
+    width: 70,
+    height: 70,
+    borderRadius: 12,
+    marginRight: 8,
   },
 });

@@ -14,10 +14,12 @@ import RecommendHeader from '../components/headers/RecommendHeader';
 import defaultProfile from '../../assets/images/profile_default.png';
 import pencil from '../../assets/images/btn_edit.png';
 import NicknameModal from '../components/NicknameModal';
+import RedModal from '../components/RedModal';
 
 const ModifyInfoScreen = ({navigation}) => {
   const [isModalOpen, setisModalOpen] = useState(false);
   const [isNoticeOn, setIsNoticeOn] = useState(false);
+  const [isRedModalOpen, setIsRedModalOpen] = useState(false);
 
   useEffect(() => {
     if (isNoticeOn) {
@@ -31,6 +33,17 @@ const ModifyInfoScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      {isRedModalOpen && (
+        <RedModal
+          boldText={'정말 탈퇴하시겠어요?'}
+          subText={'탈퇴 시, 정보가 모두 삭제되며 복구가 불가능해요'}
+          whiteBtnText={'취소'}
+          redBtnText={'탈퇴하기'}
+          onClose={() => setIsRedModalOpen(false)}
+          // 로그아웃 로직 추가 필요
+          redBtnFn={() => navigation.navigate('LoginMain')}
+        />
+      )}
       <RecommendHeader navigation={navigation} headerText={'내 정보'} />
       {isModalOpen ? (
         <NicknameModal
@@ -69,10 +82,6 @@ const ModifyInfoScreen = ({navigation}) => {
             <Text style={styles.boldText}>이메일</Text>
             <Text style={styles.grayText}>abc@naver.com</Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.boldText}>전화번호</Text>
-            <Text style={styles.grayText}>010-0000-0000</Text>
-          </View>
         </View>
       </View>
       {isNoticeOn ? (
@@ -83,7 +92,9 @@ const ModifyInfoScreen = ({navigation}) => {
         </View>
       ) : null}
 
-      <Pressable style={styles.withdrawalButton}>
+      <Pressable
+        style={styles.withdrawalButton}
+        onPress={() => setIsRedModalOpen(true)}>
         <Text
           style={{
             color: '#9B9BA3',
