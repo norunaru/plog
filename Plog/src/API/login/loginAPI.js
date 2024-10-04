@@ -1,5 +1,5 @@
 import axios from "axios";
-import BASE_URL from '../../../api/APIconfig';
+import BASE_URL from '../apiconfig';
 
 // 카카오 로그인
 const KakaoLogin = async (kakaoAccessToken) => {

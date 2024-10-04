@@ -9,7 +9,7 @@ import {
     login,
 } from '@react-native-seoul/kakao-login';
 import { useNavigation } from '@react-navigation/native';
-import { KakaoLogin } from "../../api/login/loginAPI";
+import { KakaoLogin } from "../API/login/loginAPI";
 import useStore from '../../store/store';
 
 const LoginMainScreen = () => {
