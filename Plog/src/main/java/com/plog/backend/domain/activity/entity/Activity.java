@@ -1,11 +1,13 @@
 package com.plog.backend.domain.activity.entity;
 
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.member.entity.Member;
+import com.plog.backend.domain.trail.entity.Trail;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -83,6 +85,10 @@ public class Activity {
 
     @Column(name = "score", columnDefinition = "real")
     private Float score;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "trail_id")
+    private Trail trail;
 
     @Setter
     @JsonIgnore

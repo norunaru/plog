@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ActivitySaveRequestDto {
 
     private Long memberId;
+    private Long trailId;
     private Float[] lat;
     private Float[] lon;
     private Float distance;
