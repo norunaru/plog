@@ -28,7 +28,7 @@ def get_db():
 def generate_user_scores(db: Session = Depends(get_db)):
     random.seed(42)  # 결과 재현을 위해 seed 고정
     for user_id in range(1, 21):
-        ratings = [random.choice([0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]) for _ in range(20)]
+        ratings = [random.choice([0.0, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]) for _ in range(100)]
         user_score = models.MemberScore(user_id=user_id, score=ratings)
         db.add(user_score)
     db.commit()
@@ -82,7 +82,7 @@ def recommend_trails(trailList: List[int], db: Session = Depends(get_db)):
 @app.post("/users/recommend/", response_model=List[int])
 def recommend_by_user_score(user_id: int, db: Session = Depends(get_db)):
     try:
-        recommendations = recommend_score(db, user_id)
+        recommendations, scores_matrix, similar_users = recommend_score(db, user_id)
         recommendations = [int(item[0]) for item in recommendations]
         return recommendations
     except ValueError as e:
@@ -93,7 +93,7 @@ def recommend_by_user_score(user_id: int, db: Session = Depends(get_db)):
 def recommend_and_visualize_by_user_score(user_id: int, db: Session = Depends(get_db)):
     try:
         # 추천 결과 수행 및 시각화
-        recommendations = recommend_and_visualize(db, user_id)
+        recommendations, scores_matrix = recommend_and_visualize(db, user_id)
 
         # recommendations가 [(item_index, score), ...] 형태일 경우, item_index만 가져옴
         recommendation_ids = [int(item[0]) for item in recommendations]

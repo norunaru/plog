@@ -2,9 +2,11 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import numpy as np
 from sqlalchemy.orm import Session
+from sklearn.cluster import KMeans
 
 from . import models
 from .service import recommend_score, cluster_trails
+
 
 def visualize_user_recommendations(user_id, similar_users, scores_matrix):
     """
@@ -16,6 +18,10 @@ def visualize_user_recommendations(user_id, similar_users, scores_matrix):
     # PCA로 점수 행렬을 2D로 축소
     pca = PCA(n_components=2)
     reduced_data = pca.fit_transform(scores_matrix)
+
+    # 설명된 분산 비율을 출력하여 PCA 축소 상태를 확인
+    explained_variance = pca.explained_variance_ratio_
+    print(f"Explained variance by PCA: {explained_variance}")
 
     # 유저들의 2D 위치
     x = reduced_data[:, 0]
@@ -39,6 +45,7 @@ def visualize_user_recommendations(user_id, similar_users, scores_matrix):
     plt.legend()
     plt.show()
 
+
 def visualize_clustered_trails(trails, cluster_labels):
     """
     산책로들의 위치를 클러스터 그룹에 따라 시각화합니다.
@@ -61,21 +68,29 @@ def visualize_clustered_trails(trails, cluster_labels):
     pca = PCA(n_components=2)
     reduced_data = pca.fit_transform(trail_data)
 
-    # 유저들의 2D 위치
+    # 설명된 분산 비율을 출력하여 PCA 축소 상태를 확인
+    explained_variance = pca.explained_variance_ratio_
+    print(f"Explained variance by PCA: {explained_variance}")
+
+    # 산책로들의 2D 위치
     x = reduced_data[:, 0]
     y = reduced_data[:, 1]
 
     for cluster_id in unique_clusters:
-        cluster_trails = [trail for idx, trail in enumerate(trails) if cluster_labels[idx] == cluster_id]
-        latitudes = [x[trail.trail_id-1] for trail in cluster_trails]
-        longitudes = [y[trail.trail_id-1] for trail in cluster_trails]
-        plt.scatter(latitudes, longitudes, color=colors(cluster_id), label=f'Cluster {cluster_id}')
+        # 클러스터에 속한 산책로들의 인덱스 필터링
+        cluster_mask = (cluster_labels == cluster_id)
+        cluster_x = x[cluster_mask]
+        cluster_y = y[cluster_mask]
 
-    plt.xlabel('x')
-    plt.ylabel('y')
+        # 각 클러스터 별로 산책로 표시
+        plt.scatter(cluster_x, cluster_y, color=colors(cluster_id), label=f'Cluster {cluster_id}')
+
+    plt.xlabel('PCA Component 1')
+    plt.ylabel('PCA Component 2')
     plt.title('Clustered Trails Visualization')
     plt.legend()
     plt.show()
+
 
 def recommend_and_visualize(db: Session, user: int):
     """
@@ -84,17 +99,15 @@ def recommend_and_visualize(db: Session, user: int):
     :param user: 추천을 위한 유저 ID
     """
     # 1. 추천 수행 및 점수 행렬 가져오기
-    recommendations, scores_matrix = recommend_score(db, user)
-
-    # 2. 유사한 유저들 가져오기
-    similar_users = [rec[0] for rec in recommendations]
+    recommendations, scores_matrix, similar_users = recommend_score(db, user)
 
     # 3. 유저 추천 결과 시각화
     visualize_user_recommendations(user, similar_users, scores_matrix)
 
     return recommendations
 
-def cluster_and_visualize_trails(db: Session, n_clusters: int = 5):
+
+def cluster_and_visualize_trails(db: Session, n_clusters: int = 6):
     """
     산책로 클러스터링을 수행하고 시각화합니다.
     :param db: 데이터베이스 세션
@@ -111,11 +124,9 @@ def cluster_and_visualize_trails(db: Session, n_clusters: int = 5):
         models.TrailNormal.trail_id == models.TrailCluster.trail_id
     ).all()
 
-    cluster_labels = [trail_cluster.cluster_id for trail_normal, trail_cluster in trail_cluster_data]
+    cluster_labels = np.array([trail_cluster.cluster_id for trail_normal, trail_cluster in trail_cluster_data])
 
     # 4. 클러스터링 시각화
     visualize_clustered_trails(trails, cluster_labels)
 
     return clusters
-
-

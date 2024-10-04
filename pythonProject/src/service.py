@@ -83,7 +83,7 @@ def normalization_trails(db: Session):
 3. KNN을 통해서 산책로 클러스터링
 4. 클러스터링된 산책로를 각각 저장
 """
-def cluster_trails(db: Session, n_clusters: int = 5):
+def cluster_trails(db: Session, n_clusters: int = 6):
     normalization_trails(db)
 
     trails = db.query(models.TrailNormal).all()
@@ -93,7 +93,7 @@ def cluster_trails(db: Session, n_clusters: int = 5):
 
     # feature vector 생성 (lat, lon, shop_cnt, toilet_cnt 등을 사용할 수 있음)
     feature_vectors = np.array([
-        [trail.lat, trail.lon, trail.shop_cnt, trail.toilet_cnt, trail.park, trail.ocean, trail.city, trail.lake, trail.distance,trail.area]
+        [trail.lat * 2, trail.lon * 2, trail.shop_cnt, trail.toilet_cnt, trail.park, trail.ocean, trail.city, trail.lake, trail.distance,trail.area]
         for trail in trails
     ])
 
@@ -202,12 +202,16 @@ def recommend_score(db: Session, user: int):
         non_zero_scores = np.where(similar_user_scores != 0, similar_user_scores, np.nan)
         average_scores = np.nanmean([average_scores, non_zero_scores], axis=0)
 
-    # 4. 평균값 중에서 가장 높은 3개의 아이템 추천
+    # 4. 평균값 중에서 0이 아닌 가장 높은 3개의 아이템 추천
     # 0이 아닌 값들만 고려한 후, 가장 높은 값 3개 찾기
-    top_3_items = np.argsort(average_scores)[-3:][::-1]  # 상위 3개 아이템의 인덱스
+    non_zero_indices = np.where(average_scores != 0)[0]  # 0이 아닌 값의 인덱스만 가져오기
+    top_3_items = non_zero_indices[np.argsort(average_scores[non_zero_indices])[-3:][::-1]]  # 상위 3개 아이템의 인덱스
 
     # 추천 아이템 출력
     recommended_items = [(item_index, average_scores[item_index]) for item_index in top_3_items]
 
-    return recommended_items
+    # scores_matrix와 추천 아이템 반환
+    return recommended_items, scores_matrix, similar_users
+
+
 
