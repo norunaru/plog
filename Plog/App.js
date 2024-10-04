@@ -74,9 +74,7 @@ function TabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="LoginMain"
-      >
+      <Stack.Navigator initialRouteName="LoginMain">
         {/* 탭 네비게이터 사용되는 스크린 */}
         <Stack.Screen
           name="Tabs"
@@ -84,7 +82,7 @@ export default function App() {
           options={{headerShown: false}} // 탭 네비게이터 상단에 헤더 표시 안 함
         />
         {/* 스택 네비게이터에만 존재하는 스크린 */}
-        <Stack.Screen 
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{headerShown: false}}
@@ -119,9 +117,9 @@ export default function App() {
             headerShown: false,
           }}
         />
-        <Stack.Screen 
-          name="Writing" 
-          component={WritingScreen} 
+        <Stack.Screen
+          name="Writing"
+          component={WritingScreen}
           options={{
             title: '일지 작성',
             headerTitleAlign: 'center',
@@ -135,31 +133,28 @@ export default function App() {
         />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Review" component={ViewReviewScreen} />
+        <Stack.Screen name="ManageFriend" component={ManageFriendScreen} />
         <Stack.Screen
-          name="ManageFriend"
-          component={ManageFriendScreen}
+          name="LoginMain"
+          component={LoginMainScreen}
+          options={{headerShown: false}}
         />
-        <Stack.Screen 
-          name="LoginMain" 
-          component={LoginMainScreen} 
-          options={{headerShown: false}}  
-        />
-        <Stack.Screen 
+        <Stack.Screen
           name="Survey"
           component={SurveyScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="Question"
           component={SurveyQuestionScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="SurveyFinish"
           component={SurveyFinishScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="SurveyResult"
           component={SurveyResultScreen}
           options={{headerShown: false}}
