@@ -10,7 +10,7 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
 
 const CourseDetailScreen = ({route, navigation}) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -33,7 +33,7 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'코스 상세정보'} />
+      <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} />
       <Image
         source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}

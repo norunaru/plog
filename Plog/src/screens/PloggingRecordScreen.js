@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import ChevronLeft from '../../assets/calendar/left.png';
 import ChevronRight from '../../assets/calendar/right.png';
 import notebookIcon from '../../assets/icons/ic_notebook.png';
@@ -90,12 +90,12 @@ const PloggingRecordScreen = ({ navigation }) => {
 
   const handleCourseDetailPress = (courseId) => {
     // 코스 디테일 화면으로 이동하면서 courseId를 전달
-    navigation.navigate('CourseDetail', { courseId });
+    navigation.navigate('PloggingRecordDetail', { courseId });
   };
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'나의 플로깅 기록'} />
+      <PloggingHeader navigation={navigation} headerText={'나의 플로깅 기록'} />
       <View>
         <Calendar
           onDayPress={(day) => setSelectedDate(day.dateString)}
