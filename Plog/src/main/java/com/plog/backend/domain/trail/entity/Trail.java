@@ -1,6 +1,5 @@
 package com.plog.backend.domain.trail.entity;
 
-import com.sun.jdi.BooleanType;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -72,4 +71,7 @@ public class Trail {
     @NotNull
     @Column(name = "center", columnDefinition = "real[]")
     private Float[] center;
+
+    @Column(name = "exp", columnDefinition = "real")
+    private Float exp;
 }

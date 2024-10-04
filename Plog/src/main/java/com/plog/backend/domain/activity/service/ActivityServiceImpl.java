@@ -6,16 +6,18 @@ import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdRespo
 import com.plog.backend.domain.activity.dto.request.ActivitySaveRequestDto;
 import com.plog.backend.domain.activity.entity.Activity;
 import com.plog.backend.domain.activity.entity.ActivityImage;
-import com.plog.backend.domain.activity.repository.ActivityImageRepository;
 import com.plog.backend.domain.activity.repository.ActivityRepository;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.entity.MemberScore;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.domain.member.repository.MemberScoreRepository;
+import com.plog.backend.domain.trail.entity.Trail;
+import com.plog.backend.domain.trail.repository.TrailRepository;
 import com.plog.backend.global.s3.service.S3Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +33,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
-    private final ActivityImageRepository activityImageRepository;
     private final MemberScoreRepository memberScoreRepository;
     private final MemberRepository memberRepository;
+    private final TrailRepository trailRepository;
     private final ModelMapper mapper;
     private final S3Service s3Service;
 
+    @Transactional
     @Override
     public void save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
 
@@ -61,39 +64,46 @@ public class ActivityServiceImpl implements ActivityService {
         long trailId = activity.getTrailId();
         // 2.2. trailId
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        memberScore.getScore()[(int)trailId] = activity.getScore();
+        memberScore.getScore()[(int) trailId] = activity.getScore();
         memberScoreRepository.save(memberScore);
 
-        // 3. Activity 엔티티를 생성하여 저장
-        Activity newActivity = Activity.builder()
-            .member(member)
-            .title(activity.getTitle())
-            .lat(activity.getLat())
-            .lon(activity.getLon())
-            .totalDistance(activity.getDistance())
-            .totalKcal(activity.getTotalKcal())
-            .totalTime(activity.getTime())
-            .creationDate(activity.getCreationDate())
-            .locationName(activity.getLocationName())
-            .review(activity.getReview())
-            .score(activity.getScore())
-            .build();
+        Optional<Trail> trail = trailRepository.findById(trailId);
+        if (trail.isPresent()) {
+            Trail trailEntity = trail.get();
+            member.setExp(member.getExp() + trailEntity.getExp());
 
-        // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
-        List<ActivityImage> activityImages = new ArrayList<>();
-        for (String url : imageUrls) {
-            ActivityImage activityImage = ActivityImage.builder()
-                .savedUrl(url)
-                .activity(newActivity)  // 연관된 Activity 설정
+            // 3. Activity 엔티티를 생성하여 저장
+            Activity newActivity = Activity.builder()
+                .member(member)
+                .title(activity.getTitle())
+                .lat(activity.getLat())
+                .lon(activity.getLon())
+                .totalDistance(activity.getDistance())
+                .totalKcal(activity.getTotalKcal())
+                .totalTime(activity.getTime())
+                .creationDate(activity.getCreationDate())
+                .locationName(trailEntity.getName())
+                .review(activity.getReview())
+                .score(activity.getScore())
+                .trail(trailEntity)
                 .build();
-            activityImages.add(activityImage);
+
+            // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
+            List<ActivityImage> activityImages = new ArrayList<>();
+            for (String url : imageUrls) {
+                ActivityImage activityImage = ActivityImage.builder()
+                    .savedUrl(url)
+                    .activity(newActivity)  // 연관된 Activity 설정
+                    .build();
+                activityImages.add(activityImage);
+            }
+
+            // Activity 객체에 ActivityImage 설정
+            newActivity.setActivityImages(activityImages);
+
+            // 4. Activity와 ActivityImage 둘 다 저장 (Cascade 설정을 통해 자동으로 ActivityImage도 저장)
+            activityRepository.save(newActivity);
         }
-
-        // Activity 객체에 ActivityImage 설정
-        newActivity.setActivityImages(activityImages);
-
-        // 4. Activity와 ActivityImage 둘 다 저장 (Cascade 설정을 통해 자동으로 ActivityImage도 저장)
-        activityRepository.save(newActivity);
     }
 
 
@@ -142,7 +152,7 @@ public class ActivityServiceImpl implements ActivityService {
         long trailId = existingActivity.getTrail().getId();
         // 3.2. trailId
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        memberScore.getScore()[(int)trailId] = existingActivity.getScore();
+        memberScore.getScore()[(int) trailId] = existingActivity.getScore();
         memberScoreRepository.save(memberScore);
 
         // 4. Activity 저장
