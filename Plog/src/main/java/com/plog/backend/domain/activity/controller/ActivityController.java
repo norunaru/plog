@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,7 +28,7 @@ public class ActivityController {
 
     private final ActivityService activityService;
 
-    @PostMapping("")
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "플로깅 일지 기록", description = "플로깅 일지 기록(저장) API")
     public SuccessResponse<?> save(@ModelAttribute ActivitySaveRequestDto activitySaveRequestDto)
         throws IOException {
