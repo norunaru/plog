@@ -15,6 +15,11 @@ import defaultProfile from '../../assets/images/profile_default.png';
 import pencil from '../../assets/images/btn_edit.png';
 import NicknameModal from '../components/NicknameModal';
 import RedModal from '../components/RedModal';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 const ModifyInfoScreen = ({navigation}) => {
   const [isModalOpen, setisModalOpen] = useState(false);
@@ -64,7 +69,9 @@ const ModifyInfoScreen = ({navigation}) => {
           }}>
           <Image source={defaultProfile} style={styles.profilePic} />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={[styles.nickname, {marginLeft: 28}]}>플로그짱1</Text>
+            <Text style={[styles.nickname, {marginLeft: responsiveWidth(7)}]}>
+              플로그짱1
+            </Text>
             <Pressable
               onPress={() => {
                 setisModalOpen(true);
@@ -86,7 +93,7 @@ const ModifyInfoScreen = ({navigation}) => {
       </View>
       {isNoticeOn ? (
         <View style={styles.noticeBox}>
-          <Text style={{fontSize: 13, color: 'white'}}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
             닉네임이 수정되었어요
           </Text>
         </View>
@@ -98,7 +105,7 @@ const ModifyInfoScreen = ({navigation}) => {
         <Text
           style={{
             color: '#9B9BA3',
-            fontSize: 11,
+            fontSize: responsiveFontSize(1.4),
           }}>
           회원탈퇴
         </Text>
@@ -113,60 +120,41 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   nickname: {
-    fontSize: 22,
+    fontSize: responsiveFontSize(2.75), // 반응형 텍스트 크기
     fontWeight: 'bold',
     color: 'black',
   },
   profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
-    marginBottom: 8,
+    width: responsiveWidth(25), // 반응형 너비
+    height: responsiveWidth(25), // 반응형 높이
+    borderRadius: responsiveWidth(6), // 반응형 둥근 모서리
+    marginBottom: responsiveHeight(2),
   },
   wrap: {
-    padding: 20,
-    paddingTop: 20,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F7F7F7',
-    borderRadius: 8,
-    paddingLeft: 16,
-    paddingRight: 8,
-    marginBottom: 20,
-  },
-  inputBox: {
-    flex: 1,
-    color: '#9B9BA3',
-    fontSize: 15,
-    paddingVertical: 12,
-  },
-  searchIcon: {
-    width: 24,
-    height: 24,
+    padding: responsiveWidth(5),
+    paddingTop: responsiveHeight(2),
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 28,
+    marginBottom: responsiveHeight(3),
   },
   boldText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
     color: 'black',
   },
   grayText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2),
     color: '#3F3F47',
   },
   noticeBox: {
     position: 'absolute',
-    bottom: 30, // 화면 하단에서 30px 위에 위치
-    alignSelf: 'center', // 가로 중앙에 배치
-    paddingVertical: 16,
-    paddingHorizontal: 30,
-    width: 291,
+    bottom: responsiveHeight(5), // 반응형으로 하단에서 5% 위
+    alignSelf: 'center',
+    paddingVertical: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
+    width: responsiveWidth(80),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
@@ -174,8 +162,8 @@ const styles = StyleSheet.create({
   },
   withdrawalButton: {
     position: 'absolute',
-    right: 20, // 화면 우측에서 20px 위치
-    bottom: 30, // 화면 하단에서 30px 위에 위치
+    right: responsiveWidth(5), // 반응형으로 오른쪽에서 5% 위치
+    bottom: responsiveHeight(5), // 반응형으로 하단에서 5% 위치
   },
 });
 

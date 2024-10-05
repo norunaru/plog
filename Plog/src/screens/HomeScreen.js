@@ -60,7 +60,10 @@ export default function HomeScreen({navigation}) {
       />
       <Button title="Login" onPress={() => navigation.navigate('Login')} />
       <Button title="Review" onPress={() => navigation.navigate('Review')} />
-      <Button title="LoginMain" onPress={() => navigation.navigate("LoginMain")}/>
+      <Button
+        title="LoginMain"
+        onPress={() => navigation.navigate('LoginMain')}
+      />
     </SafeAreaView>
   );
 }
