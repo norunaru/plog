@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,25 +11,49 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import RecommendHeader from '../components/headers/RecommendHeader';
+import { detailCourse } from '../API/plogging/detailAPI';
+import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
 
 const CourseDetailScreen = ({route, navigation}) => {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const tags = [
-    {id: 1, name: '도심'},
-    {id: 2, name: '태그2'},
-    {id: 3, name: '태그3'},
-    {id: 4, name: '태그4'},
-  ];
-
-  const courses = [
-    {id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분'},
-  ];
-  
-  const course = courses[0]
-
-  // 추후 아이디로 api 요청
   const { courseId } = route.params;
+  const [isLiked, setIsLiked] = useState(false);
+  const [courseData, setCourseData] = useState(null);
+
+  useEffect(() => {
+    const CourseDetail = async () => {
+      try {
+        const response  = await detailCourse(courseId);
+        setCourseData(response.data);
+        setIsLiked(response.data.like);
+      } catch (error) {
+        console.error("Error:", error)
+      }
+    };
+    
+    CourseDetail();
+  }, [courseId]);
+
+  const handleLikePress = async () => {
+    try {
+      if (isLiked) {
+        await unLikeCourse(courseId);
+      } else {
+        await likeCourse(courseId);
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error('like Error:', error);
+    }
+  };
+
+
+  if (!courseData) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Text>로딩 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -39,12 +63,12 @@ const CourseDetailScreen = ({route, navigation}) => {
         style={styles.courseMap}
       />
 
-      <Text style={styles.title}>{courseId}입니다</Text>
+      <Text style={styles.title}>{courseData.title}</Text>
 
       <View style={styles.tagBox}>
-        {tags.map(tag => (
-          <View key={tag.id} style={styles.tag}>
-            <Text style={styles.text}>{tag.name}</Text>
+        {courseData.tags.split(' ').map((tag, index) => (
+          <View key={index} style={styles.tag}>
+            <Text style={styles.text}>{tag.replace('#', '')}</Text>
           </View>
         ))}
       </View>
@@ -56,7 +80,7 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>활동거리</Text>
-          <Text style={styles.infoValue}>{course.distance}</Text>
+          <Text style={styles.infoValue}>{courseData.area}</Text>
         </View>
         <View style={styles.infoItem}>
           <Image
@@ -64,12 +88,12 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>예상시간</Text>
-          <Text style={styles.infoValue}>{course.time}</Text>
+          <Text style={styles.infoValue}>{courseData.time}</Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
+        <TouchableOpacity onPress={handleLikePress}>
           <Image
             source={
               isLiked
