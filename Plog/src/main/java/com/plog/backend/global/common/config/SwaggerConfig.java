@@ -25,15 +25,18 @@ public class SwaggerConfig {
             .bearerFormat("JWT")
         );
         // HTTPS Server 추가
-        Server server = new Server()
+        Server server1 = new Server()
                 .url("https://j11b205.p.ssafy.io/api") // HTTPS 서버 URL
                 .description("ploging"); // 서버 설명
+        Server server2 = new Server()
+                .url("http://localhost:8080/api") // HTTPS 서버 URL
+                .description("local"); // 서버 설명
         return new OpenAPI()
                 .components(new Components())
                 .info(apiInfo())
                 .addSecurityItem(securityRequirement)
                 .components(components)
-                .servers(List.of(server)); // 서버 리스트에 HTTPS 서버 추가
+                .servers(List.of(server1,server2)); // 서버 리스트에 HTTPS 서버 추가
     }
 
     private Info apiInfo() {
