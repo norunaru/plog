@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { responsiveWidth, responsiveHeight, responsiveFontSize } from 'react-native-responsive-dimensions';
 import SurveyResultHeader from "./headers/SurveyResultHeader";
+import useStore from '../../store/store';
 
 const SurveyResultScreen = ({ route, navigation }) => {
   const { answers } = route.params;
@@ -10,11 +11,11 @@ const SurveyResultScreen = ({ route, navigation }) => {
       navigation.goBack();
   };
 
-  console.log(answers)
+  const nickname = useStore((state) => state.nickname);
 
   return (
     <View style={styles.container}>
-      <SurveyResultHeader 
+      <SurveyResultHeader
         onBackPress={handleBackPress}
       />
       <View style={styles.titleContainer}>
@@ -22,7 +23,7 @@ const SurveyResultScreen = ({ route, navigation }) => {
         <Text style={styles.titleSub}>수정을 원하시면 뒤로가기를 눌러주세요</Text>
       </View>
     <View style={styles.answersContainer}>
-        <Text style={styles.name}>최승빈님</Text>
+        <Text style={styles.name}>{nickname}님</Text>
         <View style={styles.contentContainer}>
             <View style={styles.subContainer}>
                 <Text style={styles.sub}>선호 시간대</Text>

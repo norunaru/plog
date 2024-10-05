@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import {
   responsiveWidth,
   responsiveHeight,
@@ -9,6 +9,8 @@ import SurveyQuestionHeader from "../components/headers/SurveyQuestionHeader";
 import CloseModal from "../components/modals/CloseModal";
 import RegionModal from "../components/modals/RegionModal";
 import EnvironmentModal from "../components/modals/EnvironmentModal";
+
+import regionData from '../../assets/data/regionData.json';
 
 const SurveyQuestionScreen = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false)
@@ -21,6 +23,7 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [isCountyModalVisible, setCountyModalVisible] = useState(false);
   const [isTownModalVisible, setTownModalVisible] = useState(false);
 
+  const [csvData, setCsvData] = useState(regionData);
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedTown, setSelectedTown] = useState("");
@@ -30,20 +33,6 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [firstRank, setFirstRank] = useState("");
   const [secondRank, setSecondRank] = useState("");
   const [alreadySelected, setAlreadySelected] = useState(false);
-
-  const cities = ["서울특별시", "경기도", "강원도", "인천광역시", "울산광역시", "대전광역시", "부산광역시", "충청북도", "충청남도", ];
-  const counties = {
-    "서울특별시": ["강남구", "용산구", "종로구"],
-    "경기도": ["성남시", "수원시", "안양시"],
-    "강원도": ["춘천시", "강릉시", "원주시"],
-    // 추가 데이터 생략
-  };
-  const towns = {
-    "강남구": ["압구정동", "청담동", "역삼동"],
-    "용산구": ["이태원동", "한남동", "청파동"],
-    "종로구": ["삼청동", "팔판동", "통인동"],
-    // 추가 데이터 생략
-  };
 
   const environments = ["산", "하천", "바다", "도심", "공원"];
 
@@ -60,6 +49,21 @@ const SurveyQuestionScreen = ({navigation}) => {
 
   const handleTownSelect = (town) => {
     setSelectedTown(town);
+  };
+
+  const getCities = () => {
+    // 시/도 목록 필터링 (중복 제거)
+    return [...new Set(csvData.map(item => item.sd_nm))];
+  };
+
+  const getCounties = () => {
+    // 선택한 시에 따른 시/군/구 목록 필터링 (중복 제거)
+    return [...new Set(csvData.filter(item => item.sd_nm === selectedCity).map(item => item.sgg_nm))];
+  };
+
+  const getTowns = () => {
+    // 선택한 구에 따른 동/읍/면 목록 필터링
+    return csvData.filter(item => item.sgg_nm === selectedCounty).map(item => item.emd_nm);
   };
 
   const handleEnvironmentSelect = (environment) => {
@@ -264,7 +268,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isCityModalVisible}
               onClose={() => setCityModalVisible(false)}
               onSelect={handleCitySelect}
-              options={cities}
+              options={getCities()}
               selectedValue={selectedCity}
             />
 
@@ -272,7 +276,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isCountyModalVisible}
               onClose={() => setCountyModalVisible(false)}
               onSelect={handleCountySelect}
-              options={counties[selectedCity] || []}
+              options={getCounties()}
               selectedValue={selectedCounty}
             />
 
@@ -280,7 +284,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isTownModalVisible}
               onClose={() => setTownModalVisible(false)}
               onSelect={handleTownSelect}
-              options={towns[selectedCounty] || []}
+              options={getTowns()}
               selectedValue={selectedTown}
             />
           </View>

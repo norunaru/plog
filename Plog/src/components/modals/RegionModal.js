@@ -18,6 +18,7 @@ const RegionModal = ({ isVisible, onClose, onSelect, options }) => {
         <FlatList
           data={options}
           showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity 
               style={styles.regionItem} 
@@ -29,7 +30,6 @@ const RegionModal = ({ isVisible, onClose, onSelect, options }) => {
               <Text style={styles.regionText}>{item}</Text>
             </TouchableOpacity>
           )}
-          keyExtractor={(item) => item}
         />
       </View>
     </Modal>
