@@ -41,7 +41,7 @@ public class TrailServiceImpl implements TrailService {
     public TrailListResponseDto getAllTrails() {
         List<Trail> trails = trailRepository.findAll();
 
-        // List<Trail>을 List<TrailListResponseDto>로 변환
+        // List<Trail>을 List<TrailListResponseDto>로 변환 하기
         List<TrailDto> trailResponseDtos = trails.stream()
             .map(trail -> mapper.map(trail, TrailDto.class))  // 각 Trail 객체를 TrailResponseDto로 매핑
             .collect(Collectors.toList());
@@ -50,6 +50,35 @@ public class TrailServiceImpl implements TrailService {
         return TrailListResponseDto.builder()
             .trails(trailResponseDtos)  // 변환된 리스트를 설정
             .build();
+    }
+
+    @Override
+    public TrailRecommendDto getTrailById(Long id, Long memberId) {
+        Trail trail = trailRepository.findById(id).orElse(null);
+        String tag = "";
+        int time = (int) (trail.getArea()/500);
+        tag += timeToTag(time);
+        tag += trailTotag(trail);
+        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+        boolean like = true;
+        if(likeTrail==null){
+            like=false;
+        }
+        Coordinate[] polygon = new Coordinate[trail.getLat().length];
+        for(int i = 0; i < polygon.length; i++) {
+            polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+        }
+
+        TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
+                .id(trail.getId())
+                .area(trail.getArea())
+                .polygon(polygon)
+                .title(trail.getName())
+                .time(time)
+                .tags(tag)
+                .like(like)
+                .build();
+        return trailRecommendDto;
     }
 
     /*
