@@ -20,7 +20,7 @@ public class TrailController {
     public SuccessResponse<?> trail() {
         return SuccessResponse.ok(trailService.getAllTrails());
     }
-
+    // 디테일 조회
     @GetMapping("/{trailId}")
     public SuccessResponse<?> getTrail(@PathVariable(name = "trailId") Long trailId) {
         return SuccessResponse.ok(trailService.getTrailById(trailId, MemberInfo.getUserId()));

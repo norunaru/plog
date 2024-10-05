@@ -8,7 +8,7 @@ import java.util.List;
 public interface TrailService {
 
     TrailListResponseDto getAllTrails();
-
+    // 디테일 추가
     TrailRecommendDto getTrailById(Long id, Long memberId);
 
     void createTrailCenter();

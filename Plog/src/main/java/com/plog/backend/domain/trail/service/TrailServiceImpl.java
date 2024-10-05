@@ -41,7 +41,7 @@ public class TrailServiceImpl implements TrailService {
     public TrailListResponseDto getAllTrails() {
         List<Trail> trails = trailRepository.findAll();
 
-        // List<Trail>을 List<TrailListResponseDto>로 변환
+        // List<Trail>을 List<TrailListResponseDto>로 변환 하기
         List<TrailDto> trailResponseDtos = trails.stream()
             .map(trail -> mapper.map(trail, TrailDto.class))  // 각 Trail 객체를 TrailResponseDto로 매핑
             .collect(Collectors.toList());
