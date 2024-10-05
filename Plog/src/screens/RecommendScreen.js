@@ -1,5 +1,8 @@
 import React, { useState, useEffect, memo, useRef } from "react";
 import { View, Text, StyleSheet, Image, Platform, Alert } from 'react-native';
+import {
+    responsiveFontSize,
+  } from 'react-native-responsive-dimensions';
 import CourseBottomSheet from "../components/CourseBottomSheet";
 import MapView, { PROVIDER_GOOGLE, Marker, Polygon } from 'react-native-maps';
 import Geolocation from "react-native-geolocation-service";
@@ -114,7 +117,10 @@ const RecommendScreen = ({navigation}) => {
 
     return (
         <View style={styles.mapView}>
-          <RecommendHeader navigation={navigation} headerText={regionName || '나의 위치'} />
+          <RecommendHeader 
+            navigation={navigation} 
+            headerText={regionName || '나의 위치'} 
+            style={styles.header}/>
             {currentPosition ? (
                 <MapView 
                     provider={PROVIDER_GOOGLE}
@@ -169,6 +175,11 @@ const RecommendScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   mapView: {
     flex: 1,
+  },
+  header: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: '#202025',
   },
   mapImg: {
     flex: 1,

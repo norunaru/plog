@@ -21,10 +21,6 @@ const RecommendHeader = ({navigation, headerText}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Image 
-          source={require('../../../assets/icons/ic_location.png')}
-          style={styles.headerIcon}
-        />
         <Text
           style={{
             color: 'black',

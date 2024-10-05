@@ -10,7 +10,7 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import DetailHeader from '../components/headers/DetailHeader';
 import { detailCourse } from '../API/plogging/detailAPI';
 import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
 
@@ -46,6 +46,17 @@ const CourseDetailScreen = ({route, navigation}) => {
     }
   };
 
+  const convertTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+  
+    if (hours > 0) {
+      return `${hours}시간 ${remainingMinutes}분`;
+    } else {
+      return `${remainingMinutes}분`;
+    }
+  };
+
 
   if (!courseData) {
     return (
@@ -57,7 +68,10 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'코스 상세정보'} />
+      <DetailHeader 
+        navigation={navigation} 
+        headerText={'코스 상세정보'} 
+        style={styles.header}/>
       <Image
         source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}
@@ -88,7 +102,7 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>예상시간</Text>
-          <Text style={styles.infoValue}>{courseData.time}</Text>
+          <Text style={styles.infoValue}>{convertTime(courseData.time)}</Text>
         </View>
       </View>
 
@@ -117,6 +131,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  header: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: '#202025',
   },
   courseMap: {
     width: '100%',
