@@ -52,6 +52,35 @@ public class TrailServiceImpl implements TrailService {
             .build();
     }
 
+    @Override
+    public TrailRecommendDto getTrailById(Long id, Long memberId) {
+        Trail trail = trailRepository.findById(id).orElse(null);
+        String tag = "";
+        int time = (int) (trail.getArea()/500);
+        tag += timeToTag(time);
+        tag += trailTotag(trail);
+        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+        boolean like = true;
+        if(likeTrail==null){
+            like=false;
+        }
+        Coordinate[] polygon = new Coordinate[trail.getLat().length];
+        for(int i = 0; i < polygon.length; i++) {
+            polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+        }
+
+        TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
+                .id(trail.getId())
+                .area(trail.getArea())
+                .polygon(polygon)
+                .title(trail.getName())
+                .time(time)
+                .tags(tag)
+                .like(like)
+                .build();
+        return trailRecommendDto;
+    }
+
     /*
     1. trail 불러오기
     2. trail의 위도 경도 값을 활용하여 중심 좌표 계산하기

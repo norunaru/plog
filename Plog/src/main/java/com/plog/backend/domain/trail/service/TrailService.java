@@ -9,6 +9,8 @@ public interface TrailService {
 
     TrailListResponseDto getAllTrails();
 
+    TrailRecommendDto getTrailById(Long id, Long memberId);
+
     void createTrailCenter();
 
     List<TrailRecommendDto> getRecommendedTrail(Long memberId);

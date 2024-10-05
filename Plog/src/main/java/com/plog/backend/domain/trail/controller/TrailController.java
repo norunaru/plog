@@ -21,6 +21,11 @@ public class TrailController {
         return SuccessResponse.ok(trailService.getAllTrails());
     }
 
+    @GetMapping("/{trailId}")
+    public SuccessResponse<?> getTrail(@PathVariable(name = "trailId") Long trailId) {
+        return SuccessResponse.ok(trailService.getTrailById(trailId, MemberInfo.getUserId()));
+    }
+
     @GetMapping("/center")
     @Operation(summary = "중심 좌표 구하기", description = "새로운 산책로 추가시 실행(프론트 사용 X)")
     public SuccessResponse<?> center() {
