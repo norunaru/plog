@@ -69,14 +69,11 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-<<<<<<< Plog/src/screens/CourseDetailScreen.js
-      <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} />
-=======
+      {/* <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} /> */}
       <DetailHeader 
         navigation={navigation} 
         headerText={'코스 상세정보'} 
         style={styles.header}/>
->>>>>>> Plog/src/screens/CourseDetailScreen.js
       <Image
         source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}
