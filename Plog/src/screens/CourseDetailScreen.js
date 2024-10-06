@@ -10,6 +10,7 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import DetailHeader from '../components/headers/DetailHeader';
 import { detailCourse } from '../API/plogging/detailAPI';
 import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
@@ -68,10 +69,14 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
+<<<<<<< Plog/src/screens/CourseDetailScreen.js
+      <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} />
+=======
       <DetailHeader 
         navigation={navigation} 
         headerText={'코스 상세정보'} 
         style={styles.header}/>
+>>>>>>> Plog/src/screens/CourseDetailScreen.js
       <Image
         source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}
