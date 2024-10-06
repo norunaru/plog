@@ -69,7 +69,7 @@ export default function MyPageScreen({navigation}) {
           </ScrollView>
         </View>
         <View style={styles.optionWrap}>
-          <Pressable>
+          <Pressable onPress={() => navigation.navigate('ModifyInfo')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>프로필 수정</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />

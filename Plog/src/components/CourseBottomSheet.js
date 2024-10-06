@@ -48,8 +48,18 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
   };
 
   const handleCourseDetailPress = (courseId) => {
-    // 코스 디테일 화면으로 이동하면서 courseId를 전달
     navigation.navigate('CourseDetail', { courseId });
+  };
+
+  const convertTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+  
+    if (hours > 0) {
+      return `${hours}시간 ${remainingMinutes}분`;
+    } else {
+      return `${remainingMinutes}분`;
+    }
   };
 
   return (
@@ -75,7 +85,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>활동거리</Text>
-                  <Text style={styles.infoValue}>{selectedCourse.distance}</Text>
+                  <Text style={styles.infoValue}>{selectedCourse.area}</Text>
                 </View>
                 <View style={styles.infoItem}>
                   <Image
@@ -83,7 +93,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>예상시간</Text>
-                  <Text style={styles.infoValue}>{selectedCourse.time}</Text>
+                  <Text style={styles.infoValue}>{convertTime(selectedCourse.time)}</Text>
                 </View>
               </View>
               <View style={styles.separator} />
@@ -105,7 +115,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>활동거리</Text>
-                  <Text style={styles.infoValue}>{location.distance}</Text>
+                  <Text style={styles.infoValue}>{location.area}</Text>
                 </View>
                 <View style={styles.infoItem}>
                   <Image
@@ -113,7 +123,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>예상시간</Text>
-                  <Text style={styles.infoValue}>{location.time}</Text>
+                  <Text style={styles.infoValue}>{convertTime(location.time)}</Text>
                 </View>
               </View>
               <View style={styles.separator} />

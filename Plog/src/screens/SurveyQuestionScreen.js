@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import {
   responsiveWidth,
   responsiveHeight,
@@ -9,6 +9,9 @@ import SurveyQuestionHeader from "../components/headers/SurveyQuestionHeader";
 import CloseModal from "../components/modals/CloseModal";
 import RegionModal from "../components/modals/RegionModal";
 import EnvironmentModal from "../components/modals/EnvironmentModal";
+
+import regionData from '../../assets/data/regionData.json';
+import { submitSurvey } from '../API/survey/surveyAPI';
 
 const SurveyQuestionScreen = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false)
@@ -21,6 +24,7 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [isCountyModalVisible, setCountyModalVisible] = useState(false);
   const [isTownModalVisible, setTownModalVisible] = useState(false);
 
+  const [csvData, setCsvData] = useState(regionData);
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedTown, setSelectedTown] = useState("");
@@ -31,21 +35,49 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [secondRank, setSecondRank] = useState("");
   const [alreadySelected, setAlreadySelected] = useState(false);
 
-  const cities = ["서울특별시", "경기도", "강원도", "인천광역시", "울산광역시", "대전광역시", "부산광역시", "충청북도", "충청남도", ];
-  const counties = {
-    "서울특별시": ["강남구", "용산구", "종로구"],
-    "경기도": ["성남시", "수원시", "안양시"],
-    "강원도": ["춘천시", "강릉시", "원주시"],
-    // 추가 데이터 생략
-  };
-  const towns = {
-    "강남구": ["압구정동", "청담동", "역삼동"],
-    "용산구": ["이태원동", "한남동", "청파동"],
-    "종로구": ["삼청동", "팔판동", "통인동"],
-    // 추가 데이터 생략
-  };
+  const questions = [
+    {
+      id: 1,
+      question: "선호하는 플로깅 시간대가 \n언제인가요?",
+      options: ["아침", "점심", "저녁"],
+    },
+    {
+      id: 2,
+      question: "선호하는 플로깅 적정 활동시간은 \n어느정도 인가요?",
+      options: ["30분 미만", "30분 이상 1시간 미만", "1시간 이상"],
+    },
+    {
+      id: 3,
+      question: "다음 중 누구와 함께 플로깅을 \n함께 하고 싶으신가요?",
+      options: ["혼자서", "친구 또는 가족과 함께", "새로운 사람들과 함께"],
+    },
+    {
+      id: 4,
+      question: "현재 주거하고 있는 지역과 \n선호 환경이 어디인가요?",
+    },
+  ];
 
   const environments = ["산", "하천", "바다", "도심", "공원"];
+
+  const activityTimeMap = {
+    "아침": 0,
+    "점심": 1,
+    "저녁": 2,
+  };
+
+  const floggingTimeMap = {
+    "30분 미만": 0,
+    "30분 이상 1시간 미만": 1,
+    "1시간 이상": 2,
+  };
+
+  const environmentMap = {
+    "산": 0,
+    "하천": 1,
+    "바다": 2,
+    "도심": 3,
+    "공원": 4,
+  };
 
   const handleCitySelect = (city) => {
     setSelectedCity(city);
@@ -60,6 +92,18 @@ const SurveyQuestionScreen = ({navigation}) => {
 
   const handleTownSelect = (town) => {
     setSelectedTown(town);
+  };
+
+  const getCities = () => {
+    return [...new Set(csvData.map(item => item.sd_nm))];
+  };
+
+  const getCounties = () => {
+    return [...new Set(csvData.filter(item => item.sd_nm === selectedCity).map(item => item.sgg_nm))];
+  };
+
+  const getTowns = () => {
+    return csvData.filter(item => item.sgg_nm === selectedCounty).map(item => item.emd_nm);
   };
 
   const handleEnvironmentSelect = (environment) => {
@@ -83,6 +127,16 @@ const SurveyQuestionScreen = ({navigation}) => {
     }
   };
 
+  const findRegionCoordinates = (city, county, town) => {
+    const region = csvData.find(item => 
+      item.sd_nm === city && item.sgg_nm === county && item.emd_nm === town
+    );
+    if (region) {
+      return { lat: region.center_lati, lon: region.center_long };
+    }
+    return { lat: 0, lon: 0 };
+  };
+
   const handleModalClose = () => {
     setEnvironmentModalVisible(false);
     setAlreadySelected(false);
@@ -92,28 +146,6 @@ const SurveyQuestionScreen = ({navigation}) => {
     setEnvironmentRank(rank);
     setEnvironmentModalVisible(true);
   };
-
-  const questions = [
-    {
-      id: 1,
-      question: "선호하는 플로깅 시간대가 \n언제인가요?",
-      options: ["아침", "점심", "저녁"],
-    },
-    {
-      id: 2,
-      question: "선호하는 플로깅 적정 활동시간은 \n어느정도 인가요?",
-      options: ["30분 미만", "30분 이상 1시간 미만", "1시간 이상"],
-    },
-    {
-      id: 3,
-      question: "다음 중 누구와 함께 플로깅을 \n함께 하고 싶으신가요?",
-      options: ["혼자서", "친구 또는 가족과 함께", "새로운 사람들과 함께"],
-    },
-    {
-      id: 4,
-      question: "현재 주거하고 있는 지역과 \n선호 환경이 어디인가요?",
-    },
-  ];
 
   useEffect(() => {
     if (navigateToResult) {
@@ -141,8 +173,25 @@ const SurveyQuestionScreen = ({navigation}) => {
     setSelectedOption(option);
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === 4) {
+      const coordinates = findRegionCoordinates(selectedCity, selectedCounty, selectedTown);
+      
+      const surveyData = {
+        activityTime: activityTimeMap[answers[1]], // 선호 시간대
+        floggingTime: floggingTimeMap[answers[2]], // 적정 시간
+        region_type: environmentMap[firstRank], // 선호 환경
+        regionLat: coordinates.lat,
+        regionLon: coordinates.lon,
+      };
+  
+      try {
+        const result = await submitSurvey(surveyData);  // API 호출
+        console.log(result);
+      } catch (error) {
+        console.error('Survey submission error:', error);
+      }
+  
       setAnswers((prevAnswers) => ({
         ...prevAnswers,
         4: {
@@ -264,7 +313,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isCityModalVisible}
               onClose={() => setCityModalVisible(false)}
               onSelect={handleCitySelect}
-              options={cities}
+              options={getCities()}
               selectedValue={selectedCity}
             />
 
@@ -272,7 +321,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isCountyModalVisible}
               onClose={() => setCountyModalVisible(false)}
               onSelect={handleCountySelect}
-              options={counties[selectedCity] || []}
+              options={getCounties()}
               selectedValue={selectedCounty}
             />
 
@@ -280,7 +329,7 @@ const SurveyQuestionScreen = ({navigation}) => {
               isVisible={isTownModalVisible}
               onClose={() => setTownModalVisible(false)}
               onSelect={handleTownSelect}
-              options={towns[selectedCounty] || []}
+              options={getTowns()}
               selectedValue={selectedTown}
             />
           </View>

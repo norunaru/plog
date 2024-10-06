@@ -28,7 +28,7 @@ const RedModal = ({
 
         {/* 버튼 영역 */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.whiteBtn} onPress={whiteBtnFn}>
+          <TouchableOpacity style={styles.whiteBtn} onPress={onClose}>
             <Text style={styles.whiteBtnText}>{whiteBtnText}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.greenBtn} onPress={redBtnFn}>

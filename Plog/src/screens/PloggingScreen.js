@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import LottieView from 'lottie-react-native';
 import timerIcon from '../../assets/icons/ic_time.png';
 import startIcon from '../../assets/icons/ic_start.png';
 import stopIcon from '../../assets/icons/ic_stop.png';
@@ -10,27 +11,32 @@ import Modal from '../components/Modal';
 
 const PloggingScreen = ({navigation}) => {
   const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(true); // 타이머가 실행 중인지 확인하는 상태
+  const [isRunning, setIsRunning] = useState(false); // 타이머가 실행 중인지 확인하는 상태
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCountdownComplete, setIsCountdownComplete] = useState(false);
 
-  // 타이머 설정 (1초마다 업데이트)
+  // 카운트다운이 끝나면 타이머를 실행하는 useEffect
   useEffect(() => {
     let interval = null;
     if (isRunning) {
       interval = setInterval(() => {
-        setSeconds(prev => prev + 1);
+        setSeconds((prev) => prev + 1);
       }, 1000);
-    } else if (!isRunning && seconds !== 0) {
-      clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isRunning, seconds]);
+  }, [isRunning]);
 
   // 시간을 "00:00" 형식으로 변환하는 함수
   const formatTime = (secs) => {
     const time = parseInt(secs / 60) + ':' + parseInt(secs % 60)
 
     return time.replace(/\b(\d)\b/g, '0$1');
+  };
+
+  // Lottie 애니메이션이 끝났을 때 호출되는 함수
+  const onCountdownFinish = () => {
+    setIsCountdownComplete(true);  // 카운트다운 완료 상태로 설정
+    setIsRunning(true);  // 카운트다운이 끝나면 타이머 시작
   };
 
   return (
@@ -99,6 +105,17 @@ const PloggingScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+      {!isCountdownComplete && (
+        <View style={styles.overlay}>
+          <LottieView
+            source={require('../../assets/animation/countdown.json')}
+            autoPlay
+            loop={false}
+            onAnimationFinish={onCountdownFinish} // 애니메이션이 끝나면 타이머 시작
+            style={styles.lottie}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -108,6 +125,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#DFE4E7',
     alignItems: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)',  // 반투명 배경
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lottie: {
+    width: 200,
+    height: 200,
   },
   topText: {
     color: 'black',

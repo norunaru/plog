@@ -1,5 +1,6 @@
+import React, {useState} from 'react';
 import {
-  KeyboardAvoidingView, // 추가
+  KeyboardAvoidingView,
   SafeAreaView,
   View,
   Text,
@@ -7,7 +8,9 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Platform, // 추가
+  Platform,
+  ScrollView,
+  Pressable,
 } from 'react-native';
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
@@ -16,13 +19,45 @@ import distance from '../../assets/icons/distance.png';
 import time from '../../assets/icons/ic_time.png';
 import calorie from '../../assets/icons/ic_calorie.png';
 import Modal from '../components/Modal';
-import {useState} from 'react';
+import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
+import greenStar from '../../assets/images/greenStar.png';
+import grayStar from '../../assets/images/grayStar.png';
 
 const WritingScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rating, setRating] = useState(0); // 별점 상태
+  const [memo, setMemo] = useState(''); // 메모 상태
+  const [selectedImages, setSelectedImages] = useState([]); // 선택된 이미지 상태
+
+  // 별 클릭 시 호출되는 함수
+  const handleStarPress = index => {
+    setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
+  };
+
+  // 이미지 선택 핸들러
+  const handleSelectImages = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo', // 사진만 선택 가능
+        selectionLimit: 3, // 최대 3개 선택 가능
+      },
+      response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.log('ImagePicker Error: ', response.errorMessage);
+        } else {
+          // 선택된 이미지를 상태에 저장
+          const selectedUris = response.assets.map(asset => asset.uri);
+          setSelectedImages(selectedUris);
+        }
+      },
+    );
+  };
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // iOS는 padding, Android는 height 사용
+    <ScrollView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       {/* 모달 */}
       {isModalOpen ? (
@@ -44,7 +79,7 @@ const WritingScreen = ({navigation}) => {
         <TextInput
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
-          placeholderTextColor="#D9D9D9" // placeholder 색상 설정
+          placeholderTextColor="#D9D9D9"
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -80,36 +115,67 @@ const WritingScreen = ({navigation}) => {
             </View>
           </View>
         </View>
+
+        <View style={{marginTop: 20}}>
+          <Text style={styles.boldText}>이 코스 어땠나요?</Text>
+          {/* starWrap */}
+          <View style={styles.starWrap}>
+            <View style={styles.starRow}>
+              {Array.from({length: 5}, (_, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleStarPress(index + 1)}>
+                  <Image
+                    source={index < rating ? greenStar : grayStar}
+                    style={styles.starIcon}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text style={styles.scoreText}>{rating}점</Text>
+          </View>
+        </View>
+
         {/* 메모 */}
-        <TextInput
-          placeholder="메모를 작성하세요"
-          style={styles.memo}
-          multiline={true} // 여러 줄 입력 가능하게 설정
-          textAlignVertical="top"
-        />
-        <Image source={photoAdd} style={styles.icon} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 29,
-          }}>
-          {/* <TouchableOpacity onPress={() => navigation.navigate('Home')}> */}
+        <KeyboardAvoidingView>
+          <TextInput
+            placeholder="메모를 작성하세요"
+            style={styles.memo}
+            multiline={true}
+            scrollEnabled={true} // 내부 스크롤 가능하게 설정
+            maxLength={255} // 최대 글자 수 제한
+            onChangeText={text => setMemo(text)}
+            value={memo}
+            textAlignVertical="top"
+          />
+        </KeyboardAvoidingView>
+
+        <View style={{flexDirection: 'row', marginBottom: 24}}>
+          {/* 선택한 이미지들을 표시 */}
+          {selectedImages.map((imageUri, index) => (
+            <Image key={index} source={{uri: imageUri}} style={styles.photo} />
+          ))}
+        </View>
+
+        {/* 사진 선택 버튼 */}
+        <Pressable onPress={handleSelectImages}>
+          <Image source={photoAdd} style={styles.icon} />
+        </Pressable>
+
+        <View style={styles.btnWrap}>
           <TouchableOpacity onPress={() => setIsModalOpen(true)}>
-            {/* "다음에 작성" 버튼 */}
             <View style={styles.whiteBtn}>
               <Text style={styles.btnText}>다음에 작성</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            {/* "저장하기" 버튼 */}
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
             </View>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -118,9 +184,9 @@ export default WritingScreen;
 const styles = StyleSheet.create({
   textInput: {
     borderBottomColor: '#D9D9D9',
-    borderBottomWidth: 1, // 입력 필드 하단에 테두리 추가
+    borderBottomWidth: 1,
     padding: 8,
-    fontSize: 18, // 텍스트 입력 크기 조정
+    fontSize: 18,
   },
   miniIcon: {
     width: 20,
@@ -135,7 +201,6 @@ const styles = StyleSheet.create({
   map: {
     backgroundColor: '#DFE4E7',
     width: '100%',
-    // flex: 1,
     height: 265,
     borderTopRightRadius: 16,
     borderTopLeftRadius: 16,
@@ -151,20 +216,19 @@ const styles = StyleSheet.create({
   },
   detailBold: {
     fontSize: 15,
-    // fontWeight: 600,
     marginRight: 8,
     color: 'black',
   },
   detailThin: {
     fontSize: 13,
-    // fontWeight: 500,
   },
   memo: {
-    borderBottomColor: '#D9D9D9',
-    borderBottomWidth: 1, // 입력 필드 하단에 테두리 추가
-    height: 96,
+    borderBottomColor: '#D9D9D9', // 하단 테두리만 설정
+    borderBottomWidth: 1,
+    height: 80, // 높이를 80으로 설정
+    maxHeight: 265, // 최대 높이 설정
     padding: 8,
-    fontSize: 18, // 텍스트 입력 크기 조정
+    fontSize: 18,
     marginVertical: 16,
   },
   whiteBtn: {
@@ -180,10 +244,8 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
   greenBtn: {
-    // flex: 1,
     width: 205,
     height: 52,
-    color: '#1ECD90',
     backgroundColor: '#1ECD90',
     marginRight: 8,
     borderRadius: 30,
@@ -193,5 +255,41 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  boldText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: 'black',
+  },
+  starWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  starIcon: {
+    width: 28,
+    height: 28,
+    marginRight: 4,
+  },
+  scoreText: {
+    marginLeft: 4,
+    fontSize: 15,
+    color: '#202025',
+  },
+  btnWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 29,
+  },
+  photo: {
+    backgroundColor: 'gray',
+    width: 70,
+    height: 70,
+    borderRadius: 12,
+    marginRight: 8,
   },
 });
