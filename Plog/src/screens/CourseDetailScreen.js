@@ -1,45 +1,90 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {
   responsiveHeight,
   responsiveFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
+import DetailHeader from '../components/headers/DetailHeader';
+import { detailCourse } from '../API/plogging/detailAPI';
+import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
 
 const CourseDetailScreen = ({route, navigation}) => {
+  const { courseId } = route.params;
   const [isLiked, setIsLiked] = useState(false);
+  const [courseData, setCourseData] = useState(null);
 
-  const tags = [
-    {id: 1, name: '도심'},
-    {id: 2, name: '태그2'},
-    {id: 3, name: '태그3'},
-    {id: 4, name: '태그4'},
-  ];
+  useEffect(() => {
+    const CourseDetail = async () => {
+      try {
+        const response  = await detailCourse(courseId);
+        setCourseData(response.data);
+        setIsLiked(response.data.like);
+      } catch (error) {
+        console.error("Error:", error)
+      }
+    };
+    
+    CourseDetail();
+  }, [courseId]);
 
-  const courses = [
-    {id: 1, name: 'A코스', distance: '3km', time: '2시간 ~ 2시간 30분'},
-  ];
+  const handleLikePress = async () => {
+    try {
+      if (isLiked) {
+        await unLikeCourse(courseId);
+      } else {
+        await likeCourse(courseId);
+      }
+      setIsLiked(!isLiked);
+    } catch (error) {
+      console.error('like Error:', error);
+    }
+  };
 
-  const course = courses[0];
+  const convertTime = (minutes) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+  
+    if (hours > 0) {
+      return `${hours}시간 ${remainingMinutes}분`;
+    } else {
+      return `${remainingMinutes}분`;
+    }
+  };
 
-  // 추후 아이디로 api 요청
-  const {courseId} = route.params;
+
+  if (!courseData) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Text>로딩 중...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'코스 상세정보'} />
+      <DetailHeader 
+        navigation={navigation} 
+        headerText={'코스 상세정보'} 
+        style={styles.header}/>
       <Image
         source={require('../../assets/images/mapmap.png')}
         style={styles.courseMap}
       />
 
-      <Text style={styles.title}>{courseId}입니다</Text>
+      <Text style={styles.title}>{courseData.title}</Text>
 
       <View style={styles.tagBox}>
-        {tags.map(tag => (
-          <View key={tag.id} style={styles.tag}>
-            <Text style={styles.text}>{tag.name}</Text>
+        {courseData.tags.split(' ').map((tag, index) => (
+          <View key={index} style={styles.tag}>
+            <Text style={styles.text}>{tag.replace('#', '')}</Text>
           </View>
         ))}
       </View>
@@ -51,7 +96,7 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>활동거리</Text>
-          <Text style={styles.infoValue}>{course.distance}</Text>
+          <Text style={styles.infoValue}>{courseData.area}</Text>
         </View>
         <View style={styles.infoItem}>
           <Image
@@ -59,12 +104,12 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>예상시간</Text>
-          <Text style={styles.infoValue}>{course.time}</Text>
+          <Text style={styles.infoValue}>{convertTime(courseData.time)}</Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
+        <TouchableOpacity onPress={handleLikePress}>
           <Image
             source={
               isLiked
@@ -88,6 +133,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  header: {
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: '500',
+    color: '#202025',
   },
   courseMap: {
     width: '100%',

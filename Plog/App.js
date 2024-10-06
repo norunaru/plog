@@ -14,6 +14,7 @@ import LoginMainScreen from './src/screens/LoginMainScreen';
 import SurveyScreen from './src/screens/SurveyScreen';
 import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
 import PloggingRecordScreen from './src/screens/PloggingRecordScreen';
+import PloggingRecordDetailScreen from './src/screens/PloggingRecordDetailScreen';
 import {Image} from 'react-native';
 import homeBlack from './assets/icons/homeBlack.png';
 import homeGray from './assets/icons/homeGray.png';
