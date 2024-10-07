@@ -7,7 +7,8 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground, // ImageBackground 추가
+  ImageBackground,
+  ScrollView, // ImageBackground 추가
 } from 'react-native';
 import {
   responsiveFontSize,
@@ -36,7 +37,7 @@ export default function HomeScreen({navigation}) {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={{flex: 1, padding: 20, paddingTop: 80}}>
       <TopBar />
       <View style={styles.Wrapper}>
         <Weather />
@@ -87,7 +88,7 @@ export default function HomeScreen({navigation}) {
         </ImageBackground>
       )}
 
-      {/* <Text>Home Screen</Text>
+      <Text>Home Screen</Text>
       <Button
         title="to detail page"
         onPress={() => navigation.navigate('Detail')}
@@ -101,33 +102,27 @@ export default function HomeScreen({navigation}) {
       <Button
         title="LoginMain"
         onPress={() => navigation.navigate('LoginMain')}
-      /> */}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F7F7F7',
-    padding: responsiveWidth(5),
-    paddingTop: responsiveHeight(10),
-  },
   Wrapper: {
     width: '100%',
-    marginBottom: responsiveHeight(1),
+    marginBottom: 8,
   },
   BottomWrapper: {
     width: '100%',
-    marginTop: responsiveHeight(1),
+    marginTop: 8,
     flexDirection: 'row',
   },
   GreenBox: {
     flex: 1,
-    marginRight: responsiveWidth(2),
+    marginRight: 8,
     borderRadius: 16,
-    padding: responsiveWidth(4),
-    height: responsiveHeight(25),
+    padding: 16,
+    height: 206,
     backgroundColor: '#E7F7EF',
     borderWidth: 1,
     borderColor: '#1ECD90',
@@ -140,27 +135,26 @@ const styles = StyleSheet.create({
   },
   SmallBox: {
     width: '100%',
-    height: responsiveHeight(12),
+    height: 99,
     backgroundColor: 'white',
     borderRadius: 16,
-    paddingHorizontal: responsiveWidth(3),
-    paddingVertical: responsiveHeight(1.3),
+    marginBottom: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 16,
   },
   bg: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: responsiveWidth(23),
-    height: responsiveHeight(17),
   },
   heading: {
-    fontSize: responsiveFontSize(2.4),
+    fontSize: 18, // h1 스타일과 유사한 폰트 크기
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
-    marginBottom: responsiveHeight(1),
+    marginBottom: 10, // 텍스트와 이미지 사이의 간격
   },
   heading2: {
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(1.6), // h1 스타일과 유사한 폰트 크기
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
     marginTop: responsiveHeight(4),

@@ -183,11 +183,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     position: 'absolute',
-    top: responsiveHeight(40.4),
-    height: responsiveHeight(0.3),
+    top: 368,
+    height: 3,
     width: '100%',
     backgroundColor: '#ECECEC',
-    marginVertical: responsiveHeight(2),
+    marginVertical: 18,
     elevation: 1,
   },
   contentContainer: {

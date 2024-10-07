@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   weatherBox: {
     position: 'absolute',
-    left: 24,
+    left: 20,
     top: 49,
     width: 268,
     height: 104,
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     position: 'absolute',
-    left: 140,
+    left: 133,
     width: 148,
     height: 104,
     paddingVertical: 8,

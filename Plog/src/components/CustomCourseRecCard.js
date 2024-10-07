@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 1,
     width: width,
-    height: responsiveHeight(49),
+    height: 450,
     alignSelf: 'center',
     position: 'relative',
   },
