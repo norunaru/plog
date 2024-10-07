@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, useRef } from "react";
-import { View, Text, StyleSheet, Image, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Platform, Alert, ActivityIndicator } from 'react-native';
 import {
     responsiveFontSize,
   } from 'react-native-responsive-dimensions';
@@ -158,7 +158,7 @@ const RecommendScreen = ({navigation}) => {
                 </MapView>
             ) : (
                 <View style={styles.loading}>
-                    <Text>위치 정보를 불러오고 있습니다...</Text>
+                    <ActivityIndicator size="large" color="#1ECD90" />
                 </View>
             )}
             <CourseBottomSheet 
@@ -190,6 +190,16 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  loading: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default RecommendScreen;

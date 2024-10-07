@@ -5,12 +5,12 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import PloggingHeader from '../components/headers/PloggingHeader';
 import DetailHeader from '../components/headers/DetailHeader';
 import { detailCourse } from '../API/plogging/detailAPI';
 import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
@@ -62,20 +62,19 @@ const CourseDetailScreen = ({route, navigation}) => {
   if (!courseData) {
     return (
       <View style={styles.loaderContainer}>
-        <Text>로딩 중...</Text>
+        <ActivityIndicator size="large" color="#1ECD90" />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {/* <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} /> */}
       <DetailHeader 
         navigation={navigation} 
         headerText={'코스 상세정보'} 
         style={styles.header}/>
       <Image
-        source={require('../../assets/images/mapmap.png')}
+        source={courseData.imageUri ? { uri: courseData.imageUri } : require('../../assets/images/map_default.png')}
         style={styles.courseMap}
       />
 
@@ -229,6 +228,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: responsiveFontSize(1.9),
     fontWeight: 'bold',
+  },
+  loaderContainer: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
