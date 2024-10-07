@@ -1,5 +1,6 @@
 package com.plog.backend.domain.friend.controller;
 
+import com.plog.backend.domain.friend.dto.request.FriendFindByEmailRequestDto;
 import com.plog.backend.domain.friend.dto.request.FriendRequestDto;
 import com.plog.backend.domain.friend.service.FriendService;
 import com.plog.backend.global.dto.SuccessResponse;
@@ -53,9 +54,11 @@ public class FriendController {
         return SuccessResponse.deleted();
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/search")
     @Operation(summary = "유저 이메일 검색", description = "유저 이메일 검색 api")
-    public SuccessResponse<?> getFriend(@PathVariable String email) {
-        return SuccessResponse.ok(friendService.findByEmail(email));
+    public SuccessResponse<?> getFriend(
+        @RequestBody FriendFindByEmailRequestDto friendFindByEmailRequestDto) {
+        return SuccessResponse.ok(
+            friendService.findByEmail(friendFindByEmailRequestDto.getEmail()));
     }
 }

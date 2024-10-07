@@ -99,6 +99,8 @@ public class FriendServiceImpl implements FriendService {
         for (Member member : members) {
             emailList.add(FriendFindByEmailResponseDto.builder()
                 .email(member.getEmail())
+                .id(member.getId())
+                .nickName(member.getNickname())
                 .build());
         }
         return emailList;
