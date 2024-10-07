@@ -114,6 +114,6 @@ public class Member {
     }
 
     public void removeFriend(Friend friend) {
-        this.friends.remove(friend.getId());
+        this.friends.remove(friend.getFriend().getId());
     }
 }

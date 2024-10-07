@@ -45,10 +45,17 @@ public class FriendServiceImpl implements FriendService {
         if (currentUser.isPresent() && friendToRemove.isPresent()) {
             Member member = currentUser.get();
             Member friend = friendToRemove.get();
-            removeFriendInternal(member, friend);
+
+            // 친구를 member의 친구 목록에서 제거
+            Friend friendToRemoveFromMap = member.getFriends().get(friend.getId());
+            if (friendToRemoveFromMap != null) {
+                member.removeFriend(friendToRemoveFromMap);
+            }
+
             memberRepository.save(member);
         }
     }
+
 
     @Override
     public void requestFriend(Long friendId) {
@@ -99,6 +106,8 @@ public class FriendServiceImpl implements FriendService {
         for (Member member : members) {
             emailList.add(FriendFindByEmailResponseDto.builder()
                 .email(member.getEmail())
+                .id(member.getId())
+                .nickName(member.getNickname())
                 .build());
         }
         return emailList;
@@ -107,13 +116,5 @@ public class FriendServiceImpl implements FriendService {
 
     private Optional<Member> getFriend(Long friendId) {
         return memberRepository.findById(friendId);
-    }
-
-
-    private void removeFriendInternal(Member member, Member friend) {
-        Friend friendToRemove = member.getFriends().get(friend.getId());
-        if (friendToRemove != null) {
-            member.removeFriend(friendToRemove);
-        }
     }
 }

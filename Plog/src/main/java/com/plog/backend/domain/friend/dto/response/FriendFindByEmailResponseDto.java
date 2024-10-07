@@ -7,5 +7,7 @@ import lombok.Data;
 @Builder
 public class FriendFindByEmailResponseDto {
 
+    Long id;
+    String nickName;
     String email;
 }
