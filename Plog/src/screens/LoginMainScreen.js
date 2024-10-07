@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, ImageBackground, Pressable } from 'react-native'
+import React, {useState} from 'react';
 import {
-    responsiveWidth,
-    responsiveHeight,
-    responsiveFontSize,
-  } from 'react-native-responsive-dimensions';
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Pressable,
+} from 'react-native';
 import {
-    login,
-} from '@react-native-seoul/kakao-login';
-import { useNavigation } from '@react-navigation/native';
-import { KakaoLogin } from "../API/login/loginAPI";
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
+import {login} from '@react-native-seoul/kakao-login';
+import {useNavigation} from '@react-navigation/native';
+import {KakaoLogin} from '../API/login/loginAPI';
 import useStore from '../../store/store';
 
 const LoginMainScreen = () => {
@@ -56,7 +61,11 @@ const LoginMainScreen = () => {
                 setErrorMessage(`로그인 에러: ${err.message}`);
             }
         }
-    };
+      }
+    } catch (err) {
+      console.error('login err', err);
+    }
+  };
 
 
     return (
@@ -105,82 +114,82 @@ const LoginMainScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    loginView: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: 'center',
-    },
-    header: {
-        width: responsiveWidth(80),
-        height: responsiveHeight(10),
-        top: responsiveHeight(19.5),
-        textAlign: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    headerText: {
-        fontSize: responsiveFontSize(3.5),
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#0F1012',
-    },
-    bottomText: {
-        color: '#66666D',
-        fontSize: responsiveFontSize(1.3),
-        fontWeight: '500',
-        marginTop: responsiveHeight(1.2),
-    },
-    highlightedText: {
-        color: '#1ECD90',
-    },
-    balloon: {
-        top: responsiveHeight(28),
-        width: responsiveWidth(90),
-        height: responsiveHeight(20),
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: responsiveHeight(2),
-    },
-    balloonTextContainer: {
-        paddingHorizontal: responsiveWidth(5),
-        position: 'relative',
-        top: responsiveHeight(-1.5),
-    },
-    balloonText: {
-        fontSize: responsiveFontSize(1.5),
-        fontWeight: '500',
-        color: '#0F1012',
-        textAlign: 'center',
-        lineHeight: responsiveHeight(2.5),
-    },
-    loginImg: {
-        width: responsiveWidth(60),
-        height: responsiveHeight(20),
-        marginTop: responsiveHeight(25)
-    },
-    login: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    kakao: {
-        width: responsiveWidth(85),
-        height: responsiveHeight(8),
-        backgroundColor: '#FEE500',
-        borderRadius: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-    },
-    kakaoImg: {
-        width: 25,
-        height: 20,
-        marginRight: 5,
-    },
-    kakaoText: {
-        fontSize: responsiveFontSize(2),
-        fontWeight: 'bold',
-        color: '#1C2028',
-    },
+  loginView: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  header: {
+    width: responsiveWidth(80),
+    height: responsiveHeight(10),
+    top: responsiveHeight(19.5),
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: responsiveFontSize(3.5),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#0F1012',
+  },
+  bottomText: {
+    color: '#66666D',
+    fontSize: responsiveFontSize(1.3),
+    fontWeight: '500',
+    marginTop: responsiveHeight(1.2),
+  },
+  highlightedText: {
+    color: '#1ECD90',
+  },
+  balloon: {
+    top: responsiveHeight(28),
+    width: responsiveWidth(90),
+    height: responsiveHeight(20),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: responsiveHeight(2),
+  },
+  balloonTextContainer: {
+    paddingHorizontal: responsiveWidth(5),
+    position: 'relative',
+    top: responsiveHeight(-1.5),
+  },
+  balloonText: {
+    fontSize: responsiveFontSize(1.5),
+    fontWeight: '500',
+    color: '#0F1012',
+    textAlign: 'center',
+    lineHeight: responsiveHeight(2.5),
+  },
+  loginImg: {
+    width: responsiveWidth(60),
+    height: responsiveHeight(20),
+    marginTop: responsiveHeight(25),
+  },
+  login: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  kakao: {
+    width: responsiveWidth(85),
+    height: responsiveHeight(8),
+    backgroundColor: '#FEE500',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  kakaoImg: {
+    width: 25,
+    height: 20,
+    marginRight: 5,
+  },
+  kakaoText: {
+    fontSize: responsiveFontSize(2),
+    fontWeight: 'bold',
+    color: '#1C2028',
+  },
 });
 
 export default LoginMainScreen;
