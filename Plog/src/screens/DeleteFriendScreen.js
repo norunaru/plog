@@ -16,6 +16,11 @@ import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
 import yonghoon from '../../assets/images/용훈.jpg';
 import RedModal from '../components/RedModal.js';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 const DeleteFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
@@ -72,20 +77,24 @@ const DeleteFriendScreen = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: 20,
+                marginBottom: responsiveHeight(2),
               }}>
               <View style={{flexDirection: 'row'}}>
                 <Text
                   style={{
                     color: 'black',
-                    fontSize: 16,
+                    fontSize: responsiveFontSize(2),
                     fontWeight: 'bold',
-                    marginRight: 4,
+                    marginRight: responsiveWidth(1),
                   }}>
                   친구 목록
                 </Text>
                 <Text
-                  style={{color: '#1ECD90', fontSize: 18, fontWeight: 'bold'}}>
+                  style={{
+                    color: '#1ECD90',
+                    fontSize: responsiveFontSize(2.2),
+                    fontWeight: 'bold',
+                  }}>
                   {dummyFriends.length}
                 </Text>
               </View>
@@ -112,7 +121,7 @@ const DeleteFriendScreen = ({navigation}) => {
 
       {isNoticeOn ? (
         <View style={styles.noticeBox}>
-          <Text style={{fontSize: 13, color: 'white'}}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
             친구가 삭제되었어요
           </Text>
         </View>
@@ -127,35 +136,35 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   wrap: {
-    padding: 20,
-    paddingTop: 20,
+    padding: responsiveWidth(5),
+    paddingTop: responsiveHeight(2),
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F7F7F7',
     borderRadius: 8,
-    paddingLeft: 16,
-    paddingRight: 8,
-    marginBottom: 20,
+    paddingLeft: responsiveWidth(4),
+    paddingRight: responsiveWidth(2),
+    marginBottom: responsiveHeight(2),
   },
   inputBox: {
     flex: 1,
     color: '#9B9BA3',
-    fontSize: 15,
-    paddingVertical: 12,
+    fontSize: responsiveFontSize(1.8),
+    paddingVertical: responsiveHeight(1.5),
   },
   searchIcon: {
-    width: 24,
-    height: 24,
+    width: responsiveWidth(6),
+    height: responsiveWidth(6),
   },
   noticeBox: {
     position: 'absolute',
-    bottom: 30, // 화면 하단에서 30px 위에 위치
+    bottom: responsiveHeight(5), // 화면 하단에서 반응형 위치
     alignSelf: 'center', // 가로 중앙에 배치
-    paddingVertical: 16,
-    paddingHorizontal: 30,
-    width: 291,
+    paddingVertical: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
+    width: responsiveWidth(80),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -18,10 +18,44 @@ import LoginScreen from './LoginScreen';
 import running from '../../assets/images/img_home_running.png';
 import FriendCard from '../components/cards/FriendCard';
 import chevronRight from '../../assets/icons/Union.png';
+import {
+  login,
+  logout,
+  getProfile as getKakaoProfile,
+  shippingAddresses as getKakaoShippingAddresses,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+import RedModal from '../components/RedModal';
 
 export default function MyPageScreen({navigation}) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const signOutWithKakao = async () => {
+    try {
+      const message = await logout();
+      console.log('로그아웃 성공');
+    } catch (err) {
+      console.error('signOut error', err);
+    }
+  };
+
+  const handleLogOut = () => {
+    setIsModalOpen(false);
+    signOutWithKakao();
+    navigation.navigate('LoginMain');
+  };
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 60}}>
+      {isModalOpen && (
+        <RedModal
+          boldText={'정말 로그아웃 하시겠어요?'}
+          whiteBtnText={'취소'}
+          subText={''}
+          redBtnText={'로그아웃'}
+          onClose={() => setIsModalOpen(false)}
+          redBtnFn={() => handleLogOut()}
+        />
+      )}
       <TopBar />
       <ScrollView>
         <View style={styles.whiteWrap}>
@@ -97,7 +131,7 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          <Pressable onPress={() => setIsModalOpen(true)}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>로그아웃</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />

@@ -9,6 +9,7 @@ import {
 import {
   responsiveHeight,
   responsiveFontSize,
+  responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import PloggingHeader from '../components/headers/PloggingHeader';
 import DetailHeader from '../components/headers/DetailHeader';
@@ -141,93 +142,93 @@ const styles = StyleSheet.create({
   },
   courseMap: {
     width: '100%',
-    height: responsiveHeight(40),
+    height: responsiveHeight(40), // 반응형 높이
   },
   title: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.5), // 반응형 텍스트 크기
     color: '#0F1012',
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    marginHorizontal: 20,
+    marginTop: responsiveHeight(2), // 반응형 마진
+    marginBottom: responsiveHeight(1), // 반응형 마진
+    marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
   },
   tagBox: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: 20,
-    marginTop: 4,
+    marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
+    marginTop: responsiveHeight(1), // 반응형 세로 마진
   },
   tag: {
     backgroundColor: '#E7F7EF',
-    marginRight: 10,
-    marginBottom: 10,
+    marginRight: responsiveWidth(2), // 반응형 마진
+    marginBottom: responsiveHeight(1), // 반응형 마진
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    height: 24,
+    paddingHorizontal: responsiveWidth(3), // 반응형 패딩
+    height: responsiveHeight(3.5), // 반응형 높이
   },
   text: {
     color: '#017978',
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
     fontWeight: '500',
   },
   content: {
-    marginHorizontal: 20,
-    marginVertical: 14,
+    marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
+    marginVertical: responsiveHeight(2), // 반응형 세로 마진
   },
   infoItem: {
-    height: 56,
+    height: responsiveHeight(8), // 반응형 높이
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: responsiveHeight(1.5), // 반응형 세로 마진
     borderWidth: 1,
     borderRadius: 12,
     borderColor: '#D9D9D9',
-    paddingLeft: 16,
+    paddingLeft: responsiveWidth(4), // 반응형 패딩
   },
   infoIcon: {
-    width: 26,
-    height: 26,
-    marginRight: 8,
+    width: responsiveWidth(7), // 반응형 아이콘 크기
+    height: responsiveWidth(7), // 반응형 아이콘 크기
+    marginRight: responsiveWidth(2), // 반응형 마진
   },
   infoText: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsiveFontSize(2), // 반응형 텍스트 크기
     color: '#0F1012',
-    marginRight: 4,
+    marginRight: responsiveWidth(1), // 반응형 마진
     fontWeight: '500',
   },
   infoValue: {
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
     color: '#3F3F47',
     fontWeight: '400',
-    marginLeft: 3,
+    marginLeft: responsiveWidth(1), // 반응형 마진
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 30,
+    paddingHorizontal: responsiveWidth(8), // 반응형 패딩
     position: 'absolute',
-    bottom: 40,
+    bottom: responsiveHeight(5), // 반응형 위치
     width: '100%',
   },
   like: {
-    width: 40,
-    height: 40,
+    width: responsiveWidth(12), // 반응형 아이콘 크기
+    height: responsiveWidth(12), // 반응형 아이콘 크기
   },
   start: {
     flex: 1,
-    height: 52,
+    height: responsiveHeight(7), // 반응형 높이
     backgroundColor: '#1ECD90',
-    borderRadius: 30,
+    borderRadius: responsiveWidth(10), // 반응형 둥근 모서리
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 30,
+    marginLeft: responsiveWidth(5), // 반응형 마진
   },
   startText: {
     color: '#FFFFFF',
-    fontSize: responsiveFontSize(1.9),
+    fontSize: responsiveFontSize(2.2), // 반응형 텍스트 크기
     fontWeight: 'bold',
   },
 });
