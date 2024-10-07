@@ -193,7 +193,8 @@ public class TrailServiceImpl implements TrailService {
             List<TrailRecommendDto> response = new ArrayList<>();
             for(Trail trail : recommendedTrails) {
                 String tag = "";
-                int time = (int) (trail.getArea()/500);
+                // 면적 => 거리 => 시간
+                int time = (int) (Math.sqrt(trail.getArea())/240);
                 tag += timeToTag(time);
                 tag += trailTotag(trail);
                 LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
@@ -231,7 +232,8 @@ public class TrailServiceImpl implements TrailService {
 
             List<TrailRecommendDto> response = new ArrayList<>();
             for(Trail trail : recommendedTrails) {
-                int time = (int) (trail.getArea()/500);
+                // 면적 => 거리 => 시간
+                int time = (int) (Math.sqrt(trail.getArea())/240);
                 if(checkFologgingTime(time,floggingTimeType));
                 String tag = "";
                 tag += timeToTag(time);
