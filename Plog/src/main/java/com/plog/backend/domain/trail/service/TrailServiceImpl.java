@@ -206,7 +206,7 @@ public class TrailServiceImpl implements TrailService {
                 tag += trailTotag(trail);
                 LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
                 boolean like = true;
-                if(likeTrail==null){
+                if(likeTrail==null || !likeTrail.getLikeCheck()){
                     like=false;
                 }
                 Coordinate[] polygon = new Coordinate[trail.getLat().length];
@@ -249,7 +249,7 @@ public class TrailServiceImpl implements TrailService {
                 tag += typeTotag(type);
                 LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
                 boolean like = true;
-                if(likeTrail==null){
+                if(likeTrail==null || !likeTrail.getLikeCheck()){
                     like=false;
                 }
 
@@ -291,8 +291,9 @@ public class TrailServiceImpl implements TrailService {
             tag += trailTotag(trail);
 
             LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+
             boolean like = true;
-            if(likeTrail==null){
+            if(likeTrail==null || !likeTrail.getLikeCheck()){
                 like=false;
             }
             Coordinate[] polygon = new Coordinate[trail.getLat().length];
@@ -354,12 +355,23 @@ public class TrailServiceImpl implements TrailService {
 
     @Override
     public void like(Long memberId, Long trailId) {
-        likeTrailRepository.save(LikeTrail.builder().trail(trailRepository.findById(trailId).orElseThrow()).member(memberRepository.findById(memberId).orElseThrow()).build());
+        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trailId,memberId);
+        if(likeTrail==null){
+            likeTrail = LikeTrail.builder()
+                    .trail(trailRepository.findById(trailId).orElseThrow())
+                    .member(memberRepository.findById(memberId).orElseThrow())
+                    .likeCheck(true)
+                    .build();
+        } else {
+            likeTrail.setLikeCheck(true);
+        }
+        likeTrailRepository.save(likeTrail);
     }
 
     @Override
     public void unlike(Long memberId, Long trailId) {
         LikeTrail trail = likeTrailRepository.findByTrailIdAndMemberId(trailId,memberId);
-        likeTrailRepository.delete(trail);
+        trail.setLikeCheck(false);
+        likeTrailRepository.save(trail);
     }
 }
