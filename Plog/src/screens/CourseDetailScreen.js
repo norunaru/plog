@@ -70,6 +70,7 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
+      {/* <PloggingHeader navigation={navigation} headerText={'코스 상세정보'} /> */}
       <DetailHeader 
         navigation={navigation} 
         headerText={'코스 상세정보'} 
