@@ -58,7 +58,7 @@ const WritingScreen = ({navigation}) => {
 
   const writingSavePress = () => {
     // 일지 기록 post 요청
-    // postActivity 어쩌구..
+    // postActivity 
 
     navigation.navigate('Tabs')
   };
