@@ -17,4 +17,6 @@ public interface ActivityService {
 
     void updateActivity(ActivityUpdateRequestDto activityUpdateRequestDto, Long memberId)
         throws IOException;
+
+    Long getTotalActivityCount(Long memberId);
 }

@@ -78,21 +78,19 @@ public class ActivityServiceImpl implements ActivityService {
                 .title(activity.getTitle())
                 .lat(activity.getLat())
                 .lon(activity.getLon())
-                .totalDistance(activity.getDistance())
+                .totalDistance(activity.getTotalDistance())
                 .totalKcal(activity.getTotalKcal())
-                .totalTime(activity.getTime())
+                .totalTime(activity.getTotalTime())
                 .creationDate(activity.getCreationDate())
                 .locationName(trailEntity.getName())
                 .review(activity.getReview())
                 .score(activity.getScore())
-                .trail(trailEntity)
-                .build();
+                .trail(trailEntity).build();
 
             // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
             List<ActivityImage> activityImages = new ArrayList<>();
             for (String url : imageUrls) {
-                ActivityImage activityImage = ActivityImage.builder()
-                    .savedUrl(url)
+                ActivityImage activityImage = ActivityImage.builder().savedUrl(url)
                     .activity(newActivity)  // 연관된 Activity 설정
                     .build();
                 activityImages.add(activityImage);
@@ -157,5 +155,10 @@ public class ActivityServiceImpl implements ActivityService {
 
         // 4. Activity 저장
         activityRepository.save(existingActivity);
+    }
+
+    @Override
+    public Long getTotalActivityCount(Long memberId) {
+        return activityRepository.countByMemberId(memberId);
     }
 }
