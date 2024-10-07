@@ -34,9 +34,9 @@ export const addFriend = async (token, friendId) => {
 };
 
 //이메일로 찾기
-export const searchWithEmail = async token => {
+export const searchWithEmail = async (token, email) => {
   try {
-    const response = await axios.get(`${BASE_URL}/friends`, {
+    const response = await axios.get(`${BASE_URL}/friends/${email}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
