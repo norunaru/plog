@@ -94,5 +94,6 @@ public class Member {
         this.region_type = memberSurveyRequestDto.getRegion_type();
         this.regionLat = memberSurveyRequestDto.getRegionLat();
         this.regionLon = memberSurveyRequestDto.getRegionLon();
+        this.isFirst = false;
     }
 }
