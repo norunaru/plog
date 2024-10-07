@@ -92,12 +92,12 @@ public class Member {
 
     @Setter
     @JsonBackReference
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private Map<Long, Friend> friends;
 
     @Setter
     @JsonIgnore
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "member", cascade = ALL, orphanRemoval = true)
     private MemberScore memberScore;
 
     public void updateFields(MemberSurveyRequestDto memberSurveyRequestDto) {
@@ -110,7 +110,7 @@ public class Member {
     }
 
     public void addFriend(Friend friend) {
-        this.friends.put(friend.getMember().getId(), friend);
+        this.friends.put(friend.getFriend().getId(), friend);
     }
 
     public void removeFriend(Friend friend) {

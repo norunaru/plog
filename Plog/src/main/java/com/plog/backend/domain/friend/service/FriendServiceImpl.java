@@ -6,13 +6,9 @@ import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.global.common.util.MemberInfo;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,43 +49,48 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void requestFriend(Long friendId) {
         Optional<Member> currentUser = memberRepository.findById(MemberInfo.getUserId());
-        Optional<Member> friendToRequest = getFriend(friendId);
+        Optional<Member> friendToRequest = memberRepository.findById(friendId);
 
         if (currentUser.isPresent() && friendToRequest.isPresent()) {
             Member member = currentUser.get();
             Member friend = friendToRequest.get();
-            if (member.getFriends().containsKey(friend.getId())) {
-                return;
+
+            // 기존에 같은 친구가 있는지 확인 후, 없는 경우에만 추가
+            if (!member.getFriends().containsKey(friend.getId())) {
+                Friend newFriend = Friend.builder()
+                    .member(member)
+                    .creationDate(LocalDateTime.now())
+                    .isFriend(0)
+                    .friend(friend)
+                    .build();
+
+                member.addFriend(newFriend);  // 친구 추가
+                memberRepository.save(member);  // 변경 사항 저장
             }
-            addFriendInternal(member, friend, LocalDateTime.now());
-            memberRepository.save(member);
         }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FriendListResponseDto getFriends() {
-        Optional<Member> currentUser = memberRepository.findById(MemberInfo.getUserId());
-        FriendListResponseDto friendListResponseDto = null;
-        if (currentUser.isPresent()) {
-            Member member = currentUser.get();
-            Hibernate.initialize(member.getFriends()); // Lazy 로딩된 컬렉션을 강제 초기화
-            friendListResponseDto = FriendListResponseDto.builder().friendList(member.getFriends())
-                .build();
-        }
-        return friendListResponseDto;
+        return memberRepository.findById(MemberInfo.getUserId())
+            .map(member -> {
+                log.info("Friend list size for member {}: {}", member.getId(),
+                    member.getFriends().size());
+                // FriendListResponseDto에 친구 목록 (Map 형태) 포함
+                return FriendListResponseDto.builder()
+                    .friendCount(member.getFriends().size())
+                    .friendList(member.getFriends())
+                    .build();
+            })
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Member not found with id: " + MemberInfo.getUserId()));
     }
 
     private Optional<Member> getFriend(Long friendId) {
         return memberRepository.findById(friendId);
     }
 
-    private void addFriendInternal(Member member, Member friend, LocalDateTime creationDate) {
-        member.addFriend(Friend.builder()
-            .member(friend)
-            .creationDate(creationDate)
-            .isFriend(0)
-            .build());
-    }
 
     private void removeFriendInternal(Member member, Member friend) {
         Friend friendToRemove = member.getFriends().get(friend.getId());

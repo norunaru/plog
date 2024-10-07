@@ -4,6 +4,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.plog.backend.domain.member.dto.MemberDto;
 import com.plog.backend.domain.member.entity.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,10 +39,15 @@ public class Friend {
     @Column(name = "id")
     private Long id;
 
-//    @JsonManagedReference
-    @ManyToOne(fetch = LAZY)
+    @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @ManyToOne()
+    @JoinColumn(name = "friend_id")
+    private Member friend;
+
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime creationDate;
