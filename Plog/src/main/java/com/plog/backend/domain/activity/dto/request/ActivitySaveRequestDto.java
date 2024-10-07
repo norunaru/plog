@@ -15,15 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ActivitySaveRequestDto {
 
-    private Long memberId;
     private Long trailId;
     private Float[] lat;
     private Float[] lon;
-    private Float distance;
-    private Float time;
     private String review;
     private Float score;
     private String title;
+    private Float totalTime;
     private Float totalDistance;
     private Float totalKcal;
     private LocalDateTime creationDate;

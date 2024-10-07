@@ -10,4 +10,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     @Query("SELECT a FROM Activity a WHERE a.member.id = :id")
     List<Activity> findAllByMemberId(@Param("id") Long id);
+
+    Long countByMemberId(@Param("id") Long id);
 }

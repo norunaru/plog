@@ -96,6 +96,7 @@ public class Activity {
     public void update(ActivityUpdateRequestDto activityUpdateRequestDto, List<String> savedUrls) {
         this.title = activityUpdateRequestDto.getTitle();
         this.score = activityUpdateRequestDto.getScore();
+        this.review = activityUpdateRequestDto.getReview();
 
         // 기존 activityImages 컬렉션을 clear하여 모든 이미지를 제거하고 새로 추가
         this.activityImages.clear();

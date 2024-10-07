@@ -2,6 +2,7 @@ package com.plog.backend.domain.activity.controller;
 
 import com.plog.backend.domain.activity.dto.request.ActivitySaveRequestDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
+import com.plog.backend.domain.activity.dto.response.ActivityTotalCountResponseDto;
 import com.plog.backend.domain.activity.service.ActivityService;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.dto.SuccessResponse;
@@ -54,5 +55,12 @@ public class ActivityController {
         @ModelAttribute ActivityUpdateRequestDto activityUpdateRequestDto) throws IOException {
         activityService.updateActivity(activityUpdateRequestDto, MemberInfo.getUserId());
         return SuccessResponse.update();
+    }
+
+    @GetMapping("/total")
+    @Operation(summary = "해당 유저 총 일지 수", description = "member_id로 해당 일지 전체 조회")
+    public SuccessResponse<?> total() {
+        return SuccessResponse.ok(ActivityTotalCountResponseDto.builder()
+            .totalCount(activityService.getTotalActivityCount(MemberInfo.getUserId())).build());
     }
 }
