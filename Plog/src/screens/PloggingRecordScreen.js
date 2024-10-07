@@ -9,7 +9,7 @@ import locationIcon from '../../assets/icons/ic_location.png';
 import detailIcon from '../../assets/icons/ic_enter.png';
 import starIcon from '../../assets/icons/ic_star.png';
 import mapImg from '../../assets/images/mapmap.png';
- import {
+import {
   responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
@@ -141,32 +141,39 @@ const PloggingRecordScreen = ({ navigation }) => {
           <Text style={styles.ploggingText}>의 플로깅</Text>
         </View>
       </View>
-      <FlatList
-        data={filteredData}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleCourseDetailPress(item.id)}>
-            <View style={styles.recordItem}>
-              <Image source={item.image} style={styles.image} />
-              <View style={styles.contContainer}>
-                <View style={styles.textContainer}>
-                  <Text style={styles.title}>
-                    {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
-                  </Text>
-                  <View style={styles.locationContainer}>
-                    <Image source={locationIcon} style={styles.locationImage} />
-                    <Text style={styles.location}>{item.location}</Text>
-                    <Image source={starIcon} style={styles.starImage} />
-                    <Text style={styles.location}>평점 {item.star}</Text>
+
+      {filteredData.length === 0 ? (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>이 날은 진행한 플로깅이 없습니다.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredData}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handleCourseDetailPress(item.id)}>
+              <View style={styles.recordItem}>
+                <Image source={item.image} style={styles.image} />
+                <View style={styles.contContainer}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>
+                      {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
+                    </Text>
+                    <View style={styles.locationContainer}>
+                      <Image source={locationIcon} style={styles.locationImage} />
+                      <Text style={styles.location}>{item.location}</Text>
+                      <Image source={starIcon} style={styles.starImage} />
+                      <Text style={styles.location}>평점 {item.star}</Text>
+                    </View>
                   </View>
+                  <Image source={detailIcon} style={styles.detailIcon} />
                 </View>
-                <Image source={detailIcon} style={styles.detailIcon} />
               </View>
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item.id}
-      />
+            </TouchableOpacity>
+          )}
+          keyExtractor={item => item.id}
+        />
+      )}
     </View>
   );
 };
@@ -220,6 +227,15 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.9),
     color: 'black',
     marginTop: 4,
+  },
+  noDataContainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 60,
+  },
+  noDataText: {
+    fontSize: responsiveFontSize(1.8),
+    color: 'gray',
   },
   recordItem: {
     flexDirection: 'column',
