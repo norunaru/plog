@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  ImageBackground, // ImageBackground 추가
 } from 'react-native';
 import {
   responsiveFontSize,
@@ -18,8 +19,22 @@ import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
 import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
+import {getAttractions} from '../API/attraction/attractionAPI';
+import useStore from '../../store/store';
 
 export default function HomeScreen({navigation}) {
+  const token = useStore(state => state.accessToken);
+  const [attractions, setAttractions] = useState({});
+
+  useEffect(() => {
+    const getAttractionsData = async () => {
+      const response = await getAttractions(token);
+      setAttractions(response);
+      console.log(response);
+    };
+    getAttractionsData();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <TopBar />
@@ -52,7 +67,25 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
       </View>
-      <Text style={styles.heading}>이런 행사도 열려요</Text>
+      <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
+
+      {/* attractions.image가 존재하는 경우 배경 이미지로 설정 */}
+      {attractions.image && (
+        <ImageBackground
+          source={{uri: attractions.image}}
+          style={styles.attractionCard}
+          imageStyle={{borderRadius: 16}} // 이미지의 모서리를 둥글게 만듦
+          resizeMode="cover">
+          <View style={styles.overlay} />
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{attractions.address}</Text>
+          </View>
+          <View>
+            <Text style={styles.type}>{attractions.type}</Text>
+            <Text style={styles.attractionName}>{attractions.name}</Text>
+          </View>
+        </ImageBackground>
+      )}
 
       <Text>Home Screen</Text>
       <Button
@@ -139,5 +172,39 @@ const styles = StyleSheet.create({
     position: 'absolute',
     marginLeft: responsiveWidth(2.5),
     marginTop: responsiveHeight(1.5),
+  },
+  attractionCard: {
+    width: '100%',
+    position: 'relative',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+  },
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 4,
+    marginBottom: 60,
+    alignSelf: 'flex-start',
+  },
+  badgeText: {
+    fontSize: 11,
+    color: 'white',
+  },
+  type: {
+    fontSize: 13,
+    color: 'white',
+    marginBottom: 2,
+  },
+  attractionName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // 전체 영역을 덮는 오버레이
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 검정색 반투명으로 밝기를 50% 조정
+    borderRadius: 16, // 이미지와 동일한 모서리 둥글기
   },
 });

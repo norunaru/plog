@@ -22,12 +22,13 @@ import starIcon from '../../assets/icons/ic_star.png';
 
 const PloggingRecordDetailScreen = ({ navigation }) => {
 
+const PloggingRecordDetailScreen = ({navigation}) => {
   const course = {
-    title: '제목 어쩌구', 
-    date: '2024.09.20', 
+    title: '제목 어쩌구',
+    date: '2024.09.20',
     location: '잠실 한강 공원',
     star: 4,
-    distance: '3km', 
+    distance: '3km',
     time: '2시간 15분 (10:19 - 11:42)',
     calorie: '150kcal',
     memo: '메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구',
@@ -46,7 +47,10 @@ const PloggingRecordDetailScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <PloggingDetailHeader navigation={navigation} headerText={'나의 플로깅 기록'} />
+      <PloggingDetailHeader
+        navigation={navigation}
+        headerText={'나의 플로깅 기록'}
+      />
 
       <View style={styles.bodyContainer}>
         <Text style={styles.title}>{course.title}</Text>
@@ -88,9 +92,9 @@ const PloggingRecordDetailScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.footer}>
-        <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
-          <Text style={styles.shareText}>공유하기</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
+            <Text style={styles.shareText}>공유하기</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.greenBtn}
             onPress={() => navigation.navigate('Plogging')}>

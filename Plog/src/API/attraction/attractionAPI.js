@@ -1,12 +1,9 @@
 import BASE_URL from '../apiconfig';
-import useStore from '../../../store/store';
 import axios from 'axios';
-
-const token = 'abc';
 
 export const getAttractions = async token => {
   try {
-    const response = await axios.get(`${BASE_URL}/attractions/random`, {
+    const response = await axios.get(`${BASE_URL}/attraction/random`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
