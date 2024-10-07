@@ -15,5 +15,5 @@ public class TrailDetailDto {
     private int time;
     private Boolean like;
     private String tags;
-    private String image;
+    private String imageUri;
 }

@@ -81,7 +81,7 @@ public class TrailServiceImpl implements TrailService {
                 .time(time)
                 .tags(tag)
                 .like(like)
-                .image(trail.getImage())
+                .imageUri(trail.getImage())
                 .build();
         return trailRecommendDto;
     }
