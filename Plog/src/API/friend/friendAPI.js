@@ -34,9 +34,9 @@ export const addFriend = async (token, friendId) => {
 };
 
 //이메일로 찾기
-export const searchWithEmail = async token => {
+export const searchWithEmail = async (token, email) => {
   try {
-    const response = await axios.get(`${BASE_URL}/friends`, {
+    const response = await axios.get(`${BASE_URL}/friends/${email}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -45,5 +45,24 @@ export const searchWithEmail = async token => {
     return response.data.data;
   } catch (error) {
     console.log('친구 조회 에러 : ', error);
+  }
+};
+
+//친구 삭제 - 내용 수정 필요
+export const deleteFriend = async (token, friendId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/friends`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        friendID: friendId,
+      },
+    });
+
+    console.log(`친구 ${friendId} 삭제 완료`);
+    return response.data.message;
+  } catch (error) {
+    console.log('친구 삭제 에러: ', error);
   }
 };

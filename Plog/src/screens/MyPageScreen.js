@@ -28,21 +28,41 @@ import {
 import RedModal from '../components/RedModal';
 import {getPloggingCnt} from '../API/activity/activityAPI';
 import useStore from '../../store/store';
+import {getFriendsList} from '../API/friend/friendAPI';
 
 export default function MyPageScreen({navigation}) {
   const token = useStore(state => state.accessToken);
   const nickName = useStore(state => state.nickname);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ploggingCnt, setPloggingCnt] = useState(111);
+  const [friendsList, setFriendsList] = useState([]);
+  const lvl = parseInt(useStore(state => state.exp) / 100);
 
   useEffect(() => {
     const fetchPloggingCnt = async () => {
       const response = await getPloggingCnt(token);
-      console.log(response);
+      // console.log(response);
       setPloggingCnt(response.totalCount);
     };
+
+    const fetchFriendsList = async () => {
+      const response = await getFriendsList(token);
+      // console.log('친구 리스트 응답 : ', response);
+      if (response && response.friendList) {
+        const friendArray = Object.values(response.friendList);
+        // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
+        setFriendsList(friendArray);
+      }
+    };
     fetchPloggingCnt();
+    fetchFriendsList();
   }, []);
+
+  useEffect(() => {
+    if (friendsList) {
+      // console.log(friendsList);
+    }
+  }, [friendsList]);
 
   const signOutWithKakao = async () => {
     try {
@@ -59,7 +79,7 @@ export default function MyPageScreen({navigation}) {
     navigation.navigate('LoginMain');
   };
   return (
-    <SafeAreaView style={{flex: 1, paddingTop: 60}}>
+    <View style={{flex: 1}}>
       {isModalOpen && (
         <RedModal
           boldText={'정말 로그아웃 하시겠어요?'}
@@ -85,7 +105,9 @@ export default function MyPageScreen({navigation}) {
                 {nickName}님
               </Text>
               <View style={styles.levelBadge}>
-                <Text style={{fontSize: 11, color: 'white'}}>4레벨 플로거</Text>
+                <Text style={{fontSize: 11, color: 'white'}}>
+                  {lvl + 1}레벨 플로거
+                </Text>
               </View>
             </View>
             <Text style={{fontSize: 15, color: 'black'}}>
@@ -111,19 +133,29 @@ export default function MyPageScreen({navigation}) {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.friendsWrap}>
-              <FriendCard level={6} name={'재준소'} profile={'jaejun'} />
+              {friendsList.map((friend, i) => {
+                return (
+                  <FriendCard
+                    key={i}
+                    level={parseInt(friend.friend.exp / 100) + 1}
+                    name={friend.friend.nickname}
+                    profile={friend.friend.profileImageUrl}
+                  />
+                );
+              })}
+              {/* <FriendCard level={6} name={'재준소'} profile={'jaejun'} />
               <FriendCard level={4} name={'용훈'} profile={'yonghoon'} />
-              <FriendCard level={999} name={'가원선장'} profile={'gawon'} />
+              <FriendCard level={999} name={'가원선장'} profile={'gawon'} /> */}
             </View>
           </ScrollView>
         </View>
         <View style={styles.optionWrap}>
-          <Pressable onPress={() => navigation.navigate('ModifyInfo')}>
+          {/* <Pressable onPress={() => navigation.navigate('ModifyInfo')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>프로필 수정</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={() => navigation.navigate('PloggingRecord')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>
@@ -140,12 +172,12 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          {/* <Pressable>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>공지사항</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={() => setIsModalOpen(true)}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>로그아웃</Text>
@@ -154,12 +186,13 @@ export default function MyPageScreen({navigation}) {
           </Pressable>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   whiteWrap: {
+    marginTop: 60,
     backgroundColor: 'white',
     padding: 20,
     borderTopColor: '#D9D9D9',

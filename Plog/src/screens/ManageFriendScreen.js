@@ -15,11 +15,22 @@ import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
 import yonghoon from '../../assets/images/yonghoon.jpg';
+import {getFriendsList, searchWithEmail} from '../API/friend/friendAPI';
+import useStore from '../../store/store';
 
 const ManageFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
   const [friend, setFriend] = useState({});
   const [isNoticeOn, setIsNoticeOn] = useState(true);
+  const [friendsList, setFriendsList] = useState([]);
+  const [friendsCnt, setFriendsCnt] = useState(0);
+
+  const token = useStore(state => state.accessToken);
+
+  const searchFriend = async () => {
+    const response = await searchWithEmail(token, typedText);
+    setFriend(response);
+  };
 
   useEffect(() => {
     if (isNoticeOn) {
@@ -31,15 +42,20 @@ const ManageFriendScreen = ({navigation}) => {
     }
   }, [isNoticeOn]);
 
-  // 더미 데이터 배열 생성
-  const dummyFriends = [
-    {name: '이재준', level: 6, ploggingCnt: 10},
-    {name: '김용훈', level: 8, ploggingCnt: 15},
-    {name: '최가원', level: 5, ploggingCnt: 12},
-    {name: '박지수', level: 4, ploggingCnt: 8},
-    {name: '정민수', level: 7, ploggingCnt: 20},
-    {name: '이상호', level: 3, ploggingCnt: 5},
-  ];
+  useEffect(() => {
+    const fetchFriendsList = async () => {
+      const response = await getFriendsList(token);
+      setFriendsCnt(response.friendCount);
+
+      // console.log('친구 리스트 응답 : ', response);
+      if (response && response.friendList) {
+        const friendArray = Object.values(response.friendList);
+        // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
+        setFriendsList(friendArray);
+      }
+    };
+    fetchFriendsList();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -50,9 +66,9 @@ const ManageFriendScreen = ({navigation}) => {
           <TextInput
             style={styles.inputBox}
             placeholder="친구의 카카오 이메일을 입력하세요"
-            onChange={text => setTypedText(text)}
+            onChangeText={text => setTypedText(text)}
           />
-          <Pressable>
+          <Pressable onPress={searchFriend}>
             <Image source={ic_search} style={styles.searchIcon} />
           </Pressable>
         </View>
@@ -78,7 +94,7 @@ const ManageFriendScreen = ({navigation}) => {
                 </Text>
                 <Text
                   style={{color: '#1ECD90', fontSize: 18, fontWeight: 'bold'}}>
-                  {dummyFriends.length}
+                  {friendsCnt}
                 </Text>
               </View>
               <Pressable onPress={() => navigation.navigate('DeleteFriend')}>
@@ -87,12 +103,15 @@ const ManageFriendScreen = ({navigation}) => {
             </View>
 
             <ScrollView>
-              {dummyFriends.map((friend, index) => (
+              {friendsList.map((friend, index) => (
                 <FriendManageCard
                   key={index}
-                  name={friend.name}
-                  level={friend.level}
+                  name={friend.friend.nickname}
+                  level={parseInt(friend.friend.exp / 100) + 1}
                   ploggingCnt={friend.ploggingCnt}
+                  email={friend.friend.email}
+                  profileURL={friend.friend.profileImageUrl}
+                  resizeMode="cover"
                 />
               ))}
             </ScrollView>
@@ -110,7 +129,7 @@ const ManageFriendScreen = ({navigation}) => {
           </View>
         )}
 
-        {friend.length != 0 && typedText !== '' && (
+        {friend && Object.keys(friend).length !== 0 && typedText !== '' && (
           <View
             style={{
               width: '100%',

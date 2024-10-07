@@ -147,7 +147,11 @@ export default function App() {
           />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Review" component={ViewReviewScreen} />
-          <Stack.Screen name="ManageFriend" component={ManageFriendScreen} />
+          <Stack.Screen
+            name="ManageFriend"
+            component={ManageFriendScreen}
+            options={{headerShown: false}}
+          />
           <Stack.Screen
             name="LoginMain"
             component={LoginMainScreen}
