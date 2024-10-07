@@ -36,11 +36,11 @@ const PloggingDetailHeader = ({navigation, headerText}) => {
         />
       )}
 
-      <Pressable onPress={() => navigation.goBack()}>
+      <Pressable onPress={() => navigation.goBack()} style={styles.backWrap}>
         <Image source={leftIcon} style={styles.left} />
       </Pressable>
       <Text style={styles.headerText}>{headerText}</Text>
-      <Pressable onPress={() => setIsModalOpen(true)}>
+      <Pressable onPress={() => setIsModalOpen(true)} style={styles.menyWrap}>
         <Image source={menyIcon} style={styles.meny} />
       </Pressable>
     </SafeAreaView>
@@ -77,6 +77,17 @@ const styles = StyleSheet.create({
     lineHeight: 45,
     marginLeft: -10,
   },
+  backWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    justifyContent: 'center',
+  },
+  menyWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+},
 });
 
 export default PloggingDetailHeader;

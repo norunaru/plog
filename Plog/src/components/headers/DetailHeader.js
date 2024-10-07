@@ -7,12 +7,17 @@ import {
   Pressable,
   SafeAreaView,
 } from 'react-native';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import chevronLeft from '../../../assets/icons/ic_back.png';
 
 const RecommendHeader = ({navigation, headerText}) => {
   return (
     <SafeAreaView style={styles.headerWrap}>
-      <Pressable onPress={() => navigation.goBack()}>
+      <Pressable onPress={() => navigation.goBack()} style={styles.backWrap}>
         <Image source={chevronLeft} style={styles.chevron} />
       </Pressable>
       <View
@@ -63,7 +68,12 @@ const styles = StyleSheet.create({
   },
   box: {
     width: 24,
-  }
+  },
+  backWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    justifyContent: 'center',
+  },
 });
 
 export default RecommendHeader;

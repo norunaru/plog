@@ -68,7 +68,7 @@ const WritingScreen = ({navigation}) => {
             '지금 나가면 내용이 저장되지 않으며 추후 마이페이지에서 작성이 가능해요'
           }
           whiteBtnFn={() => setIsModalOpen(false)}
-          greenBtnFn={() => navigation.navigate('Home')}
+          greenBtnFn={() => navigation.navigate('Tabs')}
           greenBtnText={'끝내기'}
           whiteBtnText={'계속하기'}
         />

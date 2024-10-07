@@ -162,12 +162,12 @@ const styles = StyleSheet.create({
   tag: {
     backgroundColor: '#E7F7EF',
     marginRight: responsiveWidth(2), // 반응형 마진
-    marginBottom: responsiveHeight(1), // 반응형 마진
+    marginBottom: responsiveHeight(0), // 반응형 마진
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: responsiveWidth(3), // 반응형 패딩
-    height: responsiveHeight(3.5), // 반응형 높이
+    height: responsiveHeight(4), // 반응형 높이
   },
   text: {
     color: '#017978',
