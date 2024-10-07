@@ -59,7 +59,7 @@ export const postActivity = async ({
   }
 
   try {
-    const response = axios.post(`${BASE_URL}/activities`, formData, {
+    const response = await axios.post(`${BASE_URL}/activities`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
