@@ -74,4 +74,7 @@ public class Trail {
 
     @Column(name = "exp", columnDefinition = "real")
     private Float exp;
+
+    @Column(name = "image")
+    private String image;
 }
