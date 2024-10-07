@@ -11,7 +11,9 @@ const CustomCourseRecScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={{
+      marginBottom: 50,
+    }}>
       <PloggingHeader navigation={navigation} headerText={'최승빈님에게 추천드려요'} />
       
       <ScrollView>
@@ -28,6 +30,8 @@ const CustomCourseRecScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+
+});
 
 export default CustomCourseRecScreen;
