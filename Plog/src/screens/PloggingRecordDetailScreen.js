@@ -84,9 +84,18 @@ const PloggingRecordDetailScreen = ({navigation}) => {
 
         <Text style={styles.memo}>{course.memo}</Text>
         <View style={styles.imageContainer}>
-          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
-          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
-          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
+          <Image
+            source={require('../../assets/images/image2001.png')}
+            style={styles.image}
+          />
+          <Image
+            source={require('../../assets/images/image2001.png')}
+            style={styles.image}
+          />
+          <Image
+            source={require('../../assets/images/image2001.png')}
+            style={styles.image}
+          />
         </View>
 
         <View style={styles.footer}>
