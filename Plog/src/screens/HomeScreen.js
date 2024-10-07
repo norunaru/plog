@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1),
   },
   heading2: {
-    fontSize: responsiveFontSize(1.8),
+    fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
     marginTop: responsiveHeight(4),
