@@ -15,7 +15,7 @@ import UpdateDeleteModal from '../modals/UpdateDeleteModal';
 import leftIcon from '../../../assets/icons/ic_back.png';
 import menyIcon from '../../../assets/icons/meny.png';
 
-const PloggingDetailHeader = ({navigation, headerText}) => {
+const PloggingDetailHeader = ({navigation, headerText, activityId}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -24,9 +24,10 @@ const PloggingDetailHeader = ({navigation, headerText}) => {
       {isModalOpen && (
         <UpdateDeleteModal
           isVisible={isModalOpen}
+          activityId={activityId}
           onClose={() => setIsModalOpen(false)}
           onEdit={() => {
-            console.log('Edit pressed');
+            navigation.navigate('WritingUpdate', { activityId })
             setIsModalOpen(false);
           }}
           onDelete={() => {
