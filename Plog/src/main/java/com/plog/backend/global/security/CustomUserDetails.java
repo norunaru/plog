@@ -15,7 +15,6 @@ public record CustomUserDetails(MemberDto member) implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<String> roles = new ArrayList<>();
         roles.add("ROLE_" + member.getRole());
-//        System.out.println(roles);
         return roles.stream()
             .map(SimpleGrantedAuthority::new)
             .toList();
