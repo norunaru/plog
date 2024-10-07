@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
+import { useFocusEffect } from '@react-navigation/native'; // useFocusEffect 추가
+
 import PloggingHeader from '../components/headers/PloggingHeader';
+import { getAcitivities } from '../API/activity/activityAPI';
+import useStore from '../../store/store';
+
 import ChevronLeft from '../../assets/calendar/left.png';
 import ChevronRight from '../../assets/calendar/right.png';
 import notebookIcon from '../../assets/icons/ic_notebook.png';
@@ -9,11 +19,6 @@ import locationIcon from '../../assets/icons/ic_location.png';
 import detailIcon from '../../assets/icons/ic_enter.png';
 import starIcon from '../../assets/icons/ic_star.png';
 import mapImg from '../../assets/images/mapmap.png';
-import {
-  responsiveWidth,
-  responsiveHeight,
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -34,41 +39,23 @@ LocaleConfig.defaultLocale = 'ko';
 const PloggingRecordScreen = ({ navigation }) => {
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
+  const [ploggingData, setPloggingData] = useState([]);
+  const accessToken = useStore((state) => state.accessToken);
 
-  const ploggingData = [
-    {
-      id: '1',
-      date: '2024-10-03',
-      title: '이 산책로 너무 마음에 든다',
-      location: '잠실 한강 공원',
-      image: mapImg,
-      star: '4',
-    },
-    {
-      id: '2',
-      date: '2024-10-03',
-      title: '조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 ',
-      location: '남산 둘레길',
-      image: mapImg,
-      star: '4',
-    },
-    {
-      id: '3',
-      date: '2024-09-30',
-      title: '이 산책로 너무 마음에 든다',
-      location: '잠실 한강 공원',
-      image: mapImg,
-      star: '2',
-    },
-    {
-      id: '4',
-      date: '2024-10-01',
-      title: '조용한 아침 산책',
-      location: '남산 둘레길',
-      image: mapImg,
-      star: '4',
-    },
-  ];
+  useFocusEffect(
+    useCallback(() => {
+      const fetchActivities = async () => {
+        if (accessToken) {
+          const activities = await getAcitivities(accessToken); // API 호출
+          setPloggingData(activities);
+          console.log('받아온 플로깅 데이터:', activities);
+        } else {
+          console.log('토큰이 없습니다.');
+        }
+      };
+      fetchActivities(); 
+    }, [accessToken])
+  );
 
   const filteredData = ploggingData.filter(item => item.date === selectedDate);
 
@@ -98,9 +85,8 @@ const PloggingRecordScreen = ({ navigation }) => {
     return `${month}월 ${day}일`;
   };
 
-  const handleCourseDetailPress = (courseId) => {
-    // 코스 디테일 화면으로 이동하면서 courseId를 전달
-    navigation.navigate('PloggingRecordDetail', { courseId });
+  const handleCourseDetailPress = (activityId) => {
+    navigation.navigate('PloggingRecordDetail', { activityId });
   };
 
   return (

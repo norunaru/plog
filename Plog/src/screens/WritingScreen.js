@@ -15,6 +15,7 @@ import {
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import Modal from '../components/Modal';
 import { postActivity } from '../API/activity/activityAPI';
+import useStore from '../../store/store';
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
 import photoAdd from '../../assets/icons/photoAdd.png';
@@ -26,9 +27,12 @@ import grayStar from '../../assets/images/grayStar.png';
 
 const WritingScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rating, setRating] = useState(0); // 별점 상태
-  const [memo, setMemo] = useState(''); // 메모 상태
-  const [selectedImages, setSelectedImages] = useState([]); // 선택된 이미지 상태
+  const [rating, setRating] = useState(0);
+  const [titleValue, setTitleValue] = useState('');
+  const [memo, setMemo] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]); 
+  const id = useStore((state) => state.id);
+  const accessToken = useStore((state) => state.accessToken);
 
   // 별 클릭 시 호출되는 함수
   const handleStarPress = index => {
@@ -56,12 +60,51 @@ const WritingScreen = ({navigation}) => {
     );
   };
 
-  const writingSavePress = () => {
-    // 일지 기록 post 요청
-    // postActivity 
+  const writingSavePress = async () => {
+    // 임의 데이터 (id, token 제외)
+    const memberId = id;
+    const trailId = 1;
+    const lat = [37.5172, 37.5175, 37.5178];
+    const lon = [127.0473, 127.0476, 127.0480];
+    const review = memo;
+    const score = parseFloat(rating);
+    const title = titleValue;
+    const totalTime = parseFloat(160.0);
+    const totalDistance = parseFloat(3.0);
+    const totalKcal = parseFloat(150.0);
+    const locationName = '잠실 한강 공원';
+    const token = accessToken;
+  
+    const imageFiles = selectedImages.map((uri, index) => {
+      return {
+        uri,
+        type: 'image/jpeg',
+        name: `image_${index}.jpg`,  // 고유 파일명
+      };
+    });
 
-    navigation.navigate('Tabs')
-  };
+    // 일지 기록 post 요청
+    try {
+      await postActivity({
+        memberId,
+        trailId,
+        lat,
+        lon,
+        totalTime,
+        review,
+        score,
+        title,
+        totalDistance,
+        totalKcal,
+        locationName,
+        images: imageFiles, // 이미지 리스트
+        token,
+      });
+      navigation.navigate('Tabs');
+    } catch (error) {
+      console.error('저장 실패:', error.response ? error.response.data : error.message);
+    }
+  };  
 
   return (
     <ScrollView
@@ -88,6 +131,8 @@ const WritingScreen = ({navigation}) => {
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
+          onChangeText={text => setTitleValue(text)}
+          value={titleValue}
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -231,10 +276,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   memo: {
-    borderBottomColor: '#D9D9D9', // 하단 테두리만 설정
+    borderBottomColor: '#D9D9D9',
     borderBottomWidth: 1,
-    height: 80, // 높이를 80으로 설정
-    maxHeight: 265, // 최대 높이 설정
+    height: 80,
+    maxHeight: 265,
     padding: 8,
     fontSize: 18,
     marginVertical: 16,

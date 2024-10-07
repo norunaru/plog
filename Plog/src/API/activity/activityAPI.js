@@ -24,8 +24,7 @@ export const postActivity = async ({
   trailId,
   lat,
   lon,
-  distance,
-  time,
+  totalTime,
   review,
   score,
   title,
@@ -36,27 +35,34 @@ export const postActivity = async ({
   token,
 }) => {
   const formData = new FormData();
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString();
+  // const today = new Date().toISOString().split('T')[0];
 
-  formData.append('memberId', memberId);
-  formData.append('trailId', trailId);
-  formData.append('lat', lat);
-  formData.append('lon', lon);
-  formData.append('distance', distance);
-  formData.append('time', time);
+  lat.forEach((latitude, index) => formData.append(`lat[]`, String(latitude)));
+  lon.forEach((longitude, index) => formData.append(`lon[]`, String(longitude)));
+  
+  // formData.append('memberId', memberId);
+  formData.append('trailId', String(trailId));
+  // formData.append('distance', distance);
+  formData.append('totalTime', String(totalTime));
   formData.append('review', review);
-  formData.append('score', score);
+  formData.append('score', String(score));
   formData.append('title', title);
-  formData.append('totalDistance', totalDistance);
-  formData.append('totalKcal', totalKcal);
+  formData.append('totalDistance', String(totalDistance));
+  formData.append('totalKcal', String(totalKcal));
   formData.append('creationDate', today);
   formData.append('locationName', locationName);
 
   if (images && images.length > 0) {
-    images.forEach((image, index) => {
-      formData.append(`images[${index}]`, image);
+    images.forEach((imageUri) => {
+      formData.append('images[]', imageUri);
     });
   }
+  // if (images && images.length > 0) {
+  //   images.forEach((image, index) => {
+  //     formData.append(`images[${index}]`, image);
+  //   });
+  // }
 
   try {
     const response = await axios.post(`${BASE_URL}/activities`, formData, {
@@ -65,7 +71,7 @@ export const postActivity = async ({
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('플로깅 일지 기록 응답 : ', formData, response);
+    console.log('플로깅 일지 기록 응답 : ', response.data);
   } catch (error) {
     console.log('플로깅 일지 기록 에러', error);
   }

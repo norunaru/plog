@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,9 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import PloggingDetailHeader from '../components/headers/PloggingDetailHeader';
+import { getActivityData } from '../API/activity/activityAPI';
+import useStore from '../../store/store';
+
 import locationIcon from '../../assets/icons/ic_location.png';
 import distanceIcon from '../../assets/icons/distance.png';
 import timeIcon from '../../assets/icons/ic_time.png';
@@ -20,18 +23,24 @@ import calorieIcon from '../../assets/icons/ic_calorie.png';
 import calendarIcon from '../../assets/icons/ic_calendar.png';
 import starIcon from '../../assets/icons/ic_star.png';
 
-const PloggingRecordDetailScreen = ({navigation}) => {
-  const course = {
-    title: '제목 어쩌구',
-    date: '2024.09.20',
-    location: '잠실 한강 공원',
-    star: 4,
-    distance: '3km',
-    time: '2시간 15분 (10:19 - 11:42)',
-    calorie: '150kcal',
-    memo: '메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구',
-    image: require('../../assets/images/mapmap.png'),
-  };
+const PloggingRecordDetailScreen = ({route, navigation}) => {
+  const [course, setCourse] = useState(null);
+  const accessToken = useStore((state) => state.accessToken);
+  
+  const activityId = route.params.activityId;
+
+  useEffect(() => {
+    const fetchActivityData = async () => {
+      try {
+        const activityData = await getActivityData(activityId, accessToken); // API 호출
+        setCourse(activityData);
+      } catch (error) {
+        console.error('기록 조회 에러:', error);
+      }
+    };
+
+    fetchActivityData();
+  }, [activityId, accessToken]);
 
   const onShare = async () => {
     try {
@@ -45,10 +54,7 @@ const PloggingRecordDetailScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <PloggingDetailHeader
-        navigation={navigation}
-        headerText={'나의 플로깅 기록'}
-      />
+      <PloggingDetailHeader navigation={navigation} headerText={'일지 조회'} />
 
       <View style={styles.bodyContainer}>
         <Text style={styles.title}>{course.title}</Text>
