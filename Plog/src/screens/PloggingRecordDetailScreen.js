@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Share,
+  ScrollView,
 } from 'react-native';
 import {
   responsiveWidth,
@@ -50,7 +51,7 @@ const PloggingRecordDetailScreen = ({navigation}) => {
         headerText={'나의 플로깅 기록'}
       />
 
-      <View style={styles.bodyContainer}>
+      <ScrollView style={styles.bodyContainer}>
         <Text style={styles.title}>{course.title}</Text>
         <View style={styles.locationContainer}>
           <Image source={calendarIcon} style={styles.smallIcon} />
@@ -99,16 +100,16 @@ const PloggingRecordDetailScreen = ({navigation}) => {
         </View>
 
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
+          {/* <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
             <Text style={styles.shareText}>공유하기</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.greenBtn}
             onPress={() => navigation.navigate('Plogging')}>
             <Text style={styles.againText}>이 코스 한번 더 하기</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -211,10 +212,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
-    position: 'absolute',
-    bottom: 40,
-    left: 20,
     width: '100%',
+    marginBottom: 20,
   },
   whiteBtn: {
     width: 122,
@@ -239,6 +238,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
+    width: '100%',
   },
   againText: {
     color: '#FFFFFF',
