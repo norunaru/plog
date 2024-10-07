@@ -75,11 +75,15 @@ const WritingScreen = ({navigation}) => {
       ) : null}
 
       <SafeAreaView
-        style={{padding: 20, backgroundColor: 'white', height: '100%'}}>
+        style={{padding: 20, backgroundColor: 'white', height: '100%'}}
+      >
         <TextInput
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
+          multiline={true}
+          maxLength={120}
+          textAlignVertical="top"
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -227,7 +231,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   memoContainer: {
-    position: 'relative',  // 우측 하단에 카운터를 고정하기 위해 상대 위치 설정
+    position: 'relative',
     paddingBottom: 15,
   },
   memo: {
@@ -237,10 +241,10 @@ const styles = StyleSheet.create({
     maxHeight: 265,
     padding: 8,
     fontSize: 15,
-    marginVertical: 16,
+    marginVertical: 14,
   },
   charCounter: {
-    position: 'absolute',  // 우측 하단에 고정
+    position: 'absolute',
     right: 10,
     bottom: 10,
     fontSize: 12,
