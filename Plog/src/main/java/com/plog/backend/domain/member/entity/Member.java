@@ -2,6 +2,10 @@ package com.plog.backend.domain.member.entity;
 
 import static jakarta.persistence.CascadeType.ALL;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.plog.backend.domain.friend.entity.Friend;
 import com.plog.backend.domain.member.dto.request.MemberSurveyRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,10 +13,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,10 +87,16 @@ public class Member {
 
     @Setter
     @Column(name = "exp", columnDefinition = "real")
-    @ColumnDefault("true")
+    @ColumnDefault("0")
     private Float exp;
 
     @Setter
+    @JsonBackReference
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
+    private Map<Long, Friend> friends;
+
+    @Setter
+    @JsonIgnore
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = ALL, orphanRemoval = true)
     private MemberScore memberScore;
 
@@ -95,5 +107,13 @@ public class Member {
         this.regionLat = memberSurveyRequestDto.getRegionLat();
         this.regionLon = memberSurveyRequestDto.getRegionLon();
         this.isFirst = false;
+    }
+
+    public void addFriend(Friend friend) {
+        this.friends.put(friend.getMember().getId(), friend);
+    }
+
+    public void removeFriend(Friend friend) {
+        this.friends.remove(friend.getId());
     }
 }

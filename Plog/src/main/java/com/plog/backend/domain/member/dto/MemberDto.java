@@ -19,4 +19,5 @@ public class MemberDto {
     private Integer regionType;
     private Float regionLat;
     private Float regionLon;
+    private Float exp;
 }
