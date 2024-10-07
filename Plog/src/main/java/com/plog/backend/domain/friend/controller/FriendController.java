@@ -1,13 +1,13 @@
 package com.plog.backend.domain.friend.controller;
 
 import com.plog.backend.domain.friend.dto.request.FriendRequestDto;
-import com.plog.backend.domain.friend.dto.response.FriendListResponseDto;
 import com.plog.backend.domain.friend.service.FriendService;
 import com.plog.backend.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,5 +51,11 @@ public class FriendController {
     public SuccessResponse<?> rejectFriend(@RequestBody FriendRequestDto friendRequestDto) {
         friendService.removeFriend(friendRequestDto.getFriendID());
         return SuccessResponse.deleted();
+    }
+
+    @GetMapping("/{email}")
+    @Operation(summary = "유저 이메일 검색", description = "유저 이메일 검색 api")
+    public SuccessResponse<?> getFriend(@PathVariable String email) {
+        return SuccessResponse.ok(friendService.findByEmail(email));
     }
 }
