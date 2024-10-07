@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   endButton: {
     backgroundColor: '#FFFFFF',
-    width: 127,
+    width: responsiveWidth(32),
     height: 70,
     padding: 15,
     flexDirection: 'row',
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     marginLeft: 7,
   },
   actionButton: {
-    width: 226,
+    width: responsiveWidth(56),
     height: 70,    
     padding: 15,
     flexDirection: 'row',
