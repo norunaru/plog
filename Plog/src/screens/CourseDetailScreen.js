@@ -123,7 +123,7 @@ const CourseDetailScreen = ({route, navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.start}
-          onPress={() => navigation.navigate('Plogging')}>
+          onPress={() => navigation.navigate('Plogging', { courseId: courseId })}>
           <Text style={styles.startText}>플로깅 시작</Text>
         </TouchableOpacity>
       </View>
