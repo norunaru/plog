@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,9 +26,22 @@ import {
   unlink,
 } from '@react-native-seoul/kakao-login';
 import RedModal from '../components/RedModal';
+import {getPloggingCnt} from '../API/activity/activityAPI';
+import useStore from '../../store/store';
 
 export default function MyPageScreen({navigation}) {
+  const token = useStore(state => state.accessToken);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ploggingCnt, setPloggingCnt] = useState(111);
+
+  useEffect(() => {
+    const fetchPloggingCnt = async () => {
+      const response = await getPloggingCnt(token);
+      console.log(response);
+      setPloggingCnt(response.totalCount);
+    };
+    fetchPloggingCnt();
+  }, []);
 
   const signOutWithKakao = async () => {
     try {
@@ -75,7 +88,8 @@ export default function MyPageScreen({navigation}) {
               </View>
             </View>
             <Text style={{fontSize: 15, color: 'black'}}>
-              지금까지 {'\n'}??번의 플로깅을 완료했어요
+              지금까지 {'\n'}
+              {ploggingCnt}번의 플로깅을 완료했어요
             </Text>
           </View>
           <View
