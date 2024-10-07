@@ -1,6 +1,10 @@
 import React from 'react';
 import {SafeAreaView, View, StyleSheet, Image, Dimensions} from 'react-native';
-
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 const {width} = Dimensions.get('window');
 
 const TopBar = () => {
@@ -47,6 +51,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 66,
     height: 25,
+    marginLeft: responsiveWidth(3),
   },
   noticeImage: {
     width: 48,

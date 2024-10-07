@@ -35,9 +35,15 @@ const LoginMainScreen = () => {
         const response = await KakaoLogin(token.accessToken);
         console.log('서버 응답:', response);
 
-        if (response && response.accessToken && response.refreshToken) {
-          setTokens(response.accessToken, response.refreshToken);
-          setUserFromToken(response.accessToken);
+        // 서버 응답에서 data 안의 accessToken과 refreshToken을 사용
+        if (
+          response.data &&
+          response.data.accessToken &&
+          response.data.refreshToken
+        ) {
+          // 서버 응답 데이터 처리
+          setTokens(response.data.accessToken, response.data.refreshToken);
+          setUserFromToken(response.data.accessToken);
 
           navigation.navigate('Survey'); // 성공 시 Survey 페이지로 이동
         } else {
