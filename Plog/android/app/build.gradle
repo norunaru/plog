@@ -87,6 +87,8 @@ android {
         versionCode 1
         versionName "1.0"
         resValue "string", "kakao_app_key", project.env.get("KAKAO_NATIVE_KEY")
+        resValue "string", "kakao_rest_key", project.env.get("KAKAO_REST_KEY")
+        resValue "string", "google_api_key", project.env.get("GOOGLE_API_KEY")
     }
     signingConfigs {
         debug {

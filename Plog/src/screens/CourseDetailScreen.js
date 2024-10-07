@@ -35,6 +35,8 @@ const CourseDetailScreen = ({route, navigation}) => {
     CourseDetail();
   }, [courseId]);
 
+  console.log(courseData)
+
   const handleLikePress = async () => {
     try {
       if (isLiked) {

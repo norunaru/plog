@@ -168,7 +168,7 @@ const WritingScreen = ({navigation}) => {
               <Text style={styles.btnText}>다음에 작성</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
             </View>
