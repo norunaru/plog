@@ -12,14 +12,15 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
+import Modal from '../components/Modal';
+import { postActivity } from '../API/activity/activityAPI';
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
 import photoAdd from '../../assets/icons/photoAdd.png';
 import distance from '../../assets/icons/distance.png';
 import time from '../../assets/icons/ic_time.png';
 import calorie from '../../assets/icons/ic_calorie.png';
-import Modal from '../components/Modal';
-import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
@@ -55,6 +56,13 @@ const WritingScreen = ({navigation}) => {
     );
   };
 
+  const writingSavePress = () => {
+    // 일지 기록 post 요청
+    // postActivity 어쩌구..
+
+    navigation.navigate('Tabs')
+  };
+
   return (
     <ScrollView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -68,7 +76,7 @@ const WritingScreen = ({navigation}) => {
             '지금 나가면 내용이 저장되지 않으며 추후 마이페이지에서 작성이 가능해요'
           }
           whiteBtnFn={() => setIsModalOpen(false)}
-          greenBtnFn={() => navigation.navigate('Home')}
+          greenBtnFn={() => navigation.navigate('Tabs')}
           greenBtnText={'끝내기'}
           whiteBtnText={'계속하기'}
         />
@@ -168,7 +176,7 @@ const WritingScreen = ({navigation}) => {
               <Text style={styles.btnText}>다음에 작성</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
+          <TouchableOpacity onPress={() => writingSavePress()}>
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
             </View>
