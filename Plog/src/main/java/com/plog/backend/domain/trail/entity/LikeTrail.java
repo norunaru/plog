@@ -2,14 +2,14 @@ package com.plog.backend.domain.trail.entity;
 
 import com.plog.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Table(name = "like_trail")
 public class LikeTrail {
     @Id
@@ -24,4 +24,7 @@ public class LikeTrail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
+
+    @Column(name = "like_check")
+    private Boolean likeCheck;
 }
