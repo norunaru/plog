@@ -41,16 +41,16 @@ export default function MyPageScreen({navigation}) {
   useEffect(() => {
     const fetchPloggingCnt = async () => {
       const response = await getPloggingCnt(token);
-      console.log(response);
+      // console.log(response);
       setPloggingCnt(response.totalCount);
     };
 
     const fetchFriendsList = async () => {
       const response = await getFriendsList(token);
-      console.log('친구 리스트 응답 : ', response);
+      // console.log('친구 리스트 응답 : ', response);
       if (response && response.friendList) {
         const friendArray = Object.values(response.friendList);
-        console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
+        // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
         setFriendsList(friendArray);
       }
     };
@@ -60,7 +60,7 @@ export default function MyPageScreen({navigation}) {
 
   useEffect(() => {
     if (friendsList) {
-      console.log(friendsList);
+      // console.log(friendsList);
     }
   }, [friendsList]);
 
@@ -79,7 +79,7 @@ export default function MyPageScreen({navigation}) {
     navigation.navigate('LoginMain');
   };
   return (
-    <SafeAreaView style={{flex: 1, paddingTop: 60}}>
+    <View style={{flex: 1}}>
       {isModalOpen && (
         <RedModal
           boldText={'정말 로그아웃 하시겠어요?'}
@@ -136,7 +136,8 @@ export default function MyPageScreen({navigation}) {
               {friendsList.map((friend, i) => {
                 return (
                   <FriendCard
-                    level={parseInt(friend.friend.exp / 100)}
+                    key={i}
+                    level={parseInt(friend.friend.exp / 100) + 1}
                     name={friend.friend.nickname}
                     profile={friend.friend.profileImageUrl}
                   />
@@ -149,12 +150,12 @@ export default function MyPageScreen({navigation}) {
           </ScrollView>
         </View>
         <View style={styles.optionWrap}>
-          <Pressable onPress={() => navigation.navigate('ModifyInfo')}>
+          {/* <Pressable onPress={() => navigation.navigate('ModifyInfo')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>프로필 수정</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={() => navigation.navigate('PloggingRecord')}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>
@@ -171,12 +172,12 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          {/* <Pressable>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>공지사항</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={() => setIsModalOpen(true)}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>로그아웃</Text>
@@ -185,12 +186,13 @@ export default function MyPageScreen({navigation}) {
           </Pressable>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   whiteWrap: {
+    marginTop: 60,
     backgroundColor: 'white',
     padding: 20,
     borderTopColor: '#D9D9D9',

@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   blackBg: {
+    flex: 1,
     backgroundColor: 'black',
     opacity: 0.5,
     position: 'absolute',
