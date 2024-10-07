@@ -31,6 +31,7 @@ import useStore from '../../store/store';
 
 export default function MyPageScreen({navigation}) {
   const token = useStore(state => state.accessToken);
+  const nickName = useStore(state => state.nickname);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ploggingCnt, setPloggingCnt] = useState(111);
 
@@ -81,7 +82,7 @@ export default function MyPageScreen({navigation}) {
                 marginBottom: 28,
               }}>
               <Text style={{fontSize: 22, fontWeight: 'bold', color: 'black'}}>
-                최승빈님
+                {nickName}님
               </Text>
               <View style={styles.levelBadge}>
                 <Text style={{fontSize: 11, color: 'white'}}>4레벨 플로거</Text>

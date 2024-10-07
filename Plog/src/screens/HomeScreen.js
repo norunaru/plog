@@ -7,7 +7,8 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground, // ImageBackground 추가
+  ImageBackground,
+  ScrollView, // ImageBackground 추가
 } from 'react-native';
 import {
   responsiveFontSize,
@@ -37,71 +38,73 @@ export default function HomeScreen({navigation}) {
 
   return (
     <SafeAreaView style={{flex: 1, padding: 20, paddingTop: 80}}>
-      <TopBar />
-      <View style={styles.Wrapper}>
-        <Weather />
-        <View style={styles.BottomWrapper}>
-          <TouchableOpacity
-            style={styles.GreenBox}
-            onPress={() => navigation.navigate('CustomCourseRec')}>
-            <Text style={styles.heading}>
-              맞춤형{'\n'}플로깅 코스{'\n'}추천받기
-            </Text>
-            <Image source={running} style={styles.bg} />
-          </TouchableOpacity>
-          <View style={styles.RightColumn}>
+      <ScrollView>
+        <TopBar />
+        <View style={styles.Wrapper}>
+          <Weather />
+          <View style={styles.BottomWrapper}>
             <TouchableOpacity
-              style={styles.SmallBox}
-              onPress={() => navigation.navigate('Recommend')}>
-              <Image style={styles.icon} source={locationCourse} />
-              <Text style={styles.heading2}>
-                내 위치 기반{'\n'}플로깅 코스 확인하기
+              style={styles.GreenBox}
+              onPress={() => navigation.navigate('CustomCourseRec')}>
+              <Text style={styles.heading}>
+                맞춤형{'\n'}플로깅 코스{'\n'}추천받기
               </Text>
+              <Image source={running} style={styles.bg} />
             </TouchableOpacity>
-            <View style={styles.SmallBox}>
-              <Image style={styles.icon} source={music} />
-              <Text style={styles.heading2}>
-                AI가 추천해주는{'\n'}플레이리스트{' '}
-              </Text>
+            <View style={styles.RightColumn}>
+              <TouchableOpacity
+                style={styles.SmallBox}
+                onPress={() => navigation.navigate('Recommend')}>
+                <Image style={styles.icon} source={locationCourse} />
+                <Text style={styles.heading2}>
+                  내 위치 기반{'\n'}플로깅 코스 확인하기
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.SmallBox}>
+                <Image style={styles.icon} source={music} />
+                <Text style={styles.heading2}>
+                  AI가 추천해주는{'\n'}플레이리스트{' '}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
+        <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
 
-      {/* attractions.image가 존재하는 경우 배경 이미지로 설정 */}
-      {attractions.image && (
-        <ImageBackground
-          source={{uri: attractions.image}}
-          style={styles.attractionCard}
-          imageStyle={{borderRadius: 16}} // 이미지의 모서리를 둥글게 만듦
-          resizeMode="cover">
-          <View style={styles.overlay} />
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{attractions.address}</Text>
-          </View>
-          <View>
-            <Text style={styles.type}>{attractions.type}</Text>
-            <Text style={styles.attractionName}>{attractions.name}</Text>
-          </View>
-        </ImageBackground>
-      )}
+        {/* attractions.image가 존재하는 경우 배경 이미지로 설정 */}
+        {attractions.image && (
+          <ImageBackground
+            source={{uri: attractions.image}}
+            style={styles.attractionCard}
+            imageStyle={{borderRadius: 16}} // 이미지의 모서리를 둥글게 만듦
+            resizeMode="cover">
+            <View style={styles.overlay} />
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{attractions.address}</Text>
+            </View>
+            <View>
+              <Text style={styles.type}>{attractions.type}</Text>
+              <Text style={styles.attractionName}>{attractions.name}</Text>
+            </View>
+          </ImageBackground>
+        )}
 
-      <Text>Home Screen</Text>
-      <Button
-        title="to detail page"
-        onPress={() => navigation.navigate('Detail')}
-      />
-      <Button
-        title="일지 작성으로"
-        onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
-      />
-      <Button title="Login" onPress={() => navigation.navigate('Login')} />
-      <Button title="Review" onPress={() => navigation.navigate('Review')} />
-      <Button
-        title="LoginMain"
-        onPress={() => navigation.navigate('LoginMain')}
-      />
+        <Text>Home Screen</Text>
+        <Button
+          title="to detail page"
+          onPress={() => navigation.navigate('Detail')}
+        />
+        <Button
+          title="일지 작성으로"
+          onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
+        />
+        <Button title="Login" onPress={() => navigation.navigate('Login')} />
+        <Button title="Review" onPress={() => navigation.navigate('Review')} />
+        <Button
+          title="LoginMain"
+          onPress={() => navigation.navigate('LoginMain')}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
