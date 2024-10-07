@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,16 +7,36 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  ImageBackground, // ImageBackground 추가
 } from 'react-native';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import TopBar from '../components/TopBar';
 import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
 import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
+import {getAttractions} from '../API/attraction/attractionAPI';
+import useStore from '../../store/store';
 
 export default function HomeScreen({navigation}) {
+  const token = useStore(state => state.accessToken);
+  const [attractions, setAttractions] = useState({});
+
+  useEffect(() => {
+    const getAttractionsData = async () => {
+      const response = await getAttractions(token);
+      setAttractions(response);
+      console.log(response);
+    };
+    getAttractionsData();
+  }, []);
+
   return (
-    <SafeAreaView style={{flex: 1, padding: 20, paddingTop: 80}}>
+    <SafeAreaView style={styles.safeArea}>
       <TopBar />
       <View style={styles.Wrapper}>
         <Weather />
@@ -47,9 +67,27 @@ export default function HomeScreen({navigation}) {
           </View>
         </View>
       </View>
-      <Text style={styles.heading}>이런 행사도 열려요</Text>
+      <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
 
-      <Text>Home Screen</Text>
+      {/* attractions.image가 존재하는 경우 배경 이미지로 설정 */}
+      {attractions.image && (
+        <ImageBackground
+          source={{uri: attractions.image}}
+          style={styles.attractionCard}
+          imageStyle={{borderRadius: 16}} // 이미지의 모서리를 둥글게 만듦
+          resizeMode="cover">
+          <View style={styles.overlay} />
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{attractions.address}</Text>
+          </View>
+          <View>
+            <Text style={styles.type}>{attractions.type}</Text>
+            <Text style={styles.attractionName}>{attractions.name}</Text>
+          </View>
+        </ImageBackground>
+      )}
+
+      {/* <Text>Home Screen</Text>
       <Button
         title="to detail page"
         onPress={() => navigation.navigate('Detail')}
@@ -63,27 +101,33 @@ export default function HomeScreen({navigation}) {
       <Button
         title="LoginMain"
         onPress={() => navigation.navigate('LoginMain')}
-      />
+      /> */}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F7F7F7',
+    padding: responsiveWidth(5),
+    paddingTop: responsiveHeight(10),
+  },
   Wrapper: {
     width: '100%',
-    marginBottom: 8,
+    marginBottom: responsiveHeight(1),
   },
   BottomWrapper: {
     width: '100%',
-    marginTop: 8,
+    marginTop: responsiveHeight(1),
     flexDirection: 'row',
   },
   GreenBox: {
     flex: 1,
-    marginRight: 8,
+    marginRight: responsiveWidth(2),
     borderRadius: 16,
-    padding: 16,
-    height: 206,
+    padding: responsiveWidth(4),
+    height: responsiveHeight(25),
     backgroundColor: '#E7F7EF',
     borderWidth: 1,
     borderColor: '#1ECD90',
@@ -96,32 +140,71 @@ const styles = StyleSheet.create({
   },
   SmallBox: {
     width: '100%',
-    height: 99,
+    height: responsiveHeight(12),
     backgroundColor: 'white',
     borderRadius: 16,
-    marginBottom: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 16,
+    paddingHorizontal: responsiveWidth(3),
+    paddingVertical: responsiveHeight(1.3),
   },
   bg: {
     position: 'absolute',
     bottom: 0,
     right: 0,
+    width: responsiveWidth(23),
+    height: responsiveHeight(17),
   },
   heading: {
-    fontSize: 18, // h1 스타일과 유사한 폰트 크기
+    fontSize: responsiveFontSize(2.4),
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
-    marginBottom: 10, // 텍스트와 이미지 사이의 간격
+    marginBottom: responsiveHeight(1),
   },
   heading2: {
-    fontSize: 15, // h1 스타일과 유사한 폰트 크기
+    fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
-    marginBottom: 10, // 텍스트와 이미지 사이의 간격
+    marginTop: responsiveHeight(4),
+    marginLeft: responsiveWidth(0.5),
   },
   icon: {
     width: 29,
     height: 29,
+    position: 'absolute',
+    marginLeft: responsiveWidth(2.5),
+    marginTop: responsiveHeight(1.5),
+  },
+  attractionCard: {
+    width: '100%',
+    position: 'relative',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+  },
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 4,
+    marginBottom: 60,
+    alignSelf: 'flex-start',
+  },
+  badgeText: {
+    fontSize: 11,
+    color: 'white',
+  },
+  type: {
+    fontSize: 13,
+    color: 'white',
+    marginBottom: 2,
+  },
+  attractionName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // 전체 영역을 덮는 오버레이
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 검정색 반투명으로 밝기를 50% 조정
+    borderRadius: 16, // 이미지와 동일한 모서리 둥글기
   },
 });

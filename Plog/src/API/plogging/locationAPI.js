@@ -35,6 +35,8 @@ const getRegionFromKakao = async (latitude, longitude) => {
             }
         });
 
+        console.log(KAKAO_REST_KEY)
+
         const regionInfo = response.data.documents[0];
         const regionName = regionInfo.address_name;
 

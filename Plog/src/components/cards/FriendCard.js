@@ -9,20 +9,12 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import jaejun from '../../../assets/images/재준소.webp';
-import yonghoon from '../../../assets/images/용훈.jpg';
-import gawon from '../../../assets/images/가원.webp';
 
 export default function FriendCard({name, profile, level}) {
-  let a = 0;
-  if (profile == 'jaejun') a = jaejun;
-  else if (profile == 'yonghoon') a = yonghoon;
-  else if (profile == 'gawon') a = gawon;
-
   return (
     <View style={styles.wrap}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image style={styles.profileImg} source={a} />
+        <Image style={styles.profileImg} />
         <View style={{}}>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.levelBadge}>
@@ -49,6 +41,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     marginRight: 4,
+    backgroundColor: 'black',
   },
   name: {
     fontSize: 14,

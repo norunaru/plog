@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Text,
   Image,
@@ -5,20 +6,41 @@ import {
   Pressable,
   SafeAreaView,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveFontSize,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
+import UpdateDeleteModal from '../modals/UpdateDeleteModal';
 import leftIcon from '../../../assets/icons/ic_back.png';
 import menyIcon from '../../../assets/icons/meny.png';
 
 const PloggingDetailHeader = ({navigation, headerText}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <SafeAreaView style={styles.headerWrap}>
+
+      {isModalOpen && (
+        <UpdateDeleteModal
+          isVisible={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onEdit={() => {
+            console.log('Edit pressed');
+            setIsModalOpen(false);
+          }}
+          onDelete={() => {
+            console.log('Delete pressed');
+            setIsModalOpen(false);
+          }}
+        />
+      )}
+
       <Pressable onPress={() => navigation.goBack()}>
         <Image source={leftIcon} style={styles.left} />
       </Pressable>
-      <Text style={styles.headerText}>
-        {headerText}
-      </Text>
-      {/* 수정해야함  */}
-      <Pressable onPress={() => navigation.goBack()}>
+      <Text style={styles.headerText}>{headerText}</Text>
+      <Pressable onPress={() => setIsModalOpen(true)}>
         <Image source={menyIcon} style={styles.meny} />
       </Pressable>
     </SafeAreaView>
@@ -47,7 +69,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: 'black',
-    fontSize: 17,
+    fontSize: responsiveFontSize(2),
     height: '100%',
     fontWeight: 'semiBold',
     textAlign: 'center',   

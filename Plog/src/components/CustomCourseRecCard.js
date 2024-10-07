@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import likeGray from '../../assets/icons/likeGray.png';
 import likeColor from '../../assets/icons/likeColor.png';
-
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 const { width } = Dimensions.get('window');
 const titleText = 'A코스입니다';
@@ -16,19 +20,15 @@ const CustomCourseRecCard = () => {
 
   return (
     <View style={styles.courseCard}>
-      {/* 지도 이미지 */}
       <Image 
         source={require('../../assets/images/mapmap.png')}
         style={styles.mapImage}
       />
-
-      {/* 코스 정보 */}
       <View style={styles.courseInfo}>
         <View style={styles.titleContainer}>
             <Text style={styles.courseTitle} numberOfLines={1}>
                   {displayTitleText}
             </Text>
-            {/* 하트 이미지 */}
             <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
               <Image 
                 source={
@@ -40,8 +40,6 @@ const CustomCourseRecCard = () => {
               />
             </TouchableOpacity>
         </View>
-
-
           <View style={styles.infoBox}>
             <View style={styles.infoLabelContainer}>
                 <Text style={styles.infoLabel}>활동 거리</Text>
@@ -62,13 +60,13 @@ const CustomCourseRecCard = () => {
 const styles = StyleSheet.create({
   courseCard: {
     backgroundColor: '#FFFFFF',
-    marginBottom: 20,
-    padding: 20,
+    marginBottom: 10,
+    padding: 22,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    elevation: 3,
+    elevation: 1,
     width: width,
     height: 450,
     alignSelf: 'center',
@@ -76,7 +74,7 @@ const styles = StyleSheet.create({
   },
   mapImage: {
     width: '100%',
-    height: 300,
+    height: responsiveHeight(32),
     borderRadius: 16,
     marginBottom: 10,
   },
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   courseTitle: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.1),
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 13,
@@ -99,29 +97,30 @@ const styles = StyleSheet.create({
   },
   infoLabelContainer: {
       backgroundColor: '#E7F7EF',
-      paddingVertical: 1, // 위아래 여백
-      paddingHorizontal: 13, // 좌우 여백
-      borderRadius: 15, // 모서리를 둥글게
-      justifyContent: 'center', // 수직 중앙 정렬
-      alignItems: 'center', // 수평 중앙 정렬
+      paddingHorizontal: 13,
+      borderRadius: 15,
+      justifyContent: 'center',
+      alignItems: 'center',
       marginBottom: 5,
   },
   infoLabel: {
-    fontSize: 14,
+    fontSize: responsiveFontSize(1.6),
     fontWeight: "500",
     color: '#00A68A',
-    paddingVertical: 2 ,
+    paddingVertical: 2,
     paddingHorizontal: 1,
+    marginBottom: 4,
   },
   infoValue: {
-    fontSize: 14,
+    fontSize: responsiveFontSize(1.6),
     color: '#66666D',
+    paddingVertical: 1.8,
     paddingHorizontal: 8,
   },
     heartImg: {
-      width: 36, // 너비 설정
-      height: 33,
-      resizeMode: 'contain', // 비율을 유지하면서 이미지 축소
+      width: responsiveWidth(13),
+      height: responsiveHeight(3.6),
+      resizeMode: 'contain',
       marginLeft: 10,
     },
 });

@@ -87,6 +87,8 @@ android {
         versionCode 1
         versionName "1.0"
         resValue "string", "kakao_app_key", project.env.get("KAKAO_NATIVE_KEY")
+        resValue "string", "kakao_rest_key", project.env.get("KAKAO_REST_KEY")
+        resValue "string", "google_api_key", project.env.get("GOOGLE_API_KEY")
     }
     signingConfigs {
         debug {
@@ -95,15 +97,19 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('my-release-key.keystore')  // 생성한 키스토어 파일 경로
+            storePassword '11111111'        // 키스토어 비밀번호
+            keyAlias 'my-key-alias'                    // 키스토어 생성 시 입력한 alias
+            keyPassword '11111111'            // 키 비밀번호 (키스토어 비밀번호와 동일할 수 있음)
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release       // 릴리즈에 서명 설정 적용
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

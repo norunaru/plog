@@ -10,9 +10,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import jaejun from '../../../assets/images/재준소.webp';
-import yonghoon from '../../../assets/images/용훈.jpg';
-import gawon from '../../../assets/images/가원.webp';
 import minus from '../../../assets/icons/ic_minus.png';
 import Modal from '../../components/Modal.js';
 import {

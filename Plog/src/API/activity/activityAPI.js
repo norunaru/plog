@@ -2,8 +2,6 @@ import BASE_URL from '../apiconfig';
 import useStore from '../../../store/store';
 import axios from 'axios';
 
-const token = 'abc';
-
 //해당 멤버 일지 전체 조회
 export const getAcitivities = async token => {
   try {
@@ -35,6 +33,7 @@ export const postActivity = async ({
   totalKcal,
   locationName,
   images,
+  token,
 }) => {
   const formData = new FormData();
   const today = new Date().toISOString().split('T')[0];
@@ -60,7 +59,7 @@ export const postActivity = async ({
   }
 
   try {
-    const response = axios.post(`${BASE_URL}/activities`, formData, {
+    const response = await axios.post(`${BASE_URL}/activities`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
@@ -72,7 +71,14 @@ export const postActivity = async ({
   }
 };
 
-export const updatePlogHistory = async (id, title, review, score, images) => {
+export const updatePlogHistory = async (
+  id,
+  title,
+  review,
+  score,
+  images,
+  token,
+) => {
   const formData = new FormData();
 
   formData.append('id', id);
@@ -105,7 +111,7 @@ export const updatePlogHistory = async (id, title, review, score, images) => {
 };
 
 //상세 조회
-export const getActivityData = async id => {
+export const getActivityData = async (id, token) => {
   try {
     const response = await axios.get(`${BASE_URL}/activities/${id}`, {
       headers: {
@@ -116,5 +122,19 @@ export const getActivityData = async id => {
     return response.data.data;
   } catch (error) {
     console.log('기록 조회 에러 : ', error);
+  }
+};
+
+//유저의 플로깅 횟수
+export const getPloggingCnt = async token => {
+  try {
+    const response = await axios.get(`${BASE_URL}/activities/total`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log('플로깅 횟수 가져오기 에러 : ', error);
   }
 };

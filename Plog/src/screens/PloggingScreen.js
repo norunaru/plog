@@ -8,14 +8,18 @@ import pauseIcon from '../../assets/icons/ic_pause.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
 import Modal from '../components/Modal';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 const PloggingScreen = ({navigation}) => {
   const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false); // 타이머가 실행 중인지 확인하는 상태
+  const [isRunning, setIsRunning] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCountdownComplete, setIsCountdownComplete] = useState(false);
 
-  // 카운트다운이 끝나면 타이머를 실행하는 useEffect
   useEffect(() => {
     let interval = null;
     if (isRunning) {
@@ -26,17 +30,15 @@ const PloggingScreen = ({navigation}) => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  // 시간을 "00:00" 형식으로 변환하는 함수
   const formatTime = (secs) => {
     const time = parseInt(secs / 60) + ':' + parseInt(secs % 60)
 
     return time.replace(/\b(\d)\b/g, '0$1');
   };
 
-  // Lottie 애니메이션이 끝났을 때 호출되는 함수
   const onCountdownFinish = () => {
-    setIsCountdownComplete(true);  // 카운트다운 완료 상태로 설정
-    setIsRunning(true);  // 카운트다운이 끝나면 타이머 시작
+    setIsCountdownComplete(true);
+    setIsRunning(true);
   };
 
   return (
@@ -55,51 +57,43 @@ const PloggingScreen = ({navigation}) => {
         />
       ) : null}
 
-      {/* 상단 텍스트 */}
       <Text style={styles.topText}>A코스에서 플로깅 하고있어요</Text>
-      
-      {/* 타이머 표시 */}
       <View style={styles.timerContainer}>
         <Image source={timerIcon} style={{width:27, height:27}}/>
         <Text style={styles.timerText}>{formatTime(seconds)}</Text>
       </View>
-
-      {/* 지도 이미지 (임시 배경 색으로 대체) */}
       <View style={styles.mapContainer}>
         <Image 
           source={require('../../assets/images/mapmap.png')}
           style={styles.mapImage}
         />
       </View>
-
-      {/* 이동 거리와 칼로리 정보 */}
       <View style={styles.infoContainer}>
         <View style={styles.textCont}>
-          <Image source={distIcon} style={{width:27, height:27}}/>
+          <Image source={distIcon} style={{width:27, height:27, marginTop: 4}}/>
           <Text style={styles.infoText}>현재 이동 거리</Text>
           <Text style={styles.numText}>3km</Text>
         </View>
         <View style={styles.textCont}>
-          <Image source={calorieIcon} style={{width:27, height:27}}/>
+          <Image source={calorieIcon} style={{width:27, height:27, marginTop: 4}}/>
           <Text style={styles.infoText}>소모 칼로리</Text>
           <Text style={styles.numText}>150kcal</Text>
         </View>
       </View>
 
-      {/* 하단 버튼 */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={styles.endButton}
           onPress={() => setIsModalOpen(true)}
         >
-          <Image source={stopIcon} style={{width:21, height:21}}/>        
+          <Image source={stopIcon} style={{width:21, height:21, marginTop: 3.5}}/>        
           <Text style={styles.endButtonText}>끝내기</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.actionButton, { backgroundColor: isRunning ? '#E7F7EF' : '#1ECD90', borderWidth: isRunning ? 2 : 0 }]} 
-          onPress={() => setIsRunning(!isRunning)} // 타이머 시작/정지
+          onPress={() => setIsRunning(!isRunning)}
         >
-          <Image source={isRunning ? pauseIcon : startIcon} style={{ width: 21, height: 21 }} />
+          <Image source={isRunning ? pauseIcon : startIcon} style={{ width: 21, height: 21, marginTop: 4 }} />
           <Text style={[styles.actionButtonText, { color: isRunning ? '#00A68A' :  '#FFFFFF'}]}>
             {isRunning ? '잠시 멈추기' : '이어하기'}
           </Text>
@@ -128,7 +122,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',  // 반투명 배경
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -138,7 +132,7 @@ const styles = StyleSheet.create({
   },
   topText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.2),
     fontWeight: 'bold',
     marginTop: 40,
     textAlign: 'center',
@@ -157,7 +151,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   timerText: {
-    fontSize: 28,
+    fontSize: responsiveFontSize(3.2),
     fontWeight: 'bold',
     color: '#017978',
   },
@@ -186,19 +180,21 @@ const styles = StyleSheet.create({
   },
   textCont: {
     flexDirection: 'row',
+    marginVertical: 1.4,
   },
   infoText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(1.8),
     color: 'black',
     fontWeight: '500',
     paddingVertical: 7,
     marginLeft: 10,
   },
   numText: {
-    fontSize: 14,
-    color: 'black',
+    fontSize: responsiveFontSize(1.7),
+    color: '#3F3F47',
     paddingVertical: 7,
     marginLeft: 6,
+    marginTop: 2,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -208,7 +204,7 @@ const styles = StyleSheet.create({
   },
   endButton: {
     backgroundColor: '#FFFFFF',
-    width: 127,
+    width: responsiveWidth(32),
     height: 70,
     padding: 15,
     flexDirection: 'row',
@@ -217,13 +213,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   endButtonText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(1.8),
     fontWeight: 'bold',
     color: '#9B9BA3',
-    marginLeft: 5,
+    marginLeft: 7,
   },
   actionButton: {
-    width: 226,
+    width: responsiveWidth(56),
     height: 70,    
     padding: 15,
     flexDirection: 'row',
@@ -233,9 +229,9 @@ const styles = StyleSheet.create({
     borderColor: '#1ECD90',
   },
   actionButtonText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(1.8),
     fontWeight: 'bold',
-    marginLeft: 5,
+    marginLeft: 7,
   },
 });
 
