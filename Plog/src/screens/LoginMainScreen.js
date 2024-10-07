@@ -22,18 +22,20 @@ const LoginMainScreen = () => {
         try {
             setErrorMessage('');  // 시도할 때마다 에러 메시지 초기화
             const token = await login();
-
+    
             if (token && token.accessToken) {
                 console.log('카카오에서 받은 토큰:', token.accessToken);
-
+    
                 // 서버에 로그인 요청 보내기
                 const response = await KakaoLogin(token.accessToken);
                 console.log('서버 응답:', response);
-
-                if (response && response.accessToken && response.refreshToken) {
-                    setTokens(response.accessToken, response.refreshToken);
-                    setUserFromToken(response.accessToken);
-
+    
+                // 서버 응답에서 data 안의 accessToken과 refreshToken을 사용
+                if (response.data && response.data.accessToken && response.data.refreshToken) {
+                    // 서버 응답 데이터 처리
+                    setTokens(response.data.accessToken, response.data.refreshToken);
+                    setUserFromToken(response.data.accessToken);
+    
                     navigation.navigate('Survey');  // 성공 시 Survey 페이지로 이동
                 } else {
                     setErrorMessage('서버로부터 유효한 토큰을 받지 못했습니다.');

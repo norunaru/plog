@@ -14,7 +14,7 @@ import RecommendHeader from '../components/headers/RecommendHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
-import yonghoon from '../../assets/images/용훈.jpg';
+import yonghoon from '../../assets/images/yonghun.jpg';
 import RedModal from '../components/RedModal.js';
 import {
   responsiveHeight,
