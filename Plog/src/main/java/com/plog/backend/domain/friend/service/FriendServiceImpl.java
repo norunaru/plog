@@ -1,11 +1,15 @@
 package com.plog.backend.domain.friend.service;
 
+import com.plog.backend.domain.friend.dto.response.FriendFindByEmailResponseDto;
 import com.plog.backend.domain.friend.dto.response.FriendListResponseDto;
 import com.plog.backend.domain.friend.entity.Friend;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.global.common.util.MemberInfo;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,8 +59,8 @@ public class FriendServiceImpl implements FriendService {
             Member member = currentUser.get();
             Member friend = friendToRequest.get();
 
-            // 기존에 같은 친구가 있는지 확인 후, 없는 경우에만 추가
-            if (!member.getFriends().containsKey(friend.getId())) {
+            if ((!Objects.equals(member.getId(), friend.getId())) && !member.getFriends()
+                .containsKey(friend.getId())) {
                 Friend newFriend = Friend.builder()
                     .member(member)
                     .creationDate(LocalDateTime.now())
@@ -64,8 +68,8 @@ public class FriendServiceImpl implements FriendService {
                     .friend(friend)
                     .build();
 
-                member.addFriend(newFriend);  // 친구 추가
-                memberRepository.save(member);  // 변경 사항 저장
+                member.addFriend(newFriend);
+                memberRepository.save(member);
             }
         }
     }
@@ -86,6 +90,20 @@ public class FriendServiceImpl implements FriendService {
             .orElseThrow(() -> new IllegalArgumentException(
                 "Member not found with id: " + MemberInfo.getUserId()));
     }
+
+    @Override
+    public List<FriendFindByEmailResponseDto> findByEmail(String email) {
+        List<Member> members = memberRepository.findByEmailContaining(email);
+        List<FriendFindByEmailResponseDto> emailList = new ArrayList<>(members.size());
+
+        for (Member member : members) {
+            emailList.add(FriendFindByEmailResponseDto.builder()
+                .email(member.getEmail())
+                .build());
+        }
+        return emailList;
+    }
+
 
     private Optional<Member> getFriend(Long friendId) {
         return memberRepository.findById(friendId);

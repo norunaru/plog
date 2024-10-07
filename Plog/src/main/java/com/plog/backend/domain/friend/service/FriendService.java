@@ -1,6 +1,8 @@
 package com.plog.backend.domain.friend.service;
 
+import com.plog.backend.domain.friend.dto.response.FriendFindByEmailResponseDto;
 import com.plog.backend.domain.friend.dto.response.FriendListResponseDto;
+import java.util.List;
 
 public interface FriendService {
 
@@ -11,4 +13,6 @@ public interface FriendService {
     void requestFriend(Long member_id);
 
     FriendListResponseDto getFriends();
+
+    List<FriendFindByEmailResponseDto> findByEmail(String email);
 }
