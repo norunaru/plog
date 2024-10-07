@@ -87,7 +87,7 @@ export default function HomeScreen({navigation}) {
         </ImageBackground>
       )}
 
-      <Text>Home Screen</Text>
+      {/* <Text>Home Screen</Text>
       <Button
         title="to detail page"
         onPress={() => navigation.navigate('Detail')}
@@ -101,7 +101,7 @@ export default function HomeScreen({navigation}) {
       <Button
         title="LoginMain"
         onPress={() => navigation.navigate('LoginMain')}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

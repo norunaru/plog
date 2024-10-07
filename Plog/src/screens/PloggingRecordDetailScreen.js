@@ -20,8 +20,6 @@ import calorieIcon from '../../assets/icons/ic_calorie.png';
 import calendarIcon from '../../assets/icons/ic_calendar.png';
 import starIcon from '../../assets/icons/ic_star.png';
 
-const PloggingRecordDetailScreen = ({ navigation }) => {
-
 const PloggingRecordDetailScreen = ({navigation}) => {
   const course = {
     title: '제목 어쩌구',
