@@ -116,7 +116,7 @@ const WritingScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={{marginTop: 20}}>
+        <View style={{marginTop: 20, marginLeft: 8}}>
           <Text style={styles.boldText}>이 코스 어땠나요?</Text>
           {/* starWrap */}
           <View style={styles.starWrap}>
@@ -137,7 +137,7 @@ const WritingScreen = ({navigation}) => {
         </View>
 
         {/* 메모 */}
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={styles.memoContainer}>
           <TextInput
             placeholder="메모를 작성하세요"
             style={styles.memo}
@@ -148,6 +148,10 @@ const WritingScreen = ({navigation}) => {
             value={memo}
             textAlignVertical="top"
           />
+          {/* 글자수 카운터 표시 */}
+          <Text style={styles.charCounter}>
+            {memo.length}/255
+          </Text>
         </KeyboardAvoidingView>
 
         <View style={{flexDirection: 'row', marginBottom: 24}}>
@@ -222,14 +226,25 @@ const styles = StyleSheet.create({
   detailThin: {
     fontSize: 13,
   },
+  memoContainer: {
+    position: 'relative',  // 우측 하단에 카운터를 고정하기 위해 상대 위치 설정
+    paddingBottom: 15,
+  },
   memo: {
-    borderBottomColor: '#D9D9D9', // 하단 테두리만 설정
+    borderBottomColor: '#D9D9D9', 
     borderBottomWidth: 1,
-    height: 80, // 높이를 80으로 설정
-    maxHeight: 265, // 최대 높이 설정
+    height: 80,
+    maxHeight: 265,
     padding: 8,
-    fontSize: 18,
+    fontSize: 15,
     marginVertical: 16,
+  },
+  charCounter: {
+    position: 'absolute',  // 우측 하단에 고정
+    right: 10,
+    bottom: 10,
+    fontSize: 12,
+    color: '#8A8A8A',
   },
   whiteBtn: {
     width: 122,
@@ -257,9 +272,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   boldText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
     color: 'black',
   },
   starWrap: {
