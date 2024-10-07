@@ -124,6 +124,14 @@ export default function App() {
             }}
           />
           <Stack.Screen
+            name="PloggingRecordDetail"
+            component={PloggingRecordDetailScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="Writing"
             component={WritingScreen}
             options={{

@@ -7,7 +7,13 @@ import ChevronRight from '../../assets/calendar/right.png';
 import notebookIcon from '../../assets/icons/ic_notebook.png';
 import locationIcon from '../../assets/icons/ic_location.png';
 import detailIcon from '../../assets/icons/ic_enter.png';
+import starIcon from '../../assets/icons/ic_star.png';
 import mapImg from '../../assets/images/mapmap.png';
+ import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 LocaleConfig.locales['ko'] = {
   monthNames: [
@@ -36,6 +42,7 @@ const PloggingRecordScreen = ({ navigation }) => {
       title: '이 산책로 너무 마음에 든다',
       location: '잠실 한강 공원',
       image: mapImg,
+      star: '4',
     },
     {
       id: '2',
@@ -43,6 +50,7 @@ const PloggingRecordScreen = ({ navigation }) => {
       title: '조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 조용한 아침 산책 ',
       location: '남산 둘레길',
       image: mapImg,
+      star: '4',
     },
     {
       id: '3',
@@ -50,6 +58,7 @@ const PloggingRecordScreen = ({ navigation }) => {
       title: '이 산책로 너무 마음에 든다',
       location: '잠실 한강 공원',
       image: mapImg,
+      star: '2',
     },
     {
       id: '4',
@@ -57,6 +66,7 @@ const PloggingRecordScreen = ({ navigation }) => {
       title: '조용한 아침 산책',
       location: '남산 둘레길',
       image: mapImg,
+      star: '4',
     },
   ];
 
@@ -112,13 +122,13 @@ const PloggingRecordScreen = ({ navigation }) => {
           theme={{
             todayTextColor: '#1ECD90',
             monthTextColor: 'black',
-            textMonthFontSize: 18,
+            textMonthFontSize: responsiveFontSize(2.1),
             textMonthFontWeight: 'bold',
             textDayHeaderColor: '#9B9BA3',
             textDayHeaderFontWeight: 'bold',
             textDayFontWeight: 'semiBold',
-            textDayFontSize: 15,
-            textDayHeaderFontSize: 15,
+            textDayFontSize: responsiveFontSize(1.7),
+            textDayHeaderFontSize: responsiveFontSize(1.7),
             textSectionTitleColor: 'black',
           }}
         />
@@ -146,6 +156,8 @@ const PloggingRecordScreen = ({ navigation }) => {
                   <View style={styles.locationContainer}>
                     <Image source={locationIcon} style={styles.locationImage} />
                     <Text style={styles.location}>{item.location}</Text>
+                    <Image source={starIcon} style={styles.starImage} />
+                    <Text style={styles.location}>평점 {item.star}</Text>
                   </View>
                 </View>
                 <Image source={detailIcon} style={styles.detailIcon} />
@@ -165,17 +177,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   arrowIcon: {
-    width: 8,
-    height: 9,
-    marginHorizontal: 45,
+    width: responsiveWidth(1.8),
+    height: responsiveHeight(0.9),
+    marginHorizontal: responsiveWidth(13.5),
   },
   separator: {
     position: 'absolute',
-    top: 375,
-    height: 3,
+    top: responsiveHeight(40.4),
+    height: responsiveHeight(0.3),
     width: '100%',
     backgroundColor: '#ECECEC',
-    marginVertical: 18,
+    marginVertical: responsiveHeight(2),
     elevation: 1,
   },
   contentContainer: {
@@ -189,23 +201,23 @@ const styles = StyleSheet.create({
   },
   imageBox: {
     position: 'absolute',
-    top: 2,
-    left: 28,
-    width: 34,
-    height: 34,
+    top: responsiveHeight(0.4),
+    left: responsiveWidth(7.6),
+    width: responsiveWidth(8.4),
+    height: responsiveHeight(3.0),
   },
   textBox: {
     flexDirection: 'row',
   },
   selectedDateText: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(1.9),
     fontWeight: 'bold',
     color: 'black',
     marginLeft: 50,
     marginTop: 4,
   },
   ploggingText: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(1.9),
     color: 'black',
     marginTop: 4,
   },
@@ -221,7 +233,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 160,
+    height: responsiveHeight(20),
     marginBottom: 10,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -234,13 +246,13 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   detailIcon: {
-    height: 26,
-    width: 26,
+    height: responsiveHeight(2.9),
+    width: responsiveWidth(2.6),
   },
   title: {
-    width: 310,
+    width: responsiveWidth(76),
     marginTop: 10,
-    fontSize: 16,
+    fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold',
   },
   locationContainer: {
@@ -248,11 +260,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   locationImage: {
-    height: 22,
-    width: 22,
+    height: responsiveHeight(2.2),
+    width: responsiveWidth(4.2),
+  },
+  starImage: {
+    height: responsiveHeight(2),
+    width: responsiveWidth(4.6),
+    marginLeft: 14,
   },
   location: {
-    fontSize: 14,
+    fontSize: responsiveFontSize(1.5),
     color: 'gray',
     marginLeft: 6,
   },

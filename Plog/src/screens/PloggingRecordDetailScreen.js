@@ -8,6 +8,7 @@ import {
   Share,
 } from 'react-native';
 import {
+  responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
@@ -18,7 +19,8 @@ import timeIcon from '../../assets/icons/ic_time.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import calendarIcon from '../../assets/icons/ic_calendar.png';
 import starIcon from '../../assets/icons/ic_star.png';
-import exImg from '../../assets/images/yonghoon.jpg';
+
+const PloggingRecordDetailScreen = ({ navigation }) => {
 
 const PloggingRecordDetailScreen = ({navigation}) => {
   const course = {
@@ -84,9 +86,9 @@ const PloggingRecordDetailScreen = ({navigation}) => {
 
         <Text style={styles.memo}>{course.memo}</Text>
         <View style={styles.imageContainer}>
-          <Image source={exImg} style={styles.image} />
-          <Image source={exImg} style={styles.image} />
-          <Image source={exImg} style={styles.image} />
+          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
+          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
+          <Image source={require('../../assets/images/image2001.png')} style={styles.image} />
         </View>
 
         <View style={styles.footer}>
@@ -127,15 +129,17 @@ const styles = StyleSheet.create({
   date: {
     fontSize: responsiveFontSize(1.6),
     color: '#3F3F47',
+    marginRight: 6,
   },
   smallIcon: {
-    width: 20,
-    height: 20,
+    width: responsiveWidth(4.2),
+    height: responsiveHeight(1.8),
     marginHorizontal: 5,
   },
   location: {
     fontSize: responsiveFontSize(1.6),
     color: '#3F3F47',
+    marginRight: 6,
   },
   star: {
     fontSize: responsiveFontSize(1.6),
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
   },
   mapImage: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(31),
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },
@@ -164,19 +168,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   infoIcon: {
-    width: 26,
-    height: 26,
+    width: responsiveWidth(5.6),
+    height: responsiveHeight(2.8),
     marginRight: 8,
   },
   imageContainer: {
     flexDirection: 'row',
-    width: 106,
+    width: responsiveWidth(10.6),
     marginVertical: 20,
     marginHorizontal: 10,
   },
   image: {
-    width: 106,
-    height: 106,
+    width: 110,
+    height: 110,
     marginRight: 8,
     borderRadius: 12,
   },
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
   },
   whiteBtn: {
     width: 122,
-    height: 54,
+    height: responsiveHeight(6.3),
     backgroundColor: 'white',
     borderColor: '#1ECD90',
     borderWidth: 1,
@@ -222,7 +226,7 @@ const styles = StyleSheet.create({
   },
   greenBtn: {
     flex: 1,
-    height: 54,
+    height: responsiveHeight(6.3),
     backgroundColor: '#1ECD90',
     borderRadius: 30,
     justifyContent: 'center',

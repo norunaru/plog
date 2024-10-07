@@ -9,6 +9,11 @@ import {
   TouchableOpacity,
   ImageBackground, // ImageBackground 추가
 } from 'react-native';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import TopBar from '../components/TopBar';
 import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
@@ -148,14 +153,18 @@ const styles = StyleSheet.create({
     marginBottom: 10, // 텍스트와 이미지 사이의 간격
   },
   heading2: {
-    fontSize: 15, // h1 스타일과 유사한 폰트 크기
+    fontSize: responsiveFontSize(1.8), // h1 스타일과 유사한 폰트 크기
     fontWeight: 'bold', // 텍스트 굵기
     color: 'black', // 텍스트 색상
-    marginBottom: 10, // 텍스트와 이미지 사이의 간격
+    marginTop: responsiveHeight(4),
+    marginLeft: responsiveWidth(0.5),
   },
   icon: {
     width: 29,
     height: 29,
+    position: 'absolute',
+    marginLeft: responsiveWidth(2.5),
+    marginTop: responsiveHeight(1.5),
   },
   attractionCard: {
     width: '100%',
