@@ -39,7 +39,7 @@ const WritingScreen = ({navigation}) => {
     launchImageLibrary(
       {
         mediaType: 'photo', // 사진만 선택 가능
-        selectionLimit: 3, // 최대 3개 선택 가능
+        selectionLimit: 3 - selectedImages.length, // 선택할 수 있는 이미지 개수를 제한
       },
       response => {
         if (response.didCancel) {
@@ -47,12 +47,18 @@ const WritingScreen = ({navigation}) => {
         } else if (response.errorMessage) {
           console.log('ImagePicker Error: ', response.errorMessage);
         } else {
-          // 선택된 이미지를 상태에 저장
+          // 새로 선택한 이미지들을 기존 이미지에 추가
           const selectedUris = response.assets.map(asset => asset.uri);
-          setSelectedImages(selectedUris);
+          const newImages = [...selectedImages, ...selectedUris].slice(0, 3); // 최대 3개까지 유지
+          setSelectedImages(newImages);
         }
       },
     );
+  };
+
+  // 이미지 삭제 핸들러
+  const handleRemoveImage = imageUri => {
+    setSelectedImages(selectedImages.filter(image => image !== imageUri));
   };
 
   return (
@@ -151,9 +157,13 @@ const WritingScreen = ({navigation}) => {
         </KeyboardAvoidingView>
 
         <View style={{flexDirection: 'row', marginBottom: 24}}>
-          {/* 선택한 이미지들을 표시 */}
+          {/* 선택한 이미지들을 표시하고, 클릭 시 이미지 삭제 */}
           {selectedImages.map((imageUri, index) => (
-            <Image key={index} source={{uri: imageUri}} style={styles.photo} />
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleRemoveImage(imageUri)}>
+              <Image source={{uri: imageUri}} style={styles.photo} />
+            </TouchableOpacity>
           ))}
         </View>
 
