@@ -49,6 +49,7 @@ const PloggingRecordDetailScreen = ({navigation}) => {
       <PloggingDetailHeader
         navigation={navigation}
         headerText={'나의 플로깅 기록'}
+        activityId={1}
       />
 
       <ScrollView style={styles.bodyContainer}>

@@ -23,6 +23,7 @@ import communityGray from './assets/icons/communityGray.png';
 import MyBlack from './assets/icons/myBlack.png';
 import MyGray from './assets/icons/myGray.png';
 import WritingScreen from './src/screens/WritingScreen';
+import WritingUpdateScreen from './src/screens/WritingUpdateScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import ViewReviewScreen from './src/screens/ViewReviewScreen';
 import ManageFriendScreen from './src/screens/ManageFriendScreen';
@@ -136,6 +137,15 @@ export default function App() {
             component={WritingScreen}
             options={{
               title: '일지 작성',
+              headerTitleAlign: 'center',
+              headerBackVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="WritingUpdate"
+            component={WritingUpdateScreen}
+            options={{
+              title: '일지 수정',
               headerTitleAlign: 'center',
               headerBackVisible: false,
             }}
