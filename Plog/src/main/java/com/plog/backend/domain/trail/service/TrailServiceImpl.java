@@ -266,12 +266,13 @@ public class TrailServiceImpl implements TrailService {
     public List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId, TrailPositionRequestDto trailPositionRequestDto){
         System.out.println(trailPositionRequestDto.getLatitude());
         System.out.println(trailPositionRequestDto.getLongitude());
-        List<Trail> recommendedTrails = trailRepository.findTrailsWithinDistance(trailPositionRequestDto.getLatitude(), trailPositionRequestDto.getLongitude(),10f);
+        List<Trail> recommendedTrails = trailRepository.findTrailsWithinDistance(trailPositionRequestDto.getLatitude(), trailPositionRequestDto.getLongitude(),5f);
 
         // 응답 결과 출력
         List<TrailRecommendDto> response = new ArrayList<>();
         for(Trail trail : recommendedTrails) {
-            int time = (int) (trail.getArea()/500);
+            // 면적 => 거리 => 시간
+            int time = (int) (Math.sqrt(trail.getArea())/240);
             String tag = "";
             tag += timeToTag(time);
             tag += trailTotag(trail);
