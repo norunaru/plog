@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -55,6 +56,7 @@ public class TrailServiceImpl implements TrailService {
             .build();
     }
 
+    @Transactional
     @Override
     public TrailDetailDto getTrailById(Long id, Long memberId) {
         Trail trail = trailRepository.findById(id).orElse(null);
@@ -66,16 +68,16 @@ public class TrailServiceImpl implements TrailService {
         tag += timeToTag(time);
         tag += trailTotag(trail);
         LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(), memberId);
-        boolean like = true;
-        if (likeTrail == null) {
-            like = false;
+        boolean like = false;
+        if (likeTrail != null) {
+            like = likeTrail.getLikeCheck();
         }
         Coordinate[] polygon = new Coordinate[trail.getLat().length];
         for (int i = 0; i < polygon.length; i++) {
             polygon[i] = new Coordinate(trail.getLat()[i], trail.getLon()[i]);
         }
 
-        TrailDetailDto trailRecommendDto = TrailDetailDto.builder()
+        return TrailDetailDto.builder()
             .id(trail.getId())
             .area(area)
             .polygon(polygon)
@@ -85,7 +87,6 @@ public class TrailServiceImpl implements TrailService {
             .like(like)
             .imageUri(trail.getImage())
             .build();
-        return trailRecommendDto;
     }
 
     /*
@@ -395,8 +396,14 @@ public class TrailServiceImpl implements TrailService {
 
     @Override
     public LikeTrailListResponseDto getlikeTrail() {
-        List<LikeTrail> list = likeTrailRepository.findAllByMemberId(MemberInfo.getUserId());
+        List<LikeTrail> list = likeTrailRepository.findAllByMemberId(MemberInfo.getUserId())
+            .stream()
+            .filter(LikeTrail::getLikeCheck)
+            .collect(Collectors.toList());
+
         return LikeTrailListResponseDto.builder()
-            .likeTrailList(list).totalLikeCount((long) list.size()).build();
+            .likeTrailList(list)
+            .totalLikeCount((long) list.size())
+            .build();
     }
 }
