@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {
-  SafeAreaView,
   View,
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   Pressable,
   ScrollView,
@@ -14,13 +12,16 @@ import RecommendHeader from '../components/headers/RecommendHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
-import yonghoon from '../../assets/images/yonghoon.jpg';
-import {getFriendsList, searchWithEmail} from '../API/friend/friendAPI';
+import {
+  addFriend,
+  getFriendsList,
+  searchWithEmail,
+} from '../API/friend/friendAPI';
 import useStore from '../../store/store';
 
 const ManageFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
-  const [friend, setFriend] = useState({});
+  const [friends, setFriends] = useState([]); // 배열로 변경
   const [isNoticeOn, setIsNoticeOn] = useState(true);
   const [friendsList, setFriendsList] = useState([]);
   const [friendsCnt, setFriendsCnt] = useState(0);
@@ -29,7 +30,21 @@ const ManageFriendScreen = ({navigation}) => {
 
   const searchFriend = async () => {
     const response = await searchWithEmail(token, typedText);
-    setFriend(response);
+    if (response && response.length > 0) {
+      setFriends(response); // 배열을 상태로 설정
+    } else {
+      setFriends([]); // 친구가 없을 경우 빈 배열
+    }
+  };
+
+  const fetchFriendsList = async () => {
+    const response = await getFriendsList(token);
+    setFriendsCnt(response.friendCount);
+
+    if (response && response.friendList) {
+      const friendArray = Object.values(response.friendList);
+      setFriendsList(friendArray);
+    }
   };
 
   useEffect(() => {
@@ -43,17 +58,6 @@ const ManageFriendScreen = ({navigation}) => {
   }, [isNoticeOn]);
 
   useEffect(() => {
-    const fetchFriendsList = async () => {
-      const response = await getFriendsList(token);
-      setFriendsCnt(response.friendCount);
-
-      // console.log('친구 리스트 응답 : ', response);
-      if (response && response.friendList) {
-        const friendArray = Object.values(response.friendList);
-        // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
-        setFriendsList(friendArray);
-      }
-    };
     fetchFriendsList();
   }, []);
 
@@ -61,19 +65,21 @@ const ManageFriendScreen = ({navigation}) => {
     <View style={styles.container}>
       <RecommendHeader navigation={navigation} headerText={'친구관리'} />
       <View style={styles.wrap}>
-        {/* Wrap the TextInput and Image */}
         <View style={styles.inputWrapper}>
           <TextInput
             style={styles.inputBox}
             placeholder="친구의 카카오 이메일을 입력하세요"
             onChangeText={text => setTypedText(text)}
+            onSubmitEditing={searchFriend} // 입력을 완료하면 자동으로 검색
+            autoCapitalize="none"
+            value={typedText}
           />
           <Pressable onPress={searchFriend}>
             <Image source={ic_search} style={styles.searchIcon} />
           </Pressable>
         </View>
 
-        {typedText == '' && Object.keys(friend).length == 0 && (
+        {typedText === '' && (
           <View>
             <View
               style={{
@@ -118,7 +124,7 @@ const ManageFriendScreen = ({navigation}) => {
           </View>
         )}
 
-        {typedText !== '' && Object.keys(friend).length === 0 && (
+        {typedText !== '' && friends.length === 0 && (
           <View
             style={{
               flex: 1,
@@ -126,10 +132,11 @@ const ManageFriendScreen = ({navigation}) => {
               alignItems: 'center',
             }}>
             <Image source={nothing} style={{marginTop: 332}} />
+            <Text>친구를 찾을 수 없습니다.</Text>
           </View>
         )}
 
-        {friend && Object.keys(friend).length !== 0 && typedText !== '' && (
+        {friends.length > 0 && typedText !== '' && (
           <View
             style={{
               width: '100%',
@@ -139,52 +146,64 @@ const ManageFriendScreen = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
-              source={yonghoon}
-              style={{width: 90, height: 90, borderRadius: 25, marginBottom: 8}}
-            />
-            <Text
-              style={{
-                marginBottom: 12,
-                fontWeight: 'bold',
-                fontSize: 18,
-                color: 'black',
-              }}>
-              용훈쿼카
-            </Text>
-            <Pressable
-              onPress={() => {
-                setIsNoticeOn(true);
-                setTypedText('');
-              }}
-              style={{
-                borderRadius: 30,
-                height: 52,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#1ECD90',
-                width: '100%',
-              }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 16,
-                  color: 'white',
-                }}>
-                친구 추가
-              </Text>
-            </Pressable>
+            {friends.map((friend, index) => (
+              <View key={index} style={{alignItems: 'center'}}>
+                <Image
+                  source={{uri: friend.profileImageUrl}}
+                  style={{
+                    width: 90,
+                    height: 90,
+                    borderRadius: 25,
+                    marginBottom: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    marginBottom: 12,
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    color: 'black',
+                  }}>
+                  {friend.nickName}
+                </Text>
+                <Pressable
+                  onPress={async () => {
+                    addFriend(token, friend.id);
+                    setIsNoticeOn(true);
+                    setTypedText('');
+                    await fetchFriendsList(); // 친구 추가 후 목록 갱신
+                  }}
+                  style={{
+                    borderRadius: 30,
+                    height: 52,
+
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#1ECD90',
+                    width: 287,
+                  }}>
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 16,
+                      color: 'white',
+                    }}>
+                    친구 추가
+                  </Text>
+                </Pressable>
+              </View>
+            ))}
           </View>
         )}
       </View>
 
-      {isNoticeOn ? (
+      {isNoticeOn && (
         <View style={styles.noticeBox}>
           <Text style={{fontSize: 13, color: 'white'}}>
             친구가 추가되었어요
           </Text>
         </View>
-      ) : null}
+      )}
     </View>
   );
 };
