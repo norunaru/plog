@@ -39,13 +39,14 @@ export default function LikedCourseScreen({navigation}) {
         {likedCourses.map((course, i) => {
           return (
             <CustomCourseRecCard
+              navigation={navigation}
               key={i}
               id={course.trail.id}
               imageURL={course.trail.image}
               likeCheck={course.likeCheck}
               area={course.trail.area}
               name={course.trail.name}
-              likeFn={likeFn}
+              // likeFn={likeFn}
             />
           );
         })}

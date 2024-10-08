@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {likeCourse, unLikeCourse} from '../API/plogging/likeAPI';
 const {width} = Dimensions.get('window');
 
 const CustomCourseRecCard = ({
+  navigation, // navigation prop을 받아서 사용
   id,
   name,
   park,
@@ -35,40 +36,44 @@ const CustomCourseRecCard = ({
   unLikeFn,
 }) => {
   return (
-    <View style={styles.courseCard}>
-      <Image source={{uri: imageURL}} style={styles.mapImage} />
-      <View style={styles.courseInfo}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.courseTitle} numberOfLines={1}>
-            {name}
-          </Text>
-          {likeCheck ? (
-            <TouchableOpacity onPress={() => unLikeCourse(id)}>
-              <Image source={likeColor} style={styles.heartImg} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => likeCourse(id)}>
-              <Image
-                source={likeGray} // isLiked에 따라 이미지 변경
-                style={styles.heartImg}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.infoLabelContainer}>
-            <Text style={styles.infoLabel}>활동 영역</Text>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('CourseDetail', {courseId: id})} // 클릭 시 navigation을 사용해 CourseDetail로 이동하고 courseId를 전달
+    >
+      <View style={styles.courseCard}>
+        <Image source={{uri: imageURL}} style={styles.mapImage} />
+        <View style={styles.courseInfo}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.courseTitle} numberOfLines={1}>
+              {name}
+            </Text>
+            {likeCheck ? (
+              <TouchableOpacity onPress={() => unLikeCourse(id)}>
+                <Image source={likeColor} style={styles.heartImg} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => likeCourse(id)}>
+                <Image
+                  source={likeGray} // isLiked에 따라 이미지 변경
+                  style={styles.heartImg}
+                />
+              </TouchableOpacity>
+            )}
           </View>
-          <Text style={styles.infoValue}>{area}km</Text>
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.infoLabelContainer}>
-            <Text style={styles.infoLabel}>예상 시간</Text>
+          <View style={styles.infoBox}>
+            <View style={styles.infoLabelContainer}>
+              <Text style={styles.infoLabel}>활동 영역</Text>
+            </View>
+            <Text style={styles.infoValue}>{area}km</Text>
           </View>
-          <Text style={styles.infoValue}>2시간 ~ 2시간 30분</Text>
+          <View style={styles.infoBox}>
+            <View style={styles.infoLabelContainer}>
+              <Text style={styles.infoLabel}>예상 시간</Text>
+            </View>
+            <Text style={styles.infoValue}>2시간 ~ 2시간 30분</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
