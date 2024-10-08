@@ -29,6 +29,7 @@ import RedModal from '../components/RedModal';
 import {getPloggingCnt} from '../API/activity/activityAPI';
 import useStore from '../../store/store';
 import {getFriendsList} from '../API/friend/friendAPI';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function MyPageScreen({navigation}) {
   const token = useStore(state => state.accessToken);
@@ -37,8 +38,24 @@ export default function MyPageScreen({navigation}) {
   const [ploggingCnt, setPloggingCnt] = useState(111);
   const [friendsList, setFriendsList] = useState([]);
   const lvl = parseInt(useStore(state => state.exp) / 100);
-  const clearTokens = useStore((state) => state.clearTokens);
-  const clearUser = useStore((state) => state.clearUser);
+  const clearTokens = useStore(state => state.clearTokens);
+  const clearUser = useStore(state => state.clearUser);
+
+  const fetchFriendsList = async () => {
+    const response = await getFriendsList(token);
+    // console.log('친구 리스트 응답 : ', response);
+    if (response && response.friendList) {
+      const friendArray = Object.values(response.friendList);
+      // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
+      setFriendsList(friendArray);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFriendsList(); // 화면에 포커스될 때 친구 목록을 다시 불러옴
+    }, []),
+  );
 
   useEffect(() => {
     const fetchPloggingCnt = async () => {
@@ -47,15 +64,6 @@ export default function MyPageScreen({navigation}) {
       setPloggingCnt(response.totalCount);
     };
 
-    const fetchFriendsList = async () => {
-      const response = await getFriendsList(token);
-      // console.log('친구 리스트 응답 : ', response);
-      if (response && response.friendList) {
-        const friendArray = Object.values(response.friendList);
-        // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
-        setFriendsList(friendArray);
-      }
-    };
     fetchPloggingCnt();
     fetchFriendsList();
   }, []);
@@ -136,7 +144,7 @@ export default function MyPageScreen({navigation}) {
               alignItems: 'center',
             }}>
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
-              플로거 친구들
+              팔로잉 플로거
             </Text>
             <Pressable
               onPress={() => {

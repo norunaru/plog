@@ -88,7 +88,7 @@ const DeleteFriendScreen = ({navigation}) => {
           onClose={() => setIsModalOpen(false)} // 배경 클릭 시 모달 닫힘
         />
       ) : null}
-      <RecommendHeader navigation={navigation} headerText={'친구삭제'} />
+      <RecommendHeader navigation={navigation} headerText={'팔로잉 삭제'} />
       <View style={styles.wrap}>
         {typedText == '' && Object.keys(friend).length == 0 && (
           <View>
@@ -107,7 +107,7 @@ const DeleteFriendScreen = ({navigation}) => {
                     fontWeight: 'bold',
                     marginRight: responsiveWidth(1),
                   }}>
-                  친구 목록
+                  팔로잉 목록
                 </Text>
                 <Text
                   style={{
