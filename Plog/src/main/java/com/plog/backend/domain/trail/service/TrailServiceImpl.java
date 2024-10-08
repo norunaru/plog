@@ -174,7 +174,7 @@ public class TrailServiceImpl implements TrailService {
             HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
             // URL 설정
-            String url = "http://j11b205.p.ssafy.io/trails/recommend/";
+            String url = "https://j11b205.p.ssafy.io/trails/recommend/";
 
             // POST 요청 보내기
             ResponseEntity<Long[]> idArray = restTemplate.exchange(url, HttpMethod.POST, entity,
@@ -191,7 +191,7 @@ public class TrailServiceImpl implements TrailService {
             entity = new HttpEntity<>(headers);
 
             // URL 설정
-            url = "http://j11b205.p.ssafy.io/users/recommend/?user_id=" + memberId;
+            url = "https://j11b205.p.ssafy.io/users/recommend/?user_id=" + memberId;
 
             // POST 요청 보내기
             idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);

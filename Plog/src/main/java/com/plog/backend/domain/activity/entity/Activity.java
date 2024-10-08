@@ -84,7 +84,7 @@ public class Activity {
     @Column(name = "score", columnDefinition = "real")
     private Float score;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne()
     @JoinColumn(name = "trail_id")
     private Trail trail;
 
