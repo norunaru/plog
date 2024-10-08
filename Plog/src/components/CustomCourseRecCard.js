@@ -25,6 +25,7 @@ const CustomCourseRecCard = ({
   imageURL,
   likeCheck,
   onLikeToggle, // 좋아요/취소 핸들러를 props로 받음
+  time,
 }) => {
   return (
     <TouchableOpacity
@@ -47,13 +48,15 @@ const CustomCourseRecCard = ({
             <View style={styles.infoLabelContainer}>
               <Text style={styles.infoLabel}>활동 영역</Text>
             </View>
-            <Text style={styles.infoValue}>{area}km</Text>
+            <Text style={styles.infoValue}>{area}㎢</Text>
           </View>
           <View style={styles.infoBox}>
             <View style={styles.infoLabelContainer}>
               <Text style={styles.infoLabel}>예상 시간</Text>
             </View>
-            <Text style={styles.infoValue}>2시간 ~ 2시간 30분</Text>
+            <Text style={styles.infoValue}>
+              {parseInt(time / 60)}시간 {time % 60}분
+            </Text>
           </View>
         </View>
       </View>
