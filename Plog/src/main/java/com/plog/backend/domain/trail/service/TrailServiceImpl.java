@@ -22,6 +22,7 @@ import com.plog.backend.global.common.util.MemberInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TrailServiceImpl implements TrailService {
@@ -191,12 +192,13 @@ public class TrailServiceImpl implements TrailService {
             entity = new HttpEntity<>(headers);
 
             // URL 설정
-            url = "https://j11b205.p.ssafy.io/users/recommend/?user_id=" + memberId;
+            String url2 = "https://j11b205.p.ssafy.io/users/recommend/?user_id=" + memberId;
 
             // POST 요청 보내기
-            idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
+            ResponseEntity<Long[]> idArray2 = restTemplate.exchange(url2, HttpMethod.POST, entity,
+                Long[].class);
 
-            for (Long id : idArray.getBody()) {
+            for (Long id : Objects.requireNonNull(idArray2.getBody())) {
                 recommendedTrails.add(trailRepository.findById(id).orElseThrow());
             }
 
