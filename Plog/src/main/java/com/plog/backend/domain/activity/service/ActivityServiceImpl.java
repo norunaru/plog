@@ -119,10 +119,7 @@ public class ActivityServiceImpl implements ActivityService {
                 .locationName(activity.getLocationName())
                 .creationDate(activity.getCreationDate())
                 // ActivityImage 엔티티를 ActivityImageDto로 변환
-                .activityImages(activity.getActivityImages().stream()
-                    .map(image -> new ActivityImageDto(image.getId(), image.getSavedUrl()))
-                    .collect(Collectors.toList())
-                )
+                .images(activity.getTrail().getImage())
                 .score(activity.getScore())
                 .build()
             )

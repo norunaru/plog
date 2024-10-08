@@ -1,8 +1,6 @@
 package com.plog.backend.domain.activity.dto.response;
 
-import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +17,6 @@ public class ActivityFindByMemberIdResponseDto {
     private String locationName;
     private LocalDateTime creationDate;
     private String title;
-    private List<ActivityImageDto> activityImages;
+    private String images;
     private Float score;
 }
