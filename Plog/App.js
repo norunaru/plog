@@ -41,6 +41,7 @@ import useStore from './store/store';
 
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import BenchScreen from './src/screens/BenchScreen';
+import LikedCourseScreen from './src/screens/LikedCourseScreen';
 
 const queryClient = new QueryClient();
 
@@ -236,6 +237,11 @@ function AuthenticatedStack() {
       <Stack.Screen
         name="Bench"
         component={BenchScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LikedCourse"
+        component={LikedCourseScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

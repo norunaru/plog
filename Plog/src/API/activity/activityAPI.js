@@ -139,3 +139,18 @@ export const getPloggingCnt = async token => {
     console.log('플로깅 횟수 가져오기 에러 : ', error);
   }
 };
+
+//찜한 플로깅 코스
+export const getLikedCourses = async token => {
+  try {
+    const response = await axios.get(`${BASE_URL}/trail/like/list`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('찜 코스 가져오기 성공');
+    return response.data.data;
+  } catch (error) {
+    console.log('찜 코스 가져오기 에러 : ', error);
+  }
+};
