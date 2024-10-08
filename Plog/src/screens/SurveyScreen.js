@@ -54,20 +54,21 @@ const SurveyScreen = ({navigation}) => {
                 </View>
             </View>
             <View style={styles.footer}>
-                <Pressable style={styles.nextBtn}>
-                    <Text 
-                        style={styles.nextText}
-                        onPress={() => navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'Tabs' }],
-                          })}>
+                {/* <Pressable 
+                    style={styles.nextBtn}
+                    onPress={() => navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Tabs' }],
+                      })}
+                >
+                    <Text style={styles.nextText}>
                         다음에 할게요
                     </Text>
-                </Pressable>
-                <Pressable style={styles.preferBtn}>
-                    <Text 
-                        style={styles.preferText}
-                        onPress={() => navigation.navigate('Question')}>
+                </Pressable> */}
+                <Pressable 
+                    style={styles.preferBtn}
+                    onPress={() => navigation.navigate('Question')}>
+                    <Text style={styles.preferText}>
                         선호도 조사 하러가기
                     </Text>
                 </Pressable>
@@ -139,24 +140,24 @@ const styles = StyleSheet.create({
         bottom: responsiveHeight(6),
         width: '100%',
     },
-    nextBtn: {
-        borderRadius: 30,
-        borderWidth: 1,
-        borderColor: '#1ECD90',
-        width: responsiveWidth(32),
-        height: responsiveHeight(6),
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: responsiveWidth(3),
-    },
-    nextText: {
-        color: '#1ECD90',
-        fontSize: responsiveFontSize(1.8),
-        fontWeight: 'bold',
-    },
+    // nextBtn: {
+    //     borderRadius: 30,
+    //     borderWidth: 1,
+    //     borderColor: '#1ECD90',
+    //     width: responsiveWidth(35),
+    //     height: responsiveHeight(7),
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     marginRight: responsiveWidth(3),
+    // },
+    // nextText: {
+    //     color: '#1ECD90',
+    //     fontSize: responsiveFontSize(1.8),
+    //     fontWeight: 'bold',
+    // },
     preferBtn: {
-        width: responsiveWidth(52),
-        height: responsiveHeight(6),
+        width: responsiveWidth(80),
+        height: responsiveHeight(7),
         borderRadius: 30,
         backgroundColor: '#1ECD90',
         alignItems: 'center',
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     },
     preferText: {
         color: '#fff',
-        fontSize: responsiveFontSize(1.8),
+        fontSize: responsiveFontSize(2.3),
         fontWeight: 'bold',
     },
 });

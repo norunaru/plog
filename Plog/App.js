@@ -1,7 +1,11 @@
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import HomeScreen from './src/screens/HomeScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
 import DetailScreen from './src/screens/DetailScreen';
@@ -15,13 +19,6 @@ import SurveyScreen from './src/screens/SurveyScreen';
 import SurveyQuestionScreen from './src/screens/SurveyQuestionScreen';
 import PloggingRecordScreen from './src/screens/PloggingRecordScreen';
 import PloggingRecordDetailScreen from './src/screens/PloggingRecordDetailScreen';
-import {Image} from 'react-native';
-import homeBlack from './assets/icons/homeBlack.png';
-import homeGray from './assets/icons/homeGray.png';
-import communityBlack from './assets/icons/communityBlack.png';
-import communityGray from './assets/icons/communityGray.png';
-import MyBlack from './assets/icons/myBlack.png';
-import MyGray from './assets/icons/myGray.png';
 import WritingScreen from './src/screens/WritingScreen';
 import WritingUpdateScreen from './src/screens/WritingUpdateScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -31,6 +28,16 @@ import SurveyFinishScreen from './src/components/SurveyFinishScreen';
 import SurveyResultScreen from './src/components/SurveyResultScreen';
 import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
 import ModifyInfoScreen from './src/screens/ModifyInfoScreen';
+
+import {Image} from 'react-native';
+import homeBlack from './assets/icons/homeBlack.png';
+import homeGray from './assets/icons/homeGray.png';
+import communityBlack from './assets/icons/communityBlack.png';
+import communityGray from './assets/icons/communityGray.png';
+import MyBlack from './assets/icons/myBlack.png';
+import MyGray from './assets/icons/myGray.png';
+
+import useStore from './store/store';
 
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
@@ -76,253 +83,244 @@ function TabNavigator() {
   );
 }
 
-// Root Stack Navigator 정의 (Tab Navigator와 Stack Navigator 결합)
+function SurveyStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Survey"
+        component={SurveyScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Question"
+        component={SurveyQuestionScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyFinish"
+        component={SurveyFinishScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyResult"
+        component={SurveyResultScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Tabs"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="LoginMain"
+        component={LoginMainScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// 인증된 사용자용 Stack Navigator
+function AuthenticatedStack() {
+  return (
+    <Stack.Navigator>
+      {/* 탭 네비게이터 사용되는 스크린 */}
+      <Stack.Screen
+        name="Tabs"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="LoginMain"
+        component={LoginMainScreen}
+        options={{ headerShown: false }}
+      />
+      {/* 스택 네비게이터에만 존재하는 스크린 */}
+      <Stack.Screen name="Detail" component={DetailScreen} />
+      <Stack.Screen
+        name="CustomCourseRec"
+        component={CustomCourseRecScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="CourseDetail"
+        component={CourseDetailScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Plogging"
+        component={PloggingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PloggingRecord"
+        component={PloggingRecordScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="PloggingRecordDetail"
+        component={PloggingRecordDetailScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Writing"
+        component={WritingScreen}
+        options={{
+          title: '일지 작성',
+          headerTitleAlign: 'center',
+          headerBackVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="Recommend"
+        component={RecommendScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Review" component={ViewReviewScreen} />
+      <Stack.Screen
+        name="ManageFriend"
+        component={ManageFriendScreen}
+      />
+      <Stack.Screen
+        name="DeleteFriend"
+        component={DeleteFriendScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ModifyInfo"
+        component={ModifyInfoScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Survey"
+        component={SurveyScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Question"
+        component={SurveyQuestionScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyFinish"
+        component={SurveyFinishScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyResult"
+        component={SurveyResultScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// 인증되지 않은 사용자용 Stack Navigator
+function UnauthenticatedStack() {
+  return (
+    <Stack.Navigator initialRouteName="LoginMain">
+      <Stack.Screen
+        name="LoginMain"
+        component={LoginMainScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Survey"
+        component={SurveyScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Question"
+        component={SurveyQuestionScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyFinish"
+        component={SurveyFinishScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SurveyResult"
+        component={SurveyResultScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Login" component={LoginScreen} />
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const setTokens = useStore((state) => state.setTokens);
+  const accessToken = useStore((state) => state.accessToken);
+  const setUserFromToken = useStore((state) => state.setUserFromToken);
+  const setIsFirst = useStore((state) => state.setIsFirst);
+  const isFirst = useStore((state) => state.isFirst);
+
+  useEffect(() => {
+    const initializeApp  = async () => {
+      try {
+        const storedAccessToken = await AsyncStorage.getItem('accessToken');
+        const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
+        const storedIsFirst = await AsyncStorage.getItem('isFirst');
+
+        console.log("불러온 isFirst 값:", storedIsFirst);
+
+        if (storedAccessToken && storedRefreshToken) {
+          await setTokens(storedAccessToken, storedRefreshToken);
+          await setUserFromToken(storedAccessToken);
+        }
+
+        if (storedIsFirst !== null) {
+          setIsFirst(storedIsFirst === 'true');
+        } else {
+          // storedIsFirst가 없는 경우 기본값을 설정
+          setIsFirst(true);
+        }
+      } catch (e) {
+        console.error('앱 초기화 오류:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeApp();
+  }, []);
+
+  if (loading) {
+    // 토큰 로딩 중일 때 로딩 인디케이터 표시
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#1ECD90" />
+      </View>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginMain">
-          {/* 탭 네비게이터 사용되는 스크린 */}
-          <Stack.Screen
-            name="Tabs"
-            component={TabNavigator}
-            options={{headerShown: false}} // 탭 네비게이터 상단에 헤더 표시 안 함
-          />
-          {/* 스택 네비게이터에만 존재하는 스크린 */}
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen name="Detail" component={DetailScreen} />
-          <Stack.Screen
-            name="CustomCourseRec"
-            component={CustomCourseRecScreen}
-            options={{
-              headerTitleAlign: 'center',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="CourseDetail"
-            component={CourseDetailScreen}
-            options={{
-              headerTitleAlign: 'center',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Plogging"
-            component={PloggingScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="PloggingRecord"
-            component={PloggingRecordScreen}
-            options={{
-              headerTitleAlign: 'center',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="PloggingRecordDetail"
-            component={PloggingRecordDetailScreen}
-            options={{
-              headerTitleAlign: 'center',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Writing"
-            component={WritingScreen}
-            options={{
-              title: '일지 작성',
-              headerTitleAlign: 'center',
-              headerBackVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="WritingUpdate"
-            component={WritingUpdateScreen}
-            options={{
-              title: '일지 수정',
-              headerTitleAlign: 'center',
-              headerBackVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="Recommend"
-            component={RecommendScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Review" component={ViewReviewScreen} />
-          <Stack.Screen
-            name="ManageFriend"
-            component={ManageFriendScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="LoginMain"
-            component={LoginMainScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Survey"
-            component={SurveyScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Question"
-            component={SurveyQuestionScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SurveyFinish"
-            component={SurveyFinishScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SurveyResult"
-            component={SurveyResultScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="DeleteFriend"
-            component={DeleteFriendScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="ModifyInfo"
-            component={ModifyInfoScreen}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
+        {accessToken ? (
+          isFirst ? (
+            <SurveyStack />  // isFirst가 true이면 선호도 조사 화면으로 이동
+          ) : (
+            <AuthenticatedStack />  // isFirst가 false이면 바로 홈 화면으로 이동
+          )
+        ) : (
+          <UnauthenticatedStack />  // 토큰이 없을 때는 로그인 화면
+        )}
       </NavigationContainer>
     </QueryClientProvider>
   );
 }
-
-// import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
-// import React, {useState} from 'react';
-// import {
-//   login,
-//   logout,
-//   getProfile as getKakaoProfile,
-//   shippingAddresses as getKakaoShippingAddresses,
-//   unlink,
-// } from '@react-native-seoul/kakao-login';
-// import LoginScreen from './src/screens/LoginScreen';
-
-// const App = () => {
-//   const [result, setResult] = useState('');
-
-//   const signInWithKakao = async () => {
-//     try {
-//       const token = await login();
-//       console.log('카카오 로그인 토큰: ', token);
-//       setResult(JSON.stringify(token));
-//     } catch (err) {
-//       console.error('login err', err);
-//     }
-//   };
-
-//   const signOutWithKakao = async () => {
-//     try {
-//       const message = await logout();
-
-//       setResult(message);
-//     } catch (err) {
-//       console.error('signOut error', err);
-//     }
-//   };
-
-//   const getProfile = async () => {
-//     try {
-//       const profile = await getKakaoProfile();
-
-//       setResult(JSON.stringify(profile));
-//     } catch (err) {
-//       console.error('signOut error', err);
-//     }
-//   };
-
-//   const getShippingAddresses = async () => {
-//     try {
-//       const shippingAddresses = await getKakaoShippingAddresses();
-
-//       setResult(JSON.stringify(shippingAddresses));
-//     } catch (err) {
-//       console.error('signOut error', err);
-//     }
-//   };
-
-//   const unlinkKakao = async () => {
-//     try {
-//       const message = await unlink();
-
-//       setResult(message);
-//     } catch (err) {
-//       console.error('signOut error', err);
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.resultContainer}>
-//         <ScrollView>
-//           <Text>{result}</Text>
-//           <View style={{height: 100}} />
-//         </ScrollView>
-//       </View>
-//       <Pressable
-//         style={styles.button}
-//         onPress={() => {
-//           signInWithKakao();
-//         }}>
-//         <Text style={styles.text}>카카오 로그인</Text>
-//       </Pressable>
-//       <Pressable style={styles.button} onPress={() => getProfile()}>
-//         <Text style={styles.text}>프로필 조회</Text>
-//       </Pressable>
-//       <Pressable style={styles.button} onPress={() => getShippingAddresses()}>
-//         <Text style={styles.text}>배송주소록 조회</Text>
-//       </Pressable>
-//       <Pressable style={styles.button} onPress={() => unlinkKakao()}>
-//         <Text style={styles.text}>링크 해제</Text>
-//       </Pressable>
-//       <Pressable style={styles.button} onPress={() => signOutWithKakao()}>
-//         <Text style={styles.text}>카카오 로그아웃</Text>
-//       </Pressable>
-//     </View>
-//   );
-// };
-
-// export default App;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     height: '100%',
-//     justifyContent: 'flex-end',
-//     alignItems: 'center',
-//     paddingBottom: 100,
-//   },
-//   resultContainer: {
-//     flexDirection: 'column',
-//     width: '100%',
-//     padding: 24,
-//   },
-//   button: {
-//     backgroundColor: '#FEE500',
-//     borderRadius: 40,
-//     borderWidth: 1,
-//     width: 250,
-//     height: 40,
-//     paddingHorizontal: 20,
-//     paddingVertical: 10,
-//     marginTop: 10,
-//   },
-//   text: {
-//     textAlign: 'center',
-//   },
-// });

@@ -102,6 +102,7 @@ export default function HomeScreen({navigation}) {
         title="LoginMain"
         onPress={() => navigation.navigate('LoginMain')}
       /> */}
+      {/* <Button title="Survey" onPress={() => navigation.navigate('Survey')} /> */}
     </SafeAreaView>
   );
 }
