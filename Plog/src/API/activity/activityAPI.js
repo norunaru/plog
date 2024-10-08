@@ -36,8 +36,10 @@ export const postActivity = async ({
   const today = new Date().toISOString().slice(0, -1);
 
   lat.forEach((latitude, index) => formData.append(`lat[]`, String(latitude)));
-  lon.forEach((longitude, index) => formData.append(`lon[]`, String(longitude)));
-  
+  lon.forEach((longitude, index) =>
+    formData.append(`lon[]`, String(longitude)),
+  );
+
   formData.append('trailId', String(trailId));
   formData.append('totalTime', String(totalTime));
   formData.append('review', review);
@@ -48,7 +50,7 @@ export const postActivity = async ({
   formData.append('creationDate', today);
 
   if (images && images.length > 0) {
-    images.forEach((imageUri) => {
+    images.forEach(imageUri => {
       formData.append('images[]', imageUri);
     });
   }
@@ -152,5 +154,20 @@ export const getLikedCourses = async token => {
     return response.data.data;
   } catch (error) {
     console.log('찜 코스 가져오기 에러 : ', error);
+  }
+};
+
+//추천 플로깅 코스
+export const getRecommendedCourses = async token => {
+  try {
+    const response = await axios.get(`${BASE_URL}/trail/recommend`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log('추천 코스 가져오기 성공');
+    return response.data.data;
+  } catch (error) {
+    console.log('추천 코스 가져오기 에러 : ', error);
   }
 };
