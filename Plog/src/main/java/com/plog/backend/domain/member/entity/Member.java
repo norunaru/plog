@@ -49,6 +49,7 @@ public class Member {
     private String email;
 
     @Column(name = "nickname")
+    @ColumnDefault("'플로플로플로깅'")
     private String nickname;
 
     @Column(name = "profile_image_url")
@@ -70,19 +71,24 @@ public class Member {
     private Boolean isFirst;
 
     @Column(name = "activity_time")
+    @ColumnDefault("0")
     private Integer activityTime;
 
     @Column(name = "flogging_time")
+    @ColumnDefault("0")
     private Integer floggingTime;
 
     // city : 0, ocean : 1, lake : 2, park : 3
     @Column(name = "region_type")
+    @ColumnDefault("0")
     private Integer region_type;
 
     @Column(name = "region_lat", columnDefinition = "real")
+    @ColumnDefault("0")
     private Float regionLat;
 
     @Column(name = "region_lon", columnDefinition = "real")
+    @ColumnDefault("0")
     private Float regionLon;
 
     @Setter
