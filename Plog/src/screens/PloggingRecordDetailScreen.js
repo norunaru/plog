@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,17 @@ import {
   Image,
   TouchableOpacity,
   Share,
-  ScrollView,
+  ScrollView
 } from 'react-native';
 import {
+  responsiveWidth,
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import PloggingDetailHeader from '../components/headers/PloggingDetailHeader';
+import { getActivityData } from '../API/activity/activityAPI';
+import useStore from '../../store/store';
+
 import locationIcon from '../../assets/icons/ic_location.png';
 import distanceIcon from '../../assets/icons/distance.png';
 import timeIcon from '../../assets/icons/ic_time.png';
@@ -20,18 +24,36 @@ import calorieIcon from '../../assets/icons/ic_calorie.png';
 import calendarIcon from '../../assets/icons/ic_calendar.png';
 import starIcon from '../../assets/icons/ic_star.png';
 
-const PloggingRecordDetailScreen = ({navigation}) => {
-  const course = {
-    title: '제목 어쩌구',
-    date: '2024.09.20',
-    location: '잠실 한강 공원',
-    star: 4,
-    distance: '3km',
-    time: '2시간 15분 (10:19 - 11:42)',
-    calorie: '150kcal',
-    memo: '메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구 메모 어쩌구저쩌구',
-    image: require('../../assets/images/mapmap.png'),
-  };
+const PloggingRecordDetailScreen = ({route, navigation}) => {
+  const [course, setCourse] = useState([]);
+  const [createDate, setCreateDate] = useState([]);
+  const accessToken = useStore((state) => state.accessToken);
+  
+  const activityId = route.params.activityId;
+
+  useEffect(() => {
+    const fetchActivityData = async () => {
+      try {
+        const activityData = await getActivityData(activityId, accessToken); // API 호출
+        setCourse(activityData);
+        // creationDate가 유효한지 체크
+        if (activityData.creationDate) {
+          const date = new Date(activityData.creationDate); // 날짜 변환
+          if (!isNaN(date.getTime())) { // 유효한 날짜인지 확인
+            setCreateDate(date.toISOString().split('T')[0]);
+          } else {
+            console.error('유효하지 않은 날짜:', activityData.creationDate);
+          }
+        } else {
+          console.error('creationDate가 없습니다.');
+        }
+      } catch (error) {
+        console.error('기록 조회 에러:', error);
+      }
+    };
+
+    fetchActivityData();
+  }, [activityId, accessToken]);
 
   const onShare = async () => {
     try {
@@ -43,60 +65,61 @@ const PloggingRecordDetailScreen = ({navigation}) => {
     }
   };
 
+
+  const formatTime = (totalMinutes) => {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}시간 ${minutes}분`;
+  };
+
   return (
     <View style={styles.container}>
-      <PloggingDetailHeader
-        navigation={navigation}
-        headerText={'나의 플로깅 기록'}
-        activityId={1}
-      />
+      <PloggingDetailHeader navigation={navigation} headerText={'일지 조회'} />
 
       <ScrollView style={styles.bodyContainer}>
         <Text style={styles.title}>{course.title}</Text>
         <View style={styles.locationContainer}>
           <Image source={calendarIcon} style={styles.smallIcon} />
-          <Text style={styles.date}>{course.date}</Text>
+          <Text style={styles.date}>{createDate}</Text>
           <Image source={locationIcon} style={styles.smallIcon} />
-          <Text style={styles.location}>{course.location}</Text>
+          <Text style={styles.location}>{course.locationName}</Text>
           <Image source={starIcon} style={styles.smallIcon} />
-          <Text style={styles.star}>평점 {course.star}</Text>
+          <Text style={styles.star}>평점 {course.score}</Text>
         </View>
 
         <View style={styles.recordItem}>
-          <Image source={course.image} style={styles.mapImage} />
+          <Image source={{ uri: course.image }} style={styles.mapImage} />
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
               <Image source={distanceIcon} style={styles.infoIcon} />
               <Text style={styles.infoText}>총 거리</Text>
-              <Text style={styles.infoValue}>{course.distance}</Text>
+              <Text style={styles.infoValue}>{course.totalDistance}km</Text>
             </View>
             <View style={styles.infoItem}>
               <Image source={timeIcon} style={styles.infoIcon} />
               <Text style={styles.infoText}>총 시간</Text>
-              <Text style={styles.infoValue}>{course.time}</Text>
+              <Text style={styles.infoValue}>{formatTime(course.totalTime)}</Text>
             </View>
             <View style={styles.infoItem}>
               <Image source={calorieIcon} style={styles.infoIcon} />
               <Text style={styles.infoText}>소모 칼로리</Text>
-              <Text style={styles.infoValue}>{course.calorie}</Text>
+              <Text style={styles.infoValue}>{course.totalKcal}kcal</Text>
             </View>
           </View>
         </View>
 
-        <Text style={styles.memo}>{course.memo}</Text>
+        <Text style={styles.memo}>{course.review}</Text>
         <View style={styles.imageContainer}>
-          <Image
-            source={require('../../assets/images/image2001.png')}
-            style={styles.image}
-          />
-          <Image
-            source={require('../../assets/images/image2001.png')}
-            style={styles.image}
-          />
-          <Image
-            source={require('../../assets/images/image2001.png')}
-            style={styles.image}
-          />
+          {/* activityImages map 으로 출력 */}
+          {Array.isArray(course.images) && course.images.length > 0 && 
+            course.images.map((image, index) => (
+              <Image
+                key={index}
+                source={{ uri: image }} // 이미지 URI로 설정
+                style={styles.image}
+              />
+            ))
+          }
         </View>
 
         <View style={styles.footer}>
