@@ -80,7 +80,7 @@ export default function HomeScreen({navigation}) {
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{attractions.address}</Text>
           </View>
-          <View>
+          <View style={{padding: 16}}>
             <Text style={styles.type}>{attractions.type}</Text>
             <Text style={styles.attractionName}>{attractions.name}</Text>
           </View>
@@ -177,8 +177,7 @@ const styles = StyleSheet.create({
   attractionCard: {
     width: '100%',
     position: 'relative',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+
     borderRadius: 16,
   },
   badge: {
@@ -187,6 +186,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 4,
     marginBottom: 60,
+    marginTop: 16,
+    marginLeft: 16,
     alignSelf: 'flex-start',
   },
   badgeText: {
@@ -204,6 +205,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   overlay: {
+    width: '100%',
     ...StyleSheet.absoluteFillObject, // 전체 영역을 덮는 오버레이
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // 검정색 반투명으로 밝기를 50% 조정
     borderRadius: 16, // 이미지와 동일한 모서리 둥글기
