@@ -18,48 +18,24 @@ import {KakaoLogin} from '../API/login/loginAPI';
 import useStore from '../../store/store';
 
 const LoginMainScreen = () => {
-    const navigation = useNavigation();
-    const setTokens = useStore((state) => state.setTokens);
-    const setUserFromToken = useStore((state) => state.setUserFromToken);
-    const [errorMessage, setErrorMessage] = useState('');
+  const navigation = useNavigation();
+  const setTokens = useStore(state => state.setTokens);
+  const setUserFromToken = useStore(state => state.setUserFromToken);
 
-    const signInWithKakao = async () => {
-        try {
-            setErrorMessage('');  // 시도할 때마다 에러 메시지 초기화
-            const token = await login();
+  const signInWithKakao = async () => {
+    try {
+      const token = await login();
 
-            if (token && token.accessToken) {
-                console.log('카카오에서 받은 토큰:', token.accessToken);
+      if (token && token.accessToken) {
+        const response = await KakaoLogin(token.accessToken);
+        console.log('카카오 응답:', token);
+        console.log('서버 응답:', response);
 
-                // 서버에 로그인 요청 보내기
-                const response = await KakaoLogin(token.accessToken);
-                console.log('서버 응답:', response);
+        if (response.data.accessToken && response.data.refreshToken) {
+          setTokens(response.data.accessToken, response.data.refreshToken);
+          setUserFromToken(response.data.accessToken);
 
-                if (response && response.accessToken && response.refreshToken) {
-                    setTokens(response.accessToken, response.refreshToken);
-                    setUserFromToken(response.accessToken);
-
-                    navigation.navigate('Survey');  // 성공 시 Survey 페이지로 이동
-                } else {
-                    setErrorMessage('서버로부터 유효한 토큰을 받지 못했습니다.');
-                }
-            } else {
-                setErrorMessage('카카오 로그인에 실패했습니다.');
-            }
-        } catch (err) {
-            console.error('로그인 에러:', err);
-            
-            // 에러 응답이 있는 경우 처리
-            if (err.response) {
-                // 서버에서 반환된 에러 처리 (예: 404, 500 등)
-                setErrorMessage(`서버 에러: ${err.response.status} - ${err.response.data.message || '에러 메시지 없음'}`);
-            } else if (err.request) {
-                // 요청이 전송되었으나 응답을 받지 못한 경우
-                setErrorMessage('서버와의 통신에 실패했습니다. 네트워크를 확인하세요.');
-            } else {
-                // 기타 오류
-                setErrorMessage(`로그인 에러: ${err.message}`);
-            }
+          navigation.navigate('Survey');
         }
       }
     } catch (err) {
@@ -67,50 +43,49 @@ const LoginMainScreen = () => {
     }
   };
 
-
-    return (
-        <View style={styles.loginView}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>나를 위한 플로깅은</Text>
-                <Text style={styles.headerText}>
-                    <Text style={styles.highlightedText}>플로그</Text>
-                    와 함께
-                </Text>
-                <Text style={styles.bottomText}>플로깅은 조깅하면서 쓰레기를 줍는 행동을 말해요</Text>
-            </View>
-            <View style={styles.login}>
-                <ImageBackground
-                    source={require('../../assets/images/TextBalloon.png')}
-                    style={styles.balloon}
-                    resizeMode="contain">
-                    <View style={styles.balloonTextContainer}>
-                        <Text style={styles.balloonText}>오늘은 집 주변을 산책하며 쓰레기도 줍고</Text>
-                        <Text style={styles.balloonText}>나만의 플로깅 코스를 저장하고 추천받는 건 어떨까요?</Text>
-                    </View>
-                </ImageBackground>
-                <Image 
-                    source={require('../../assets/icons/img_login.png')}
-                    style={styles.loginImg}
-                />
-                <Pressable
-                    style={styles.kakao}
-                    onPress={() => {
-                        signInWithKakao();
-                    }}
-                >
-                    <Image 
-                        source={require('../../assets/icons/kakao.png')} 
-                        style={styles.kakaoImg}/>
-                    <Text style={styles.kakaoText}>Kakao로 계속하기</Text>
-                </Pressable>
-
-                {/* 에러 메시지 표시 부분 */}
-                {errorMessage ? (
-                    <Text style={styles.errorText}>{errorMessage}</Text>
-                ) : null}
-            </View>
-        </View>
-    );
+  return (
+    <View style={styles.loginView}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>나를 위한 플로깅은</Text>
+        <Text style={styles.headerText}>
+          <Text style={styles.highlightedText}>플로그</Text>와 함께
+        </Text>
+        <Text style={styles.bottomText}>
+          플로깅은 조깅하면서 쓰레기를 줍는 행동을 말해요
+        </Text>
+      </View>
+      <View style={styles.login}>
+        <ImageBackground
+          source={require('../../assets/images/TextBalloon.png')}
+          style={styles.balloon}
+          resizeMode="contain">
+          <View style={styles.balloonTextContainer}>
+            <Text style={styles.balloonText}>
+              오늘은 집 주변을 산책하며 쓰레기도 줍고
+            </Text>
+            <Text style={styles.balloonText}>
+              나만의 플로깅 코스를 저장하고 추천받는 건 어떨까요?
+            </Text>
+          </View>
+        </ImageBackground>
+        <Image
+          source={require('../../assets/icons/img_login.png')}
+          style={styles.loginImg}
+        />
+        <Pressable
+          style={styles.kakao}
+          onPress={() => {
+            signInWithKakao();
+          }}>
+          <Image
+            source={require('../../assets/icons/kakao.png')}
+            style={styles.kakaoImg}
+          />
+          <Text style={styles.kakaoText}>Kakao로 계속하기</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
