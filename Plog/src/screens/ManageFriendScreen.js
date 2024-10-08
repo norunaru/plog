@@ -18,6 +18,7 @@ import {
   searchWithEmail,
 } from '../API/friend/friendAPI';
 import useStore from '../../store/store';
+import {useFocusEffect} from '@react-navigation/native';
 
 const ManageFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
@@ -36,6 +37,12 @@ const ManageFriendScreen = ({navigation}) => {
       setFriends([]); // 친구가 없을 경우 빈 배열
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchFriendsList(); // 화면에 포커스될 때 친구 목록을 다시 불러옴
+    }, []),
+  );
 
   const fetchFriendsList = async () => {
     const response = await getFriendsList(token);
@@ -168,7 +175,7 @@ const ManageFriendScreen = ({navigation}) => {
                 </Text>
                 <Pressable
                   onPress={async () => {
-                    addFriend(token, friend.id);
+                    await addFriend(token, friend.id); // 친구 추가 요청이 완료될 때까지 기다림
                     setIsNoticeOn(true);
                     setTypedText('');
                     await fetchFriendsList(); // 친구 추가 후 목록 갱신
@@ -176,7 +183,6 @@ const ManageFriendScreen = ({navigation}) => {
                   style={{
                     borderRadius: 30,
                     height: 52,
-
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#1ECD90',
