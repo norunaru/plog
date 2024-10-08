@@ -1,10 +1,13 @@
 package com.plog.backend.domain.trail.controller;
 
 import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
+import com.plog.backend.domain.trail.dto.response.LikeTrailListResponseDto;
+import com.plog.backend.domain.trail.entity.LikeTrail;
 import com.plog.backend.domain.trail.service.TrailService;
 import com.plog.backend.global.common.util.MemberInfo;
 import com.plog.backend.global.dto.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ public class TrailController {
     public SuccessResponse<?> trail() {
         return SuccessResponse.ok(trailService.getAllTrails());
     }
+
     // 디테일 조회
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{trailId}")
@@ -44,8 +48,10 @@ public class TrailController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/postion")
     @Operation(summary = "위치 기반 플로깅 코스 추천", description = "플로깅 코스 추천 API(위치 좌표를 넘겨주면 추천)")
-    public SuccessResponse<?> postion(@RequestBody TrailPositionRequestDto trailPositionRequestDto) {
-        return SuccessResponse.ok(trailService.getRecommendedByPositionTrail(MemberInfo.getUserId(),trailPositionRequestDto));
+    public SuccessResponse<?> postion(
+        @RequestBody TrailPositionRequestDto trailPositionRequestDto) {
+        return SuccessResponse.ok(trailService.getRecommendedByPositionTrail(MemberInfo.getUserId(),
+            trailPositionRequestDto));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -62,5 +68,12 @@ public class TrailController {
     public SuccessResponse<?> unlike(@PathVariable(name = "trailId") Long trailId) {
         trailService.unlike(MemberInfo.getUserId(), trailId);
         return SuccessResponse.ok();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/like/list")
+    @Operation(summary = "좋아요 리스트 조회", description = "좋아요 리스트 api")
+    public SuccessResponse<?> likeList() {
+        return SuccessResponse.ok(trailService.getlikeTrail());
     }
 }

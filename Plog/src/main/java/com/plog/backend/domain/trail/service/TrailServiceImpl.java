@@ -9,6 +9,7 @@ import com.plog.backend.domain.member.repository.MemberScoreRepository;
 import com.plog.backend.domain.trail.dto.TrailDto;
 import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
 import com.plog.backend.domain.trail.dto.response.Coordinate;
+import com.plog.backend.domain.trail.dto.response.LikeTrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailDetailDto;
 import com.plog.backend.domain.trail.dto.response.TrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailRecommendDto;
@@ -17,6 +18,7 @@ import com.plog.backend.domain.trail.entity.Trail;
 import com.plog.backend.domain.trail.repository.LikeTrailRepository;
 import com.plog.backend.domain.trail.repository.TrailRepository;
 
+import com.plog.backend.global.common.util.MemberInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -58,31 +60,31 @@ public class TrailServiceImpl implements TrailService {
         Trail trail = trailRepository.findById(id).orElse(null);
         String tag = "";
         // 면적 => 거리 => 시간
-        int time = (int) (Math.sqrt(trail.getArea())/6);
+        int time = (int) (Math.sqrt(trail.getArea()) / 6);
         // 면적 => 거리
         float area = (float) (Math.sqrt(trail.getArea()));
         tag += timeToTag(time);
         tag += trailTotag(trail);
-        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(), memberId);
         boolean like = true;
-        if(likeTrail==null){
-            like=false;
+        if (likeTrail == null) {
+            like = false;
         }
         Coordinate[] polygon = new Coordinate[trail.getLat().length];
-        for(int i = 0; i < polygon.length; i++) {
-            polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+        for (int i = 0; i < polygon.length; i++) {
+            polygon[i] = new Coordinate(trail.getLat()[i], trail.getLon()[i]);
         }
 
         TrailDetailDto trailRecommendDto = TrailDetailDto.builder()
-                .id(trail.getId())
-                .area(area)
-                .polygon(polygon)
-                .title(trail.getName())
-                .time(time)
-                .tags(tag)
-                .like(like)
-                .imageUri(trail.getImage())
-                .build();
+            .id(trail.getId())
+            .area(area)
+            .polygon(polygon)
+            .title(trail.getName())
+            .time(time)
+            .tags(tag)
+            .like(like)
+            .imageUri(trail.getImage())
+            .build();
         return trailRecommendDto;
     }
 
@@ -95,19 +97,19 @@ public class TrailServiceImpl implements TrailService {
     public void createTrailCenter() {
         List<Trail> trails = trailRepository.findAll();
 
-        for(Trail trail : trails) {
+        for (Trail trail : trails) {
             Float[] lonArr = trail.getLon();
             Float[] latArr = trail.getLat();
 
             float lonSum = 0;
-            for(Float lon : lonArr) {
+            for (Float lon : lonArr) {
                 lonSum += lon;
             }
             float latSum = 0;
-            for(Float lat : latArr) {
+            for (Float lat : latArr) {
                 latSum += lat;
             }
-            trail.setCenter(new Float[] {latSum/latArr.length, lonSum/lonArr.length});
+            trail.setCenter(new Float[]{latSum / latArr.length, lonSum / lonArr.length});
             trailRepository.save(trail);
         }
     }
@@ -122,17 +124,21 @@ public class TrailServiceImpl implements TrailService {
     3. 추천 받은 산책로 정보와 함께 넘겨 주기
      */
     @Override
-    public List<TrailRecommendDto> getRecommendedTrail(Long memberId){
+    public List<TrailRecommendDto> getRecommendedTrail(Long memberId) {
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        Float[] scores = memberScore.getScore();;
+        Float[] scores = memberScore.getScore();
+        ;
         int count = 0;
-        for(Float score : scores) {
-            if(score>=3) count++;
+        for (Float score : scores) {
+            if (score >= 3) {
+                count++;
+            }
         }
-        if(count>5) {
+        if (count > 5) {
             // 사용자가 높게 평가한 플로깅 코스와 유사한 코스 추천
             // 우선순위 큐를 사용하여 가장 큰 3개의 값을 저장하는 방법 (작은 값이 먼저 제거됨)
-            PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> Double.compare(scores[b], scores[a]));
+            PriorityQueue<Integer> maxHeap = new PriorityQueue<>(
+                (a, b) -> Double.compare(scores[b], scores[a]));
 
             // 모든 점수의 인덱스를 힙에 추가
             for (int i = 0; i < scores.length; i++) {
@@ -170,59 +176,59 @@ public class TrailServiceImpl implements TrailService {
             String url = "http://j11b205.p.ssafy.io/trails/recommend/";
 
             // POST 요청 보내기
-            ResponseEntity<Long[]> idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
+            ResponseEntity<Long[]> idArray = restTemplate.exchange(url, HttpMethod.POST, entity,
+                Long[].class);
 
             List<Trail> recommendedTrails = new ArrayList<>();
 
-            for(Long id : idArray.getBody()) {
+            for (Long id : idArray.getBody()) {
                 recommendedTrails.add(trailRepository.findById(id).orElseThrow());
             }
-
 
             // 사용자와 유사한 사람들이 선호하는 코스 추천
             // HttpEntity 객체에 헤더와 바디를 설정
             entity = new HttpEntity<>(headers);
 
             // URL 설정
-            url = "http://j11b205.p.ssafy.io/users/recommend/?user_id="+memberId;
+            url = "http://j11b205.p.ssafy.io/users/recommend/?user_id=" + memberId;
 
             // POST 요청 보내기
             idArray = restTemplate.exchange(url, HttpMethod.POST, entity, Long[].class);
 
-
-            for(Long id : idArray.getBody()) {
+            for (Long id : idArray.getBody()) {
                 recommendedTrails.add(trailRepository.findById(id).orElseThrow());
             }
 
             // 응답 결과 출력
             List<TrailRecommendDto> response = new ArrayList<>();
-            for(Trail trail : recommendedTrails) {
+            for (Trail trail : recommendedTrails) {
                 String tag = "";
                 // 면적 => 거리 => 시간
-                int time = (int) (Math.sqrt(trail.getArea())/6);
+                int time = (int) (Math.sqrt(trail.getArea()) / 6);
                 // 면적 => 거리
                 float area = (float) (Math.sqrt(trail.getArea()));
                 tag += timeToTag(time);
                 tag += trailTotag(trail);
-                LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+                LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),
+                    memberId);
                 boolean like = true;
-                if(likeTrail==null || !likeTrail.getLikeCheck()){
-                    like=false;
+                if (likeTrail == null || !likeTrail.getLikeCheck()) {
+                    like = false;
                 }
                 Coordinate[] polygon = new Coordinate[trail.getLat().length];
-                for(int i = 0; i < polygon.length; i++) {
-                    polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+                for (int i = 0; i < polygon.length; i++) {
+                    polygon[i] = new Coordinate(trail.getLat()[i], trail.getLon()[i]);
                 }
 
                 TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
-                        .id(trail.getId())
-                        .area(area)
-                        .polygon(polygon)
-                        .title(trail.getName())
-                        .time(time)
-                        .tags(tag)
-                        .like(like)
-                        .build();
+                    .id(trail.getId())
+                    .area(area)
+                    .polygon(polygon)
+                    .title(trail.getName())
+                    .time(time)
+                    .tags(tag)
+                    .like(like)
+                    .build();
                 response.add(trailRecommendDto);
             }
             return response;
@@ -235,73 +241,33 @@ public class TrailServiceImpl implements TrailService {
             Integer floggingTimeType = member.getActivityTime();
             Pageable pageable = PageRequest.of(0, 3);
 
-            List<Trail> recommendedTrails = trailRepository.findRecommendedTrails(lat, lon, type, pageable);
+            List<Trail> recommendedTrails = trailRepository.findRecommendedTrails(lat, lon, type,
+                pageable);
 
             List<TrailRecommendDto> response = new ArrayList<>();
-            for(Trail trail : recommendedTrails) {
+            for (Trail trail : recommendedTrails) {
                 // 면적 => 거리 => 시간
-                int time = (int) (Math.sqrt(trail.getArea())/6);
+                int time = (int) (Math.sqrt(trail.getArea()) / 6);
                 // 면적 => 거리
                 float area = (float) (Math.sqrt(trail.getArea()));
-                if(checkFologgingTime(time,floggingTimeType));
+                if (checkFologgingTime(time, floggingTimeType))
+                    ;
                 String tag = "";
                 tag += timeToTag(time);
                 tag += typeTotag(type);
-                LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
+                LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),
+                    memberId);
                 boolean like = true;
-                if(likeTrail==null || !likeTrail.getLikeCheck()){
-                    like=false;
+                if (likeTrail == null || !likeTrail.getLikeCheck()) {
+                    like = false;
                 }
 
                 Coordinate[] polygon = new Coordinate[trail.getLat().length];
-                for(int i = 0; i < polygon.length; i++) {
-                    polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
+                for (int i = 0; i < polygon.length; i++) {
+                    polygon[i] = new Coordinate(trail.getLat()[i], trail.getLon()[i]);
                 }
 
                 TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
-                        .id(trail.getId())
-                        .area(area)
-                        .polygon(polygon)
-                        .title(trail.getName())
-                        .time(time)
-                        .tags(tag)
-                        .like(like)
-                        .build();
-                response.add(trailRecommendDto);
-            }
-            return response;
-        }
-    }
-
-    @Override
-    public List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId, TrailPositionRequestDto trailPositionRequestDto){
-        System.out.println(trailPositionRequestDto.getLatitude());
-        System.out.println(trailPositionRequestDto.getLongitude());
-        List<Trail> recommendedTrails = trailRepository.findTrailsWithinDistance(trailPositionRequestDto.getLatitude(), trailPositionRequestDto.getLongitude(),5f);
-
-        // 응답 결과 출력
-        List<TrailRecommendDto> response = new ArrayList<>();
-        for(Trail trail : recommendedTrails) {
-            // 면적 => 거리 => 시간
-            int time = (int) (Math.sqrt(trail.getArea())/6);
-            // 면적 => 거리
-            float area = (float) (Math.sqrt(trail.getArea()));
-            String tag = "";
-            tag += timeToTag(time);
-            tag += trailTotag(trail);
-
-            LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),memberId);
-
-            boolean like = true;
-            if(likeTrail==null || !likeTrail.getLikeCheck()){
-                like=false;
-            }
-            Coordinate[] polygon = new Coordinate[trail.getLat().length];
-            for(int i = 0; i < polygon.length; i++) {
-                polygon[i] = new Coordinate(trail.getLat()[i],trail.getLon()[i]);
-            }
-
-            TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
                     .id(trail.getId())
                     .area(area)
                     .polygon(polygon)
@@ -310,6 +276,52 @@ public class TrailServiceImpl implements TrailService {
                     .tags(tag)
                     .like(like)
                     .build();
+                response.add(trailRecommendDto);
+            }
+            return response;
+        }
+    }
+
+    @Override
+    public List<TrailRecommendDto> getRecommendedByPositionTrail(Long memberId,
+        TrailPositionRequestDto trailPositionRequestDto) {
+        System.out.println(trailPositionRequestDto.getLatitude());
+        System.out.println(trailPositionRequestDto.getLongitude());
+        List<Trail> recommendedTrails = trailRepository.findTrailsWithinDistance(
+            trailPositionRequestDto.getLatitude(), trailPositionRequestDto.getLongitude(), 5f);
+
+        // 응답 결과 출력
+        List<TrailRecommendDto> response = new ArrayList<>();
+        for (Trail trail : recommendedTrails) {
+            // 면적 => 거리 => 시간
+            int time = (int) (Math.sqrt(trail.getArea()) / 6);
+            // 면적 => 거리
+            float area = (float) (Math.sqrt(trail.getArea()));
+            String tag = "";
+            tag += timeToTag(time);
+            tag += trailTotag(trail);
+
+            LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trail.getId(),
+                memberId);
+
+            boolean like = true;
+            if (likeTrail == null || !likeTrail.getLikeCheck()) {
+                like = false;
+            }
+            Coordinate[] polygon = new Coordinate[trail.getLat().length];
+            for (int i = 0; i < polygon.length; i++) {
+                polygon[i] = new Coordinate(trail.getLat()[i], trail.getLon()[i]);
+            }
+
+            TrailRecommendDto trailRecommendDto = TrailRecommendDto.builder()
+                .id(trail.getId())
+                .area(area)
+                .polygon(polygon)
+                .title(trail.getName())
+                .time(time)
+                .tags(tag)
+                .like(like)
+                .build();
             response.add(trailRecommendDto);
         }
         return response;
@@ -321,32 +333,38 @@ public class TrailServiceImpl implements TrailService {
     }
 
     private String trailTotag(Trail trail) {
-        if(trail.getCity() > 0.5)
+        if (trail.getCity() > 0.5) {
             return "#도심";
-        if(trail.getOcean() > 0.5)
+        }
+        if (trail.getOcean() > 0.5) {
             return "#바다";
-        if(trail.getLake() > 0.5)
+        }
+        if (trail.getLake() > 0.5) {
             return "#강";
-        if(trail.getPark() > 0.5)
+        }
+        if (trail.getPark() > 0.5) {
             return "#공원";
+        }
         return "";
     }
 
     private String timeToTag(int time) {
-        if(time>60) {
+        if (time > 60) {
             return "#고급 ";
-        } else if(time>30) {
+        } else if (time > 30) {
             return "#중급 ";
-        } else{
+        } else {
             return "#초급 ";
         }
     }
 
     private boolean checkFologgingTime(int time, int type) {
-        if(type == 0) {
+        if (type == 0) {
             return time <= 30;
-        } else if(type==1) {
-            if(time < 30) return false;
+        } else if (type == 1) {
+            if (time < 30) {
+                return false;
+            }
             return time <= 60;
         } else {
             return time >= 60;
@@ -355,13 +373,13 @@ public class TrailServiceImpl implements TrailService {
 
     @Override
     public void like(Long memberId, Long trailId) {
-        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trailId,memberId);
-        if(likeTrail==null){
+        LikeTrail likeTrail = likeTrailRepository.findByTrailIdAndMemberId(trailId, memberId);
+        if (likeTrail == null) {
             likeTrail = LikeTrail.builder()
-                    .trail(trailRepository.findById(trailId).orElseThrow())
-                    .member(memberRepository.findById(memberId).orElseThrow())
-                    .likeCheck(true)
-                    .build();
+                .trail(trailRepository.findById(trailId).orElseThrow())
+                .member(memberRepository.findById(memberId).orElseThrow())
+                .likeCheck(true)
+                .build();
         } else {
             likeTrail.setLikeCheck(true);
         }
@@ -370,8 +388,15 @@ public class TrailServiceImpl implements TrailService {
 
     @Override
     public void unlike(Long memberId, Long trailId) {
-        LikeTrail trail = likeTrailRepository.findByTrailIdAndMemberId(trailId,memberId);
+        LikeTrail trail = likeTrailRepository.findByTrailIdAndMemberId(trailId, memberId);
         trail.setLikeCheck(false);
         likeTrailRepository.save(trail);
+    }
+
+    @Override
+    public LikeTrailListResponseDto getlikeTrail() {
+        List<LikeTrail> list = likeTrailRepository.findAllByMemberId(MemberInfo.getUserId());
+        return LikeTrailListResponseDto.builder()
+            .likeTrailList(list).totalLikeCount((long) list.size()).build();
     }
 }
