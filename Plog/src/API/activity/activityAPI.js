@@ -35,15 +35,12 @@ export const postActivity = async ({
   token,
 }) => {
   const formData = new FormData();
-  const today = new Date().toISOString();
-  // const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().slice(0, -1);
 
   lat.forEach((latitude, index) => formData.append(`lat[]`, String(latitude)));
   lon.forEach((longitude, index) => formData.append(`lon[]`, String(longitude)));
   
-  // formData.append('memberId', memberId);
   formData.append('trailId', String(trailId));
-  // formData.append('distance', distance);
   formData.append('totalTime', String(totalTime));
   formData.append('review', review);
   formData.append('score', String(score));

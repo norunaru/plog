@@ -13,9 +13,10 @@ import {
   Pressable,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
-import Modal from '../components/Modal';
 import { postActivity } from '../API/activity/activityAPI';
+import Modal from '../components/Modal';
 import useStore from '../../store/store';
+
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
 import photoAdd from '../../assets/icons/photoAdd.png';
@@ -33,32 +34,6 @@ const WritingScreen = ({navigation}) => {
   const [selectedImages, setSelectedImages] = useState([]); 
   const id = useStore((state) => state.id);
   const accessToken = useStore((state) => state.accessToken);
-
-  // 별 클릭 시 호출되는 함수
-  const handleStarPress = index => {
-    setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
-  };
-
-  // 이미지 선택 핸들러
-  const handleSelectImages = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo', // 사진만 선택 가능
-        selectionLimit: 3, // 최대 3개 선택 가능
-      },
-      response => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.log('ImagePicker Error: ', response.errorMessage);
-        } else {
-          // 선택된 이미지를 상태에 저장
-          const selectedUris = response.assets.map(asset => asset.uri);
-          setSelectedImages(selectedUris);
-        }
-      },
-    );
-  };
 
   const writingSavePress = async () => {
     // 임의 데이터 (id, token 제외)
@@ -106,6 +81,32 @@ const WritingScreen = ({navigation}) => {
     }
   };  
 
+  // 별 클릭 시 호출되는 함수
+  const handleStarPress = index => {
+    setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
+  };
+
+  // 이미지 선택 핸들러
+  const handleSelectImages = () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo', // 사진만 선택 가능
+        selectionLimit: 3, // 최대 3개 선택 가능
+      },
+      response => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.log('ImagePicker Error: ', response.errorMessage);
+        } else {
+          // 선택된 이미지를 상태에 저장
+          const selectedUris = response.assets.map(asset => asset.uri);
+          setSelectedImages(selectedUris);
+        }
+      },
+    );
+  };
+
   return (
     <ScrollView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -126,13 +127,15 @@ const WritingScreen = ({navigation}) => {
       ) : null}
 
       <SafeAreaView
-        style={{padding: 20, backgroundColor: 'white', height: '100%'}}>
+        style={{padding: 20, backgroundColor: 'white', height: '100%'}}
+      >
         <TextInput
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
-          onChangeText={text => setTitleValue(text)}
-          value={titleValue}
+          multiline={true}
+          maxLength={120}
+          textAlignVertical="top"
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -169,7 +172,7 @@ const WritingScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={{marginTop: 20}}>
+        <View style={{marginTop: 20, marginLeft: 8}}>
           <Text style={styles.boldText}>이 코스 어땠나요?</Text>
           {/* starWrap */}
           <View style={styles.starWrap}>
@@ -190,7 +193,7 @@ const WritingScreen = ({navigation}) => {
         </View>
 
         {/* 메모 */}
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={styles.memoContainer}>
           <TextInput
             placeholder="메모를 작성하세요"
             style={styles.memo}
@@ -201,6 +204,10 @@ const WritingScreen = ({navigation}) => {
             value={memo}
             textAlignVertical="top"
           />
+          {/* 글자수 카운터 표시 */}
+          <Text style={styles.charCounter}>
+            {memo.length}/255
+          </Text>
         </KeyboardAvoidingView>
 
         <View style={{flexDirection: 'row', marginBottom: 24}}>
@@ -275,14 +282,25 @@ const styles = StyleSheet.create({
   detailThin: {
     fontSize: 13,
   },
+  memoContainer: {
+    position: 'relative',
+    paddingBottom: 15,
+  },
   memo: {
-    borderBottomColor: '#D9D9D9',
+    borderBottomColor: '#D9D9D9', 
     borderBottomWidth: 1,
     height: 80,
     maxHeight: 265,
     padding: 8,
-    fontSize: 18,
-    marginVertical: 16,
+    fontSize: 15,
+    marginVertical: 14,
+  },
+  charCounter: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    fontSize: 12,
+    color: '#8A8A8A',
   },
   whiteBtn: {
     width: 122,
@@ -310,9 +328,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   boldText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
     color: 'black',
   },
   starWrap: {
