@@ -144,7 +144,7 @@ export default function MyPageScreen({navigation}) {
               alignItems: 'center',
             }}>
             <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>
-              플로거 친구들
+              팔로우중인 플로거
             </Text>
             <Pressable
               onPress={() => {

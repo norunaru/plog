@@ -70,12 +70,12 @@ const ManageFriendScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'친구관리'} />
+      <RecommendHeader navigation={navigation} headerText={'팔로잉'} />
       <View style={styles.wrap}>
         <View style={styles.inputWrapper}>
           <TextInput
             style={styles.inputBox}
-            placeholder="친구의 카카오 이메일을 입력하세요"
+            placeholder="카카오 이메일을 입력하세요"
             onChangeText={text => setTypedText(text)}
             onSubmitEditing={searchFriend} // 입력을 완료하면 자동으로 검색
             autoCapitalize="none"
@@ -103,7 +103,7 @@ const ManageFriendScreen = ({navigation}) => {
                     fontWeight: 'bold',
                     marginRight: 4,
                   }}>
-                  친구 목록
+                  팔로잉 목록
                 </Text>
                 <Text
                   style={{color: '#1ECD90', fontSize: 18, fontWeight: 'bold'}}>
