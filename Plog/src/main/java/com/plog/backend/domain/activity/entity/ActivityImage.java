@@ -1,7 +1,5 @@
 package com.plog.backend.domain.activity.entity;
 
-import static jakarta.persistence.FetchType.LAZY;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -37,7 +34,7 @@ public class ActivityImage {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne()
     @JoinColumn(name = "activity_id")
     private Activity activity;
 

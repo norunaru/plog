@@ -1,5 +1,6 @@
 package com.plog.backend.domain.activity.service;
 
+import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
@@ -107,13 +108,27 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<ActivityFindByMemberIdResponseDto> findActivityByMemberId(Long id) {
+        // 활동 데이터를 트랜잭션 내에서 가져옴
         List<Activity> activities = activityRepository.findAllByMemberId(id);
 
-        return activities.stream().map(
-            activity -> ActivityFindByMemberIdResponseDto.builder().id(activity.getId())
-                .title(activity.getTitle()).locationName(activity.getLocationName())
-                .creationDate(activity.getCreationDate()).build()).collect(Collectors.toList());
+        // 변환 작업
+        return activities.stream()
+            .map(activity -> ActivityFindByMemberIdResponseDto.builder()
+                .id(activity.getId())
+                .title(activity.getTitle())
+                .locationName(activity.getLocationName())
+                .creationDate(activity.getCreationDate())
+                // ActivityImage 엔티티를 ActivityImageDto로 변환
+                .activityImages(activity.getActivityImages().stream()
+                    .map(image -> new ActivityImageDto(image.getId(), image.getSavedUrl()))
+                    .collect(Collectors.toList())
+                )
+                .score(activity.getScore())
+                .build()
+            )
+            .collect(Collectors.toList());
     }
+
 
     @Override
     public ActivityFindByIdResponseDto findActivityById(Long id) {
