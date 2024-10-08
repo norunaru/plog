@@ -10,4 +10,5 @@ public class FriendFindByEmailResponseDto {
     Long id;
     String nickName;
     String email;
+    String profileImageUrl;
 }
