@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import likeGray from '../../assets/icons/likeGray.png';
 import likeColor from '../../assets/icons/likeColor.png';
 import {
@@ -7,51 +14,59 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import {likeCourse, unLikeCourse} from '../API/plogging/likeAPI';
 
-const { width } = Dimensions.get('window');
-const titleText = 'A코스입니다';
-const MAX_LENGTH = 23;
-const displayTitleText = titleText.length > MAX_LENGTH
-    ? titleText.substring(0, MAX_LENGTH) + '...'
-    : titleText;
+const {width} = Dimensions.get('window');
 
-const CustomCourseRecCard = () => {
-  const [isLiked, setIsLiked] = useState(false);
-
+const CustomCourseRecCard = ({
+  id,
+  name,
+  park,
+  ocean,
+  city,
+  lake,
+  area,
+  lat,
+  lon,
+  center,
+  imageURL,
+  likeCheck,
+  likeFn,
+  unLikeFn,
+}) => {
   return (
     <View style={styles.courseCard}>
-      <Image 
-        source={require('../../assets/images/mapmap.png')}
-        style={styles.mapImage}
-      />
+      <Image source={{uri: imageURL}} style={styles.mapImage} />
       <View style={styles.courseInfo}>
         <View style={styles.titleContainer}>
-            <Text style={styles.courseTitle} numberOfLines={1}>
-                  {displayTitleText}
-            </Text>
-            <TouchableOpacity onPress={() => setIsLiked(!isLiked)}>
-              <Image 
-                source={
-                  isLiked
-                    ? likeColor
-                    : likeGray
-                }
+          <Text style={styles.courseTitle} numberOfLines={1}>
+            {name}
+          </Text>
+          {likeCheck ? (
+            <TouchableOpacity onPress={() => unLikeCourse(id)}>
+              <Image source={likeColor} style={styles.heartImg} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => likeCourse(id)}>
+              <Image
+                source={likeGray} // isLiked에 따라 이미지 변경
                 style={styles.heartImg}
               />
             </TouchableOpacity>
+          )}
         </View>
-          <View style={styles.infoBox}>
-            <View style={styles.infoLabelContainer}>
-                <Text style={styles.infoLabel}>활동 거리</Text>
-            </View>
-            <Text style={styles.infoValue}>3km</Text>
+        <View style={styles.infoBox}>
+          <View style={styles.infoLabelContainer}>
+            <Text style={styles.infoLabel}>활동 영역</Text>
           </View>
-          <View style={styles.infoBox}>
-            <View style={styles.infoLabelContainer}>
-                <Text style={styles.infoLabel}>예상 시간</Text>
-            </View>
-            <Text style={styles.infoValue}>2시간 ~ 2시간 30분</Text>
+          <Text style={styles.infoValue}>{area}km</Text>
+        </View>
+        <View style={styles.infoBox}>
+          <View style={styles.infoLabelContainer}>
+            <Text style={styles.infoLabel}>예상 시간</Text>
           </View>
+          <Text style={styles.infoValue}>2시간 ~ 2시간 30분</Text>
+        </View>
       </View>
     </View>
   );
@@ -63,7 +78,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 22,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 1,
@@ -96,16 +111,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   infoLabelContainer: {
-      backgroundColor: '#E7F7EF',
-      paddingHorizontal: 13,
-      borderRadius: 15,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 5,
+    backgroundColor: '#E7F7EF',
+    paddingHorizontal: 13,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   infoLabel: {
     fontSize: responsiveFontSize(1.6),
-    fontWeight: "500",
+    fontWeight: '500',
     color: '#00A68A',
     paddingVertical: 2,
     paddingHorizontal: 1,
@@ -117,12 +132,12 @@ const styles = StyleSheet.create({
     paddingVertical: 1.8,
     paddingHorizontal: 8,
   },
-    heartImg: {
-      width: responsiveWidth(13),
-      height: responsiveHeight(3.6),
-      resizeMode: 'contain',
-      marginLeft: 10,
-    },
+  heartImg: {
+    width: responsiveWidth(13),
+    height: responsiveHeight(3.6),
+    resizeMode: 'contain',
+    marginLeft: 10,
+  },
 });
 
 export default CustomCourseRecCard;

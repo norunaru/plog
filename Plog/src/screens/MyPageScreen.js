@@ -186,7 +186,10 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('LikedCourse');
+            }}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>
                 찜한 플로깅 코스

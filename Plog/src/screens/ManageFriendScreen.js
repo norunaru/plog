@@ -23,7 +23,7 @@ import {useFocusEffect} from '@react-navigation/native';
 const ManageFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
   const [friends, setFriends] = useState([]); // 배열로 변경
-  const [isNoticeOn, setIsNoticeOn] = useState(true);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
   const [friendsList, setFriendsList] = useState([]);
   const [friendsCnt, setFriendsCnt] = useState(0);
 
