@@ -4,10 +4,10 @@ import {
   View,
   Text,
   Image,
-  Button,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground, // ImageBackground 추가
+  ImageBackground,
+  Pressable,
 } from 'react-native';
 import {
   responsiveFontSize,
@@ -21,9 +21,11 @@ import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
 import {getAttractions} from '../API/attraction/attractionAPI';
 import useStore from '../../store/store';
+import Geolocation from 'react-native-geolocation-service';
 
 export default function HomeScreen({navigation}) {
   const token = useStore(state => state.accessToken);
+  const setUserLocation = useStore(state => state.setUserLocation); // Get the setUserLocation function from the store
   const [attractions, setAttractions] = useState({});
 
   useEffect(() => {
@@ -33,7 +35,23 @@ export default function HomeScreen({navigation}) {
       console.log(response);
     };
     getAttractionsData();
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        console.log('현재 위치:', {latitude, longitude}); // 위도, 경도 출력
+        setUserLocation(latitude, longitude); // Store lat, lng in the app state
+      },
+      error => {
+        console.log(error);
+        setErrorMsg('위치 정보를 가져오는 데 실패했습니다.');
+        setLoading(false);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  }, [setUserLocation]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -58,23 +76,22 @@ export default function HomeScreen({navigation}) {
                 내 위치 기반{'\n'}플로깅 코스 확인하기
               </Text>
             </TouchableOpacity>
-            <View style={styles.SmallBox}>
-              <Image style={styles.icon} source={music} />
-              <Text style={styles.heading2}>
-                AI가 추천해주는{'\n'}플레이리스트{' '}
-              </Text>
-            </View>
+            <Pressable onPress={() => navigation.navigate('Bench')}>
+              <View style={styles.SmallBox}>
+                <Image style={styles.icon} source={music} />
+                <Text style={styles.heading2}>내 주변{'\n'}벤치 찾기 </Text>
+              </View>
+            </Pressable>
           </View>
         </View>
       </View>
       <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
 
-      {/* attractions.image가 존재하는 경우 배경 이미지로 설정 */}
       {attractions.image && (
         <ImageBackground
           source={{uri: attractions.image}}
           style={styles.attractionCard}
-          imageStyle={{borderRadius: 16}} // 이미지의 모서리를 둥글게 만듦
+          imageStyle={{borderRadius: 16}}
           resizeMode="cover">
           <View style={styles.overlay} />
           <View style={styles.badge}>
@@ -86,23 +103,6 @@ export default function HomeScreen({navigation}) {
           </View>
         </ImageBackground>
       )}
-
-      {/* <Text>Home Screen</Text>
-      <Button
-        title="to detail page"
-        onPress={() => navigation.navigate('Detail')}
-      />
-      <Button
-        title="일지 작성으로"
-        onPress={() => navigation.navigate('Writing', {pathId: 1})} //동적 라우팅, 값 넘긴 뒤 받는 쪽에서 이거로 다른 스크린 보여줌
-      />
-      <Button title="Login" onPress={() => navigation.navigate('Login')} />
-      <Button title="Review" onPress={() => navigation.navigate('Review')} />
-      <Button
-        title="LoginMain"
-        onPress={() => navigation.navigate('LoginMain')}
-      /> */}
-      {/* <Button title="Survey" onPress={() => navigation.navigate('Survey')} /> */}
     </SafeAreaView>
   );
 }

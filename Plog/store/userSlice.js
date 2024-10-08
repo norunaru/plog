@@ -7,6 +7,8 @@ const createUserSlice = set => ({
   role: null,
   isFirst: true,
   exp: 0,
+  lat: 0,
+  lng: 0,
 
   setUserFromToken: accessToken => {
     const decoded = jwtDecode(accessToken);
@@ -22,6 +24,10 @@ const createUserSlice = set => ({
 
   setIsFirst: value => set({isFirst: value}),
 
+  setUserLocation: (lat, lng) => {
+    set({lat, lng});
+  },
+
   clearUser: async () => {
     set({
       id: null,
@@ -29,6 +35,8 @@ const createUserSlice = set => ({
       nickname: null,
       role: null,
       isFirst: true,
+      lat: 0,
+      lng: 0,
     });
   },
 });
