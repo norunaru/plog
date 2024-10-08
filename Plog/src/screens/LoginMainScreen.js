@@ -16,30 +16,77 @@ import {login} from '@react-native-seoul/kakao-login';
 import {useNavigation} from '@react-navigation/native';
 import {KakaoLogin} from '../API/login/loginAPI';
 import useStore from '../../store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginMainScreen = () => {
   const navigation = useNavigation();
   const setTokens = useStore(state => state.setTokens);
   const setUserFromToken = useStore(state => state.setUserFromToken);
+  const setIsFirst = useStore(state => state.setIsFirst);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const signInWithKakao = async () => {
     try {
+      setErrorMessage(''); // 시도할 때마다 에러 메시지 초기화
       const token = await login();
 
       if (token && token.accessToken) {
+        console.log('카카오에서 받은 토큰:', token.accessToken);
+
+        // 서버에 로그인 요청 보내기
         const response = await KakaoLogin(token.accessToken);
-        console.log('카카오 응답:', token);
         console.log('서버 응답:', response);
 
-        if (response.data.accessToken && response.data.refreshToken) {
-          setTokens(response.data.accessToken, response.data.refreshToken);
-          setUserFromToken(response.data.accessToken);
+        // 서버 응답에서 data 안의 accessToken과 refreshToken을 사용
+        if (
+          response.data &&
+          response.data.accessToken &&
+          response.data.refreshToken
+        ) {
+          // 토큰 및 사용자 정보 설정
+          await setTokens(
+            response.data.accessToken,
+            response.data.refreshToken,
+          );
+          await setUserFromToken(response.data.accessToken);
 
-          navigation.navigate('Survey');
+          // 서버에서 받은 isFirstLogin 값을 상태와 AsyncStorage에 저장
+          const isFirstLogin = response.data.isFirstLogin === 1; // 1이면 true
+          await setIsFirst(isFirstLogin);
+          await AsyncStorage.setItem(
+            'isFirst',
+            isFirstLogin ? 'true' : 'false',
+          );
+
+          if (isFirstLogin) {
+            navigation.navigate('Survey');
+          } else {
+            navigation.navigate('Tabs');
+          }
+        } else {
+          setErrorMessage('서버로부터 유효한 토큰을 받지 못했습니다.');
         }
+      } else {
+        setErrorMessage('카카오 로그인에 실패했습니다.');
       }
     } catch (err) {
-      console.error('login err', err);
+      console.error('로그인 에러:', err);
+
+      // 에러 응답이 있는 경우 처리
+      if (err.response) {
+        // 서버에서 반환된 에러 처리 (예: 404, 500 등)
+        setErrorMessage(
+          `서버 에러: ${err.response.status} - ${
+            err.response.data.message || '에러 메시지 없음'
+          }`,
+        );
+      } else if (err.request) {
+        // 요청이 전송되었으나 응답을 받지 못한 경우
+        setErrorMessage('서버와의 통신에 실패했습니다. 네트워크를 확인하세요.');
+      } else {
+        // 기타 오류
+        setErrorMessage(`로그인 에러: ${err.message}`);
+      }
     }
   };
 
@@ -83,6 +130,11 @@ const LoginMainScreen = () => {
           />
           <Text style={styles.kakaoText}>Kakao로 계속하기</Text>
         </Pressable>
+
+        {/* 에러 메시지 표시 부분 */}
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
       </View>
     </View>
   );

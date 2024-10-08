@@ -12,6 +12,9 @@ import EnvironmentModal from "../components/modals/EnvironmentModal";
 
 import regionData from '../../assets/data/regionData.json';
 import { submitSurvey } from '../API/survey/surveyAPI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import useStore from '../../store/store';
 
 const SurveyQuestionScreen = ({navigation}) => {
   const [isModalVisible, setModalVisible] = useState(false)
@@ -34,6 +37,8 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [firstRank, setFirstRank] = useState("");
   const [secondRank, setSecondRank] = useState("");
   const [alreadySelected, setAlreadySelected] = useState(false);
+
+  const setIsFirst = useStore((state) => state.setIsFirst);
 
   const questions = [
     {
@@ -186,23 +191,37 @@ const SurveyQuestionScreen = ({navigation}) => {
       };
   
       try {
-        const result = await submitSurvey(surveyData);  // API 호출
-        console.log(result);
+        // 서버에 설문조사 데이터를 제출
+        const result = await submitSurvey(surveyData);
+        console.log('설문 제출 응답:', result);
+  
+        if (result && result.status === 200) {
+          console.log('설문조사 성공:', result.message);
+  
+          // 설문조사 완료 시 isFirst를 false로 변경
+          await AsyncStorage.setItem('isFirst', 'false');
+          setIsFirst(false);
+  
+          // answers를 최신 상태로 업데이트한 뒤 화면 전환
+          const updatedAnswers = {
+            ...answers,
+            4: {
+              city: selectedCity,
+              county: selectedCounty,
+              town: selectedTown,
+              firstEnvironment: firstRank,
+              secondEnvironment: secondRank,
+            },
+          };
+  
+          setAnswers(updatedAnswers); // 상태 업데이트
+          navigation.navigate("SurveyResult", { answers: updatedAnswers }); // 최신 상태 전달
+        } else {
+          console.error('설문 제출 실패:', result);  // 실패 시 에러 출력
+        }
       } catch (error) {
         console.error('Survey submission error:', error);
       }
-  
-      setAnswers((prevAnswers) => ({
-        ...prevAnswers,
-        4: {
-          city: selectedCity,
-          county: selectedCounty,
-          town: selectedTown,
-          firstEnvironment: firstRank,
-          secondEnvironment: secondRank,
-        },
-      }));
-      setNavigateToResult(true);
     } else {
       if (!selectedOption) return;
       setAnswers((prevAnswers) => ({

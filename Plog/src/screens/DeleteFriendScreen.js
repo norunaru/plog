@@ -14,13 +14,14 @@ import RecommendHeader from '../components/headers/RecommendHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
-import yonghoon from '../../assets/images/yonghoon.jpg';
 import RedModal from '../components/RedModal.js';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import useStore from '../../store/store';
+import {getFriendsList, deleteFriend} from '../API/friend/friendAPI';
 
 const DeleteFriendScreen = ({navigation}) => {
   const [typedText, setTypedText] = useState('');
@@ -28,16 +29,36 @@ const DeleteFriendScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState(0);
   const [isNoticeOn, setIsNoticeOn] = useState(true);
+  const [friendsCnt, setFriendsCnt] = useState(0);
+  const [friendsList, setFriendsList] = useState([]);
 
-  // 더미 데이터 배열 생성
-  const dummyFriends = [
-    {name: '이재준', level: 6, ploggingCnt: 10, id: 1},
-    {name: '김용훈', level: 8, ploggingCnt: 15, id: 2},
-    {name: '최가원', level: 5, ploggingCnt: 12, id: 3},
-    {name: '박지수', level: 4, ploggingCnt: 8, id: 4},
-    {name: '정민수', level: 7, ploggingCnt: 20, id: 5},
-    {name: '이상호', level: 3, ploggingCnt: 5, id: 6},
-  ];
+  const token = useStore(state => state.accessToken);
+
+  const deleteMember = async (token, friendId) => {
+    try {
+      await deleteFriend(token, friendId);
+      setIsNoticeOn(true);
+      fetchFriendsList(); // 삭제 후 친구 목록 새로 고침
+    } catch (error) {
+      console.log('친구 삭제 중 오류 발생: ', error);
+    }
+  };
+
+  const fetchFriendsList = async () => {
+    const response = await getFriendsList(token);
+    setFriendsCnt(response.friendCount);
+
+    // console.log('친구 리스트 응답 : ', response);
+    if (response && response.friendList) {
+      const friendArray = Object.values(response.friendList);
+      // console.log('변환된 친구 리스트 : ', friendArray); // 배열로 변환된 데이터 확인
+      setFriendsList(friendArray);
+    }
+  };
+
+  useEffect(() => {
+    fetchFriendsList();
+  }, []);
 
   useEffect(() => {
     if (isNoticeOn) {
@@ -61,14 +82,13 @@ const DeleteFriendScreen = ({navigation}) => {
           redBtnText={'삭제하기'}
           whiteBtnFn={() => setIsModalOpen(false)} // 취소 버튼 클릭 시 모달 닫힘
           redBtnFn={() => {
-            // 삭제 처리 로직 추가
-            setIsNoticeOn(true);
+            deleteMember(token, targetToDelete); // 삭제 로직 수행
             setIsModalOpen(false); // 삭제 완료 후 모달 닫힘
           }}
           onClose={() => setIsModalOpen(false)} // 배경 클릭 시 모달 닫힘
         />
       ) : null}
-      <RecommendHeader navigation={navigation} headerText={''} />
+      <RecommendHeader navigation={navigation} headerText={'친구삭제'} />
       <View style={styles.wrap}>
         {typedText == '' && Object.keys(friend).length == 0 && (
           <View>
@@ -95,22 +115,25 @@ const DeleteFriendScreen = ({navigation}) => {
                     fontSize: responsiveFontSize(2.2),
                     fontWeight: 'bold',
                   }}>
-                  {dummyFriends.length}
+                  {friendsCnt}
                 </Text>
               </View>
             </View>
 
             <ScrollView>
-              {dummyFriends.map((friend, index) => (
+              {friendsList.map((friend, index) => (
                 <FriendManageCard
                   key={index}
-                  name={friend.name}
-                  level={friend.level}
-                  ploggingCnt={friend.ploggingCnt}
                   deleteOn={true}
+                  name={friend.friend.nickname}
+                  level={parseInt(friend.friend.exp / 100) + 1}
+                  ploggingCnt={friend.ploggingCnt}
+                  email={friend.friend.email}
+                  profileURL={friend.friend.profileImageUrl}
+                  resizeMode="cover"
                   deleteFn={() => {
                     setIsModalOpen(true);
-                    setTargetToDelete(friend.id);
+                    setTargetToDelete(friend.friend.id);
                   }}
                 />
               ))}

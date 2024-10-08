@@ -68,18 +68,22 @@ const WritingScreen = ({navigation}) => {
             '지금 나가면 내용이 저장되지 않으며 추후 마이페이지에서 작성이 가능해요'
           }
           whiteBtnFn={() => setIsModalOpen(false)}
-          greenBtnFn={() => navigation.navigate('Home')}
+          greenBtnFn={() => navigation.navigate('Tabs')}
           greenBtnText={'끝내기'}
           whiteBtnText={'계속하기'}
         />
       ) : null}
 
       <SafeAreaView
-        style={{padding: 20, backgroundColor: 'white', height: '100%'}}>
+        style={{padding: 20, backgroundColor: 'white', height: '100%'}}
+      >
         <TextInput
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
+          multiline={true}
+          maxLength={120}
+          textAlignVertical="top"
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -116,7 +120,7 @@ const WritingScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={{marginTop: 20}}>
+        <View style={{marginTop: 20, marginLeft: 8}}>
           <Text style={styles.boldText}>이 코스 어땠나요?</Text>
           {/* starWrap */}
           <View style={styles.starWrap}>
@@ -137,7 +141,7 @@ const WritingScreen = ({navigation}) => {
         </View>
 
         {/* 메모 */}
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={styles.memoContainer}>
           <TextInput
             placeholder="메모를 작성하세요"
             style={styles.memo}
@@ -148,6 +152,10 @@ const WritingScreen = ({navigation}) => {
             value={memo}
             textAlignVertical="top"
           />
+          {/* 글자수 카운터 표시 */}
+          <Text style={styles.charCounter}>
+            {memo.length}/255
+          </Text>
         </KeyboardAvoidingView>
 
         <View style={{flexDirection: 'row', marginBottom: 24}}>
@@ -222,14 +230,25 @@ const styles = StyleSheet.create({
   detailThin: {
     fontSize: 13,
   },
+  memoContainer: {
+    position: 'relative',
+    paddingBottom: 15,
+  },
   memo: {
-    borderBottomColor: '#D9D9D9', // 하단 테두리만 설정
+    borderBottomColor: '#D9D9D9', 
     borderBottomWidth: 1,
-    height: 80, // 높이를 80으로 설정
-    maxHeight: 265, // 최대 높이 설정
+    height: 80,
+    maxHeight: 265,
     padding: 8,
-    fontSize: 18,
-    marginVertical: 16,
+    fontSize: 15,
+    marginVertical: 14,
+  },
+  charCounter: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
+    fontSize: 12,
+    color: '#8A8A8A',
   },
   whiteBtn: {
     width: 122,
@@ -257,9 +276,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   boldText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
     color: 'black',
   },
   starWrap: {

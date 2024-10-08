@@ -10,9 +10,6 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import jaejun from '../../../assets/images/jaejuncow.webp';
-import yonghoon from '../../../assets/images/yonghoon.jpg';
-import gawon from '../../../assets/images/gawon.webp';
 import minus from '../../../assets/icons/ic_minus.png';
 import Modal from '../../components/Modal.js';
 import {
@@ -24,14 +21,14 @@ export default function FriendManageCard({
   name,
   profileURL,
   level,
-  ploggingCnt,
+  email,
   deleteOn,
   deleteFn,
 }) {
   return (
     <View style={styles.wrap}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image style={styles.profileImg} source={''} />
+        <Image style={styles.profileImg} source={{uri: profileURL}} />
         <View
           style={{
             justifyContent: 'space-between',
@@ -46,7 +43,7 @@ export default function FriendManageCard({
                 <Text style={styles.levelText}>{level}레벨</Text>
               </View>
             </View>
-            <Text style={styles.plogCnt}>{ploggingCnt}번의 플로깅</Text>
+            <Text style={styles.plogCnt}>{email}</Text>
           </View>
 
           {deleteOn ? (

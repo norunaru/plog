@@ -15,7 +15,7 @@ import UpdateDeleteModal from '../modals/UpdateDeleteModal';
 import leftIcon from '../../../assets/icons/ic_back.png';
 import menyIcon from '../../../assets/icons/meny.png';
 
-const PloggingDetailHeader = ({navigation, headerText}) => {
+const PloggingDetailHeader = ({navigation, headerText, activityId}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -24,9 +24,10 @@ const PloggingDetailHeader = ({navigation, headerText}) => {
       {isModalOpen && (
         <UpdateDeleteModal
           isVisible={isModalOpen}
+          activityId={activityId}
           onClose={() => setIsModalOpen(false)}
           onEdit={() => {
-            console.log('Edit pressed');
+            navigation.navigate('WritingUpdate', { activityId })
             setIsModalOpen(false);
           }}
           onDelete={() => {
@@ -36,11 +37,11 @@ const PloggingDetailHeader = ({navigation, headerText}) => {
         />
       )}
 
-      <Pressable onPress={() => navigation.goBack()}>
+      <Pressable onPress={() => navigation.goBack()} style={styles.backWrap}>
         <Image source={leftIcon} style={styles.left} />
       </Pressable>
       <Text style={styles.headerText}>{headerText}</Text>
-      <Pressable onPress={() => setIsModalOpen(true)}>
+      <Pressable onPress={() => setIsModalOpen(true)} style={styles.menyWrap}>
         <Image source={menyIcon} style={styles.meny} />
       </Pressable>
     </SafeAreaView>
@@ -77,6 +78,17 @@ const styles = StyleSheet.create({
     lineHeight: 45,
     marginLeft: -10,
   },
+  backWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    justifyContent: 'center',
+  },
+  menyWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+},
 });
 
 export default PloggingDetailHeader;

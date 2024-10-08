@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import LottieView from 'lottie-react-native';
+import MapView, { PROVIDER_GOOGLE, Polygon, Marker } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+import { request, PERMISSIONS } from 'react-native-permissions';
+import { detailCourse } from '../API/plogging/detailAPI';
+
 import timerIcon from '../../assets/icons/ic_time.png';
 import startIcon from '../../assets/icons/ic_start.png';
 import stopIcon from '../../assets/icons/ic_stop.png';
@@ -14,11 +19,15 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
-const PloggingScreen = ({navigation}) => {
+const PloggingScreen = ({navigation, route}) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCountdownComplete, setIsCountdownComplete] = useState(false);
+  const [coursePolygon, setCoursePolygon] = useState(null); // 코스 폴리곤 좌표 저장
+  const [currentPosition, setCurrentPosition] = useState(null); // 현재 위치 저장
+
+  const courseId = route.params?.courseId; // 선택된 코스의 ID 가져오기
 
   useEffect(() => {
     let interval = null;
@@ -41,6 +50,51 @@ const PloggingScreen = ({navigation}) => {
     setIsRunning(true);
   };
 
+  // 코스 상세 정보 불러오기
+  useEffect(() => {
+    const fetchCourseDetails = async () => {
+      try {
+        const courseData = await detailCourse(courseId); // API 호출
+        setCoursePolygon(courseData.data.polygon); // 폴리곤 좌표 저장
+      } catch (error) {
+        console.error('코스 정보 가져오기 실패:', error);
+      }
+    };
+
+    // 현재 위치 가져오기 및 위치 권한 요청
+    const requestLocationPermission = async () => {
+      const permission = await request(
+        Platform.OS === 'ios' 
+          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE 
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+      );
+
+      if (permission === 'granted') {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setCurrentPosition({
+              latitude,
+              longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+          },
+          (error) => {
+            Alert.alert('Error', '현재 위치를 가져오는 데 실패했습니다.');
+            console.error(error);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+      } else {
+        Alert.alert('Permission Denied', '위치 권한이 필요합니다.');
+      }
+    };
+
+    fetchCourseDetails();
+    requestLocationPermission();
+  }, [courseId]);
+
   return (
     <View style={styles.wrap}>
       {isModalOpen ? (
@@ -58,16 +112,25 @@ const PloggingScreen = ({navigation}) => {
       ) : null}
 
       <Text style={styles.topText}>A코스에서 플로깅 하고있어요</Text>
+
       <View style={styles.timerContainer}>
         <Image source={timerIcon} style={{width:27, height:27}}/>
         <Text style={styles.timerText}>{formatTime(seconds)}</Text>
       </View>
+
       <View style={styles.mapContainer}>
-        <Image 
-          source={require('../../assets/images/mapmap.png')}
-          style={styles.mapImage}
-        />
+        {currentPosition && coursePolygon && (
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            initialRegion={currentPosition}
+            showsUserLocation={true}
+          >
+            <Polygon coordinates={coursePolygon} strokeColor="#7BE6B4" fillColor="rgba(231, 247, 239, 0.5)" strokeWidth={2} />
+          </MapView>
+        )}
       </View>
+
       <View style={styles.infoContainer}>
         <View style={styles.textCont}>
           <Image source={distIcon} style={{width:27, height:27, marginTop: 4}}/>
@@ -156,17 +219,18 @@ const styles = StyleSheet.create({
     color: '#017978',
   },
   mapContainer: {
+    flex: 1,
     marginTop: 20,
     width: '90%',
-    height: 300,
+    height: '100%',
     backgroundColor: '#DFE4E7',
-    borderRadius: 10,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  mapImage: {
-    width: '110%',
-    height: '90%',
+  map: {
+    width: '100%',
+    height: '100%',
   },
   infoContainer: {
     width: '90%',
@@ -204,7 +268,7 @@ const styles = StyleSheet.create({
   },
   endButton: {
     backgroundColor: '#FFFFFF',
-    width: 127,
+    width: responsiveWidth(32),
     height: 70,
     padding: 15,
     flexDirection: 'row',
@@ -219,7 +283,7 @@ const styles = StyleSheet.create({
     marginLeft: 7,
   },
   actionButton: {
-    width: 226,
+    width: responsiveWidth(56),
     height: 70,    
     padding: 15,
     flexDirection: 'row',

@@ -14,8 +14,12 @@ export default function FriendCard({name, profile, level}) {
   return (
     <View style={styles.wrap}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image style={styles.profileImg} />
-        <View style={{}}>
+        <Image
+          style={styles.profileImg}
+          source={{uri: profile}} // 이미지 URL을 받아와서 표시
+          resizeMode="cover" // 이미지가 커버되도록 설정
+        />
+        <View>
           <Text style={styles.name}>{name}</Text>
           <View style={styles.levelBadge}>
             <Text style={styles.levelText}>{level}레벨</Text>
@@ -50,8 +54,6 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   levelBadge: {
-    // paddingHorizontal: 8,
-    // paddingVertical: 2,
     paddingHorizontal: 4,
     paddingVertical: 1,
     backgroundColor: '#BAF0D7',
