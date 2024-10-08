@@ -104,6 +104,9 @@ public class FriendServiceImpl implements FriendService {
         List<FriendFindByEmailResponseDto> emailList = new ArrayList<>(members.size());
 
         for (Member member : members) {
+            if (MemberInfo.getUserId().equals(member.getId())) {
+                continue;
+            }
             emailList.add(FriendFindByEmailResponseDto.builder()
                 .email(member.getEmail())
                 .id(member.getId())
