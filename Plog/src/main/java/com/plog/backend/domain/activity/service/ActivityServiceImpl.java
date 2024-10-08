@@ -129,10 +129,16 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityFindByIdResponseDto findActivityById(Long id) {
-        // 예외처리 시간 남으면 만들면 좋음
-        Activity activity = activityRepository.findById(id).orElseThrow();
-        return mapper.map(activity, ActivityFindByIdResponseDto.class);
+        return activityRepository.findById(id)
+            .map(activity -> {
+                ActivityFindByIdResponseDto responseDto = mapper.map(activity,
+                    ActivityFindByIdResponseDto.class);
+                responseDto.setImage(activity.getTrail().getImage());
+                return responseDto;
+            })
+            .orElseThrow(); // 예외 처리가 필요할 때만 사용
     }
+
 
     @Override
     public void updateActivity(ActivityUpdateRequestDto activityDto, Long memberId)

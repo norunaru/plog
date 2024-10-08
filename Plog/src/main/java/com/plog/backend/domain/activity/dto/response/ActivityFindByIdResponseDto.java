@@ -1,6 +1,7 @@
 package com.plog.backend.domain.activity.dto.response;
 
 import com.plog.backend.domain.activity.entity.ActivityImage;
+import com.plog.backend.domain.trail.entity.Trail;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -27,4 +28,5 @@ public class ActivityFindByIdResponseDto {
     private String review;
     private Double score;
     private List<ActivityImage> activityImages;
+    private String image;
 }
