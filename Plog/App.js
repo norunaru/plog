@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from './src/screens/HomeScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
@@ -89,32 +89,32 @@ function SurveyStack() {
       <Stack.Screen
         name="Survey"
         component={SurveyScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Question"
         component={SurveyQuestionScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyFinish"
         component={SurveyFinishScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyResult"
         component={SurveyResultScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Tabs"
         component={TabNavigator}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="LoginMain"
         component={LoginMainScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -128,12 +128,12 @@ function AuthenticatedStack() {
       <Stack.Screen
         name="Tabs"
         component={TabNavigator}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="LoginMain"
         component={LoginMainScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       {/* 스택 네비게이터에만 존재하는 스크린 */}
       <Stack.Screen name="Detail" component={DetailScreen} />
@@ -156,7 +156,7 @@ function AuthenticatedStack() {
       <Stack.Screen
         name="Plogging"
         component={PloggingScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="PloggingRecord"
@@ -194,42 +194,43 @@ function AuthenticatedStack() {
       <Stack.Screen
         name="Recommend"
         component={RecommendScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen name="Review" component={ViewReviewScreen} />
       <Stack.Screen
         name="ManageFriend"
         component={ManageFriendScreen}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="DeleteFriend"
         component={DeleteFriendScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ModifyInfo"
         component={ModifyInfoScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Survey"
         component={SurveyScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Question"
         component={SurveyQuestionScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyFinish"
         component={SurveyFinishScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyResult"
         component={SurveyResultScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -242,27 +243,27 @@ function UnauthenticatedStack() {
       <Stack.Screen
         name="LoginMain"
         component={LoginMainScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Survey"
         component={SurveyScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="Question"
         component={SurveyQuestionScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyFinish"
         component={SurveyFinishScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="SurveyResult"
         component={SurveyResultScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
@@ -271,20 +272,20 @@ function UnauthenticatedStack() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const setTokens = useStore((state) => state.setTokens);
-  const accessToken = useStore((state) => state.accessToken);
-  const setUserFromToken = useStore((state) => state.setUserFromToken);
-  const setIsFirst = useStore((state) => state.setIsFirst);
-  const isFirst = useStore((state) => state.isFirst);
+  const setTokens = useStore(state => state.setTokens);
+  const accessToken = useStore(state => state.accessToken);
+  const setUserFromToken = useStore(state => state.setUserFromToken);
+  const setIsFirst = useStore(state => state.setIsFirst);
+  const isFirst = useStore(state => state.isFirst);
 
   useEffect(() => {
-    const initializeApp  = async () => {
+    const initializeApp = async () => {
       try {
         const storedAccessToken = await AsyncStorage.getItem('accessToken');
         const storedRefreshToken = await AsyncStorage.getItem('refreshToken');
         const storedIsFirst = await AsyncStorage.getItem('isFirst');
 
-        console.log("불러온 isFirst 값:", storedIsFirst);
+        console.log('불러온 isFirst 값:', storedIsFirst);
 
         if (storedAccessToken && storedRefreshToken) {
           await setTokens(storedAccessToken, storedRefreshToken);
@@ -310,7 +311,7 @@ export default function App() {
   if (loading) {
     // 토큰 로딩 중일 때 로딩 인디케이터 표시
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="large" color="#1ECD90" />
       </View>
     );
@@ -321,12 +322,12 @@ export default function App() {
       <NavigationContainer>
         {accessToken ? (
           isFirst ? (
-            <SurveyStack />  // isFirst가 true이면 선호도 조사 화면으로 이동
+            <SurveyStack /> // isFirst가 true이면 선호도 조사 화면으로 이동
           ) : (
-            <AuthenticatedStack />  // isFirst가 false이면 바로 홈 화면으로 이동
+            <AuthenticatedStack /> // isFirst가 false이면 바로 홈 화면으로 이동
           )
         ) : (
-          <UnauthenticatedStack />  // 토큰이 없을 때는 로그인 화면
+          <UnauthenticatedStack /> // 토큰이 없을 때는 로그인 화면
         )}
       </NavigationContainer>
     </QueryClientProvider>

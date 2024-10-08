@@ -21,27 +21,33 @@ export const addFriend = async (token, friendId) => {
   try {
     const response = await axios.post(
       `${BASE_URL}/friends/request`,
-      {friendId: friendId},
+      {friendID: friendId},
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     );
+    console.log('친구 추가 성공');
+    console.log('add friend success');
   } catch (error) {
-    console.log('친구 조회 에러 : ', error);
+    console.log('친구 추가 에러 : ', error);
   }
 };
 
 //이메일로 찾기
 export const searchWithEmail = async (token, email) => {
   try {
-    const response = await axios.get(`${BASE_URL}/friends/${email}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.post(
+      `${BASE_URL}/friends/search`,
+      {email: email},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
-
+    );
+    console.log(response.data.data);
     return response.data.data;
   } catch (error) {
     console.log('친구 조회 에러 : ', error);
