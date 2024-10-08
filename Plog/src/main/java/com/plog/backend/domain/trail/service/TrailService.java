@@ -1,6 +1,7 @@
 package com.plog.backend.domain.trail.service;
 
 import com.plog.backend.domain.trail.dto.request.TrailPositionRequestDto;
+import com.plog.backend.domain.trail.dto.response.LikeTrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailDetailDto;
 import com.plog.backend.domain.trail.dto.response.TrailListResponseDto;
 import com.plog.backend.domain.trail.dto.response.TrailRecommendDto;
@@ -21,4 +22,6 @@ public interface TrailService {
     void like(Long memberId,Long trailId);
 
     void unlike(Long memberId, Long trailId);
+
+    LikeTrailListResponseDto getlikeTrail();
 }
