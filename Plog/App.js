@@ -85,38 +85,126 @@ function TabNavigator() {
 
 function SurveyStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Survey"
-        component={SurveyScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Question"
-        component={SurveyQuestionScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SurveyFinish"
-        component={SurveyFinishScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SurveyResult"
-        component={SurveyResultScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Tabs"
-        component={TabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="LoginMain"
-        component={LoginMainScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="LoginMain">
+          {/* 탭 네비게이터 사용되는 스크린 */}
+          <Stack.Screen
+            name="Tabs"
+            component={TabNavigator}
+            options={{headerShown: false}} // 탭 네비게이터 상단에 헤더 표시 안 함
+          />
+          {/* 스택 네비게이터에만 존재하는 스크린 */}
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen
+            name="CustomCourseRec"
+            component={CustomCourseRecScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="CourseDetail"
+            component={CourseDetailScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Plogging"
+            component={PloggingScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="PloggingRecord"
+            component={PloggingRecordScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="PloggingRecordDetail"
+            component={PloggingRecordDetailScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Writing"
+            component={WritingScreen}
+            options={{
+              title: '일지 작성',
+              headerTitleAlign: 'center',
+              headerBackVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="WritingUpdate"
+            component={WritingUpdateScreen}
+            options={{
+              headerTitleAlign: 'center',
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Recommend"
+            component={RecommendScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Review" component={ViewReviewScreen} />
+          <Stack.Screen
+            name="ManageFriend"
+            component={ManageFriendScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LoginMain"
+            component={LoginMainScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Survey"
+            component={SurveyScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Question"
+            component={SurveyQuestionScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SurveyFinish"
+            component={SurveyFinishScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SurveyResult"
+            component={SurveyResultScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="DeleteFriend"
+            component={DeleteFriendScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ModifyInfo"
+            component={ModifyInfoScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 
