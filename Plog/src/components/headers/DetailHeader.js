@@ -36,7 +36,7 @@ const RecommendHeader = ({navigation, headerText}) => {
           {headerText}
         </Text>
       </View>
-      <View style={styles.box}></View>
+      <View style={styles.box} />
     </SafeAreaView>
   );
 };
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   box: {
-    width: 24,
+    width: responsiveWidth(12),
   },
   backWrap: {
     width: responsiveWidth(12),

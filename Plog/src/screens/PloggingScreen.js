@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
     width: '90%',
-    height: '100%',
+    height: '80%',
     backgroundColor: '#DFE4E7',
     borderRadius: 30,
     justifyContent: 'center',
