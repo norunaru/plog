@@ -35,7 +35,7 @@ const CourseDetailScreen = ({route, navigation}) => {
     CourseDetail();
   }, [courseId]);
 
-  console.log(courseData)
+  console.log('코스 데이터: ', courseData)
 
   const handleLikePress = async () => {
     try {

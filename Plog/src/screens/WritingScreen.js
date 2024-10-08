@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -15,19 +15,55 @@ import {
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
 import photoAdd from '../../assets/icons/photoAdd.png';
-import distance from '../../assets/icons/distance.png';
-import time from '../../assets/icons/ic_time.png';
-import calorie from '../../assets/icons/ic_calorie.png';
+import distanceImg from '../../assets/icons/distance.png';
+import timeImg from '../../assets/icons/ic_time.png';
+import calorieImg from '../../assets/icons/ic_calorie.png';
 import Modal from '../components/Modal';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
-const WritingScreen = ({navigation}) => {
+const WritingScreen = ({ navigation, route }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0); // 별점 상태
   const [memo, setMemo] = useState(''); // 메모 상태
   const [selectedImages, setSelectedImages] = useState([]); // 선택된 이미지 상태
+
+  // 전달된 데이터를 가져옵니다.
+  const {
+    totalDistance = 0,
+    caloriesBurned = 0,
+    seconds = 0,
+    pathCoordinates = [],
+    courseName = '',
+    endDate = new Date().toISOString(),
+  } = route.params || {};
+
+  // endDate를 Date 객체로 변환
+  const endDateObj = new Date(endDate);
+
+  // 날짜 형식 변환
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 월은 0부터 시작하므로 1을 더합니다.
+    const day = date.getDate();
+    return `${year}.${month}.${day}`;
+  };
+
+  // 시간을 시:분 형식으로 변환
+  const formatTime = (secs) => {
+    const hours = parseInt(secs / 3600, 10);
+    const minutes = parseInt((secs % 3600) / 60, 10);
+    return `${hours}시간 ${minutes}분`;
+  };
+
+  // 상태 설정
+  const [date, setDate] = useState(formatDate(endDateObj));
+  const [locationName, setLocationName] = useState(courseName);
+  const [distance, setDistance] = useState((totalDistance / 1000).toFixed(2)); // km 단위
+  const [calories, setCalories] = useState(caloriesBurned.toFixed(0)); // kcal
+  const [time, setTime] = useState(formatTime(seconds));
+  const [path, setPath] = useState(pathCoordinates);
 
   // 별 클릭 시 호출되는 함수
   const handleStarPress = index => {
@@ -88,11 +124,11 @@ const WritingScreen = ({navigation}) => {
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
             <Image style={styles.miniIcon} source={calendar} />
-            <Text>2024.9.30</Text>
+            <Text>{date}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Image style={styles.miniIcon} source={location} />
-            <Text>잠실 한강 공원</Text>
+            <Text>{locationName}</Text>
           </View>
         </View>
         {/* 지도, 정보 박스 */}
@@ -103,19 +139,19 @@ const WritingScreen = ({navigation}) => {
           />
           <View style={styles.detail}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={distance} style={styles.icon} />
+              <Image source={distanceImg} style={styles.icon} />
               <Text style={styles.detailBold}>총 거리</Text>
-              <Text style={styles.detailThin}>3km</Text>
+              <Text style={styles.detailThin}>{distance} km</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={time} style={styles.icon} />
+              <Image source={timeImg} style={styles.icon} />
               <Text style={styles.detailBold}>총 시간</Text>
-              <Text style={styles.detailThin}>2시간 15분</Text>
+              <Text style={styles.detailThin}>{time}</Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image source={calorie} style={styles.icon} />
+              <Image source={calorieImg} style={styles.icon} />
               <Text style={styles.detailBold}>소모 칼로리</Text>
-              <Text style={styles.detailThin}>150kcal</Text>
+              <Text style={styles.detailThin}>{calories} kcal</Text>
             </View>
           </View>
         </View>
