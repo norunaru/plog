@@ -145,9 +145,8 @@ export default function App() {
             name="WritingUpdate"
             component={WritingUpdateScreen}
             options={{
-              title: '일지 수정',
               headerTitleAlign: 'center',
-              headerBackVisible: false,
+              headerShown: false,
             }}
           />
           <Stack.Screen
