@@ -26,6 +26,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
@@ -52,6 +53,7 @@ public class Activity {
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
 
+    @ColumnDefault("'제목을 입력해 주세요!'")
     @Column(name = "title", columnDefinition = "TEXT")
     private String title;
 
@@ -78,9 +80,11 @@ public class Activity {
     @Column(name = "location_name", columnDefinition = "TEXT")
     private String locationName;
 
+    @ColumnDefault("'리뷰를 남겨주세요!'")
     @Column(name = "review", columnDefinition = "TEXT")
     private String review;
 
+    @ColumnDefault("3")
     @Column(name = "score", columnDefinition = "real")
     private Float score;
 
