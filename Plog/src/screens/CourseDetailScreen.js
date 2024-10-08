@@ -35,7 +35,7 @@ const CourseDetailScreen = ({route, navigation}) => {
     CourseDetail();
   }, [courseId]);
 
-  console.log(courseData)
+  console.log('코스 데이터: ', courseData)
 
   const handleLikePress = async () => {
     try {
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
     marginTop: responsiveHeight(1), // 반응형 세로 마진
+    textAlign: 'center',
   },
   tag: {
     backgroundColor: '#E7F7EF',
@@ -166,13 +167,16 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
     paddingHorizontal: responsiveWidth(3), // 반응형 패딩
-    height: responsiveHeight(4), // 반응형 높이
+    height: responsiveHeight(3), // 반응형 높이
+    width: responsiveWidth(13),
   },
   text: {
     color: '#017978',
     fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
-    fontWeight: '500',
+    fontWeight: '400',
+    height: '100%',
   },
   content: {
     marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   infoValue: {
-    fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
+    fontSize: responsiveFontSize(2), // 반응형 텍스트 크기
     color: '#3F3F47',
     fontWeight: '400',
     marginLeft: responsiveWidth(1), // 반응형 마진
