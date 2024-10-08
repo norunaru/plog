@@ -11,7 +11,7 @@ export const getAcitivities = async token => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('멤버 일지 전체 조회 응답 : ', response);
+    // console.log('멤버 일지 전체 조회 응답 : ', response);
     return response.data.data;
   } catch (error) {
     console.log('멤버 일지 전체 조회 에러', error);
@@ -29,7 +29,6 @@ export const postActivity = async ({
   title,
   totalDistance,
   totalKcal,
-  locationName,
   images,
   token,
 }) => {
@@ -47,7 +46,6 @@ export const postActivity = async ({
   formData.append('totalDistance', String(totalDistance));
   formData.append('totalKcal', String(totalKcal));
   formData.append('creationDate', today);
-  formData.append('locationName', locationName);
 
   if (images && images.length > 0) {
     images.forEach((imageUri) => {
@@ -120,7 +118,8 @@ export const getActivityData = async (id, token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    // console.log('=================================');
+    // console.log('일지 상세 조회 응답 : ', response.data.data);
     return response.data.data;
   } catch (error) {
     console.log('기록 조회 에러 : ', error);

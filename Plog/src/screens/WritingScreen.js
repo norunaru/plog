@@ -12,22 +12,72 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
+import { postActivity } from '../API/activity/activityAPI';
+import Modal from '../components/Modal';
+import useStore from '../../store/store';
+
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
 import photoAdd from '../../assets/icons/photoAdd.png';
 import distance from '../../assets/icons/distance.png';
 import time from '../../assets/icons/ic_time.png';
 import calorie from '../../assets/icons/ic_calorie.png';
-import Modal from '../components/Modal';
-import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
 const WritingScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rating, setRating] = useState(0); // 별점 상태
-  const [memo, setMemo] = useState(''); // 메모 상태
-  const [selectedImages, setSelectedImages] = useState([]); // 선택된 이미지 상태
+  const [rating, setRating] = useState(0);
+  const [titleValue, setTitleValue] = useState('');
+  const [memo, setMemo] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]); 
+  const id = useStore((state) => state.id);
+  const accessToken = useStore((state) => state.accessToken);
+
+  const writingSavePress = async () => {
+    // 임의 데이터 (id, token 제외)
+    const memberId = id;
+    const trailId = 1;
+    const lat = [37.5172, 37.5175, 37.5178];
+    const lon = [127.0473, 127.0476, 127.0480];
+    const review = memo;
+    const score = parseFloat(rating);
+    const title = titleValue;
+    const totalTime = parseFloat(160.0);
+    const totalDistance = parseFloat(3.0);
+    const totalKcal = parseFloat(150.0);
+    const token = accessToken;
+  
+    const imageFiles = selectedImages.map((uri, index) => {
+      return {
+        uri,
+        type: 'image/jpeg',
+        name: `image_${index}.jpg`,  // 고유 파일명
+      };
+    });
+
+    // 일지 기록 post 요청
+    try {
+      await postActivity({
+        memberId,
+        trailId,
+        lat,
+        lon,
+        totalTime,
+        review,
+        score,
+        title,
+        totalDistance,
+        totalKcal,
+        images: imageFiles, // 이미지 리스트
+        token,
+      });
+      navigation.navigate('Tabs');
+    } catch (error) {
+      console.error('저장 실패:', error.response ? error.response.data : error.message);
+    }
+  };  
 
   // 별 클릭 시 호출되는 함수
   const handleStarPress = index => {
@@ -84,6 +134,7 @@ const WritingScreen = ({navigation}) => {
           multiline={true}
           maxLength={120}
           textAlignVertical="top"
+          onChangeText={text => setTitleValue(text)}
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
@@ -176,7 +227,7 @@ const WritingScreen = ({navigation}) => {
               <Text style={styles.btnText}>다음에 작성</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
+          <TouchableOpacity onPress={() => writingSavePress()}>
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
             </View>
