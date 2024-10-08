@@ -108,6 +108,7 @@ public class FriendServiceImpl implements FriendService {
                 .email(member.getEmail())
                 .id(member.getId())
                 .nickName(member.getNickname())
+                .profileImageUrl(member.getProfileImageUrl())
                 .build());
         }
         return emailList;
