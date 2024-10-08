@@ -61,6 +61,12 @@ const CourseDetailScreen = ({route, navigation}) => {
     }
   };
 
+  const formatArea = (meters) => {
+    const km = meters / 100;
+    const roundedKm = Math.round(km * 10) / 10; // 소수점 첫째 자리까지 반올림
+    return `${roundedKm}km`;
+  };
+
 
   if (!courseData) {
     return (
@@ -98,7 +104,7 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>활동거리</Text>
-          <Text style={styles.infoValue}>{courseData.area}</Text>
+          <Text style={styles.infoValue}>{formatArea(courseData.area)}</Text>
         </View>
         <View style={styles.infoItem}>
           <Image
@@ -204,10 +210,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   infoValue: {
-    fontSize: responsiveFontSize(2), // 반응형 텍스트 크기
+    fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
     color: '#3F3F47',
     fontWeight: '400',
     marginLeft: responsiveWidth(1), // 반응형 마진
+    marginTop: responsiveHeight(0.2),
   },
   footer: {
     flexDirection: 'row',

@@ -5,7 +5,7 @@ import MapView, { PROVIDER_GOOGLE, Polygon, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { detailCourse } from '../API/plogging/detailAPI';
-import { getDistance } from 'geolib';
+import { getDistance, isPointInPolygon } from 'geolib';
 
 import timerIcon from '../../assets/icons/ic_time.png';
 import startIcon from '../../assets/icons/ic_start.png';
@@ -14,6 +14,7 @@ import pauseIcon from '../../assets/icons/ic_pause.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
 import Modal from '../components/Modal';
+import InPolygonModal from '../components/modals/InPolygonModal';
 import {
   responsiveWidth,
   responsiveHeight,
@@ -28,6 +29,8 @@ const PloggingScreen = ({ navigation, route }) => {
   const [coursePolygon, setCoursePolygon] = useState(null); // 코스 폴리곤 좌표 저장
   const [currentPosition, setCurrentPosition] = useState(null); // 현재 위치 저장
   const [courseName, setCourseName] = useState(null);
+  const [isOutOfArea, setIsOutOfArea] = useState(false);
+  const [isReadyToStart, setIsReadyToStart] = useState(false);
 
   const watchId = useRef(null);
   const [pathCoordinates, setPathCoordinates] = useState([]); // 경로를 저장할 배열
@@ -36,6 +39,10 @@ const PloggingScreen = ({ navigation, route }) => {
   const userWeight = 60; // 사용자의 몸무게 (kg), 필요에 따라 사용자 입력으로 변경 가능
 
   const { courseId } = route.params; // 선택된 코스의 ID 가져오기
+
+  const isWithinCourseArea = (currentLocation, coursePolygon) => {
+    return isPointInPolygon(currentLocation, coursePolygon);
+  };
 
   const handleEndButtonPress = () => {
     setIsModalOpen(true);
@@ -51,6 +58,7 @@ const PloggingScreen = ({ navigation, route }) => {
   const handleFinish = () => {
     // 여기서 Writing 페이지로 이동하면서 필요한 데이터를 전달
     navigation.navigate('Writing', {
+      courseId,
       totalDistance,
       caloriesBurned,
       seconds,
@@ -88,44 +96,64 @@ const PloggingScreen = ({ navigation, route }) => {
         const courseData = await detailCourse(courseId); // API 호출
         setCoursePolygon(courseData.data.polygon); // 폴리곤 좌표 저장
         setCourseName(courseData.data.title);
+
+        // 코스 폴리곤을 가져온 후에 현재 위치를 가져옵니다.
+        await requestLocationPermission(courseData.data.polygon);
       } catch (error) {
         console.error('코스 정보 가져오기 실패:', error);
       }
     };
 
-    // 현재 위치 가져오기 및 위치 권한 요청
-    const requestLocationPermission = async () => {
-      const permission = await request(
-        Platform.OS === 'ios'
-          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-      );
-
-      if (permission === 'granted') {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-              latitude,
-              longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            });
-          },
-          (error) => {
-            Alert.alert('Error', '현재 위치를 가져오는 데 실패했습니다.');
-            console.error(error);
-          },
-          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        );
-      } else {
-        Alert.alert('Permission Denied', '위치 권한이 필요합니다.');
-      }
-    };
-
     fetchCourseDetails();
-    requestLocationPermission();
   }, [courseId]);
+
+  // 현재 위치 가져오기 및 위치 권한 요청
+  const requestLocationPermission = async (polygon) => {
+    const permission = await request(
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+    );
+
+    if (permission === 'granted') {
+      Geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          const currentPos = {
+            latitude,
+            longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          };
+          setCurrentPosition(currentPos);
+
+          // 폴리곤 내부 확인 수행
+          if (polygon) {
+            const insidePolygon = isWithinCourseArea(
+              { latitude, longitude },
+              polygon
+            );
+
+            if (!insidePolygon) {
+              // 폴리곤 밖이면 모달을 띄움
+              setIsOutOfArea(true);
+              setIsRunning(false);
+            } else {
+              setIsOutOfArea(false);
+              setIsReadyToStart(true);
+            }
+          }
+        },
+        (error) => {
+          Alert.alert('Error', '현재 위치를 가져오는 데 실패했습니다.');
+          console.error(error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    } else {
+      Alert.alert('Permission Denied', '위치 권한이 필요합니다.');
+    }
+  };
 
   // 위치 추적 및 경로 업데이트
   useEffect(() => {
@@ -196,6 +224,23 @@ const PloggingScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.wrap}>
+      {/* 위치가 코스 영역 밖에 있을 때 모달 */}
+      {isOutOfArea && (
+        <InPolygonModal
+          onClose={() => {
+            setIsOutOfArea(false);
+            navigation.goBack();
+          }}
+          boldText={'플로깅을 시작할 수 없습니다'}
+          subText={'현재 위치가 코스 영역 밖에 있습니다.'}
+          greenBtnFn={() => {
+            setIsOutOfArea(false);
+            navigation.goBack();
+          }}
+          greenBtnText={'확인'}
+        />
+      )}
+
       {isModalOpen ? (
         <Modal
           onClose={() => {
@@ -290,7 +335,8 @@ const PloggingScreen = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {!isCountdownComplete && (
+      
+      {isReadyToStart && !isCountdownComplete && !isOutOfArea && (
         <View style={styles.overlay}>
           <LottieView
             source={require('../../assets/animation/countdown.json')}
@@ -325,14 +371,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: responsiveFontSize(2.2),
     fontWeight: 'bold',
-    marginTop: 40,
+    marginTop: 30,
     textAlign: 'center',
   },
   timerContainer: {
     marginTop: 20,
     backgroundColor: '#ffffff',
     width: responsiveWidth(60),
-    height: 89,
+    height: responsiveHeight(9),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,

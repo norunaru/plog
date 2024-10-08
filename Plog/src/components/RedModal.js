@@ -6,6 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const RedModal = ({
   onClose,
@@ -85,6 +90,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    marginTop: responsiveHeight(3),
   },
   whiteBtn: {
     flex: 1,

@@ -62,6 +62,12 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
     }
   };
 
+  const formatArea = (meters) => {
+    const km = meters / 100;
+    const roundedKm = Math.round(km * 10) / 10; // 소수점 첫째 자리까지 반올림
+    return `${roundedKm}km`;
+  };
+
   return (
     <Animated.View style={[styles.container, { height: animation }]}>
       <TouchableOpacity onPress={toggleSheet}>
@@ -85,7 +91,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>활동거리</Text>
-                  <Text style={styles.infoValue}>{selectedCourse.area}</Text>
+                  <Text style={styles.infoValue}>{formatArea(selectedCourse.area)}</Text>
                 </View>
                 <View style={styles.infoItem}>
                   <Image
@@ -115,7 +121,7 @@ const CourseBottomSheet = ({ locations, selectedCourse, resetSelectedCourse }) =
                     style={styles.infoIcon}
                   />
                   <Text style={styles.infoText}>활동거리</Text>
-                  <Text style={styles.infoValue}>{location.area}</Text>
+                  <Text style={styles.infoValue}>{formatArea(location.area)}</Text>
                 </View>
                 <View style={styles.infoItem}>
                   <Image
@@ -191,6 +197,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.3),
     color: '#3F3F47',
     fontWeight: '400',
+    marginTop: responsiveHeight(0.2),
   },
   separator: {
     height: 1,

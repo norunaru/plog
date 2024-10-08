@@ -65,10 +65,10 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     }
   };
 
-
-  const formatTime = (totalMinutes) => {
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+  // 시간을 시:분 형식으로 변환
+  const formatTime = (secs) => {
+    const hours = parseInt(secs / 3600, 10);
+    const minutes = parseInt((secs % 3600) / 60, 10);
     return `${hours}시간 ${minutes}분`;
   };
 

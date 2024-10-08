@@ -155,14 +155,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(4.5),
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#0F1012',
   },
   bottomText: {
     color: '#66666D',
-    fontSize: responsiveFontSize(1.3),
+    fontSize: responsiveFontSize(1.8),
     fontWeight: '500',
     marginTop: responsiveHeight(1.2),
   },
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     top: responsiveHeight(-1.5),
   },
   balloonText: {
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsiveFontSize(1.7),
     fontWeight: '500',
     color: '#0F1012',
     textAlign: 'center',
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   kakaoText: {
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(2.3),
     fontWeight: 'bold',
     color: '#1C2028',
   },

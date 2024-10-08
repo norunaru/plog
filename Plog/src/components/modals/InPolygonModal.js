@@ -12,13 +12,11 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-const Modal = ({
+const InPolygonModal = ({
   onClose,
-  whiteBtnFn,
   greenBtnFn,
   boldText,
   subText,
-  whiteBtnText,
   greenBtnText,
 }) => {
   return (
@@ -33,9 +31,6 @@ const Modal = ({
 
         {/* 버튼 영역 */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.whiteBtn} onPress={whiteBtnFn}>
-            <Text style={styles.whiteBtnText}>{whiteBtnText}</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.greenBtn} onPress={greenBtnFn}>
             <Text style={styles.greenBtnText}>{greenBtnText}</Text>
           </TouchableOpacity>
@@ -90,17 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
-  whiteBtn: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderColor: '#1ECD90',
-    borderWidth: 1,
-    borderRadius: 24,
-    height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-  },
   greenBtn: {
     flex: 1,
     backgroundColor: '#1ECD90',
@@ -109,11 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  whiteBtnText: {
-    color: '#1ECD90',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   greenBtnText: {
     color: '#fff',
     fontSize: 16,
@@ -121,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Modal;
+export default InPolygonModal;
