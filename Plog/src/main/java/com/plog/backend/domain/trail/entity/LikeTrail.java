@@ -1,5 +1,6 @@
 package com.plog.backend.domain.trail.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plog.backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,11 +18,12 @@ public class LikeTrail {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "trail_id", referencedColumnName = "id", nullable = false)
     private Trail trail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne()
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
