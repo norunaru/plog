@@ -12,20 +12,28 @@ export default function LikedCourseScreen({navigation}) {
   const [likedCnt, setLikedCnt] = useState(0);
   const token = useStore(state => state.accessToken);
 
+  // 좋아요 목록을 가져오는 함수
+  const getLikedTrails = async () => {
+    const response = await getLikedCourses(token);
+    console.log(response);
+    setLikedCourses(response.likeTrailList);
+    setLikedCnt(response.totalLikeCount);
+  };
+
+  // 페이지가 처음 로드될 때 좋아요 목록을 가져옴
   useEffect(() => {
-    const getLikedTrails = async () => {
-      const response = await getLikedCourses(token);
-      console.log(response);
-      setLikedCourses(response.likeTrailList);
-      setLikedCnt(response.totalLikeCount);
-    };
-
     getLikedTrails();
-  }, [likedCourses]);
+  }, []); // 빈 배열을 사용하여 페이지가 마운트될 때만 호출
 
-  const likeFn = async id => {
-    likeCourse(id);
-    getLikedTrails();
+  // 좋아요/취소 시 목록을 갱신하는 함수
+  const handleLikeToggle = async (courseId, isLiked) => {
+    if (isLiked) {
+      await unLikeCourse(courseId);
+    } else {
+      await likeCourse(courseId);
+    }
+    // 좋아요/취소 후 목록을 다시 가져옴
+    await getLikedTrails();
   };
 
   return (
@@ -46,7 +54,10 @@ export default function LikedCourseScreen({navigation}) {
               likeCheck={course.likeCheck}
               area={course.trail.area}
               name={course.trail.name}
-              // likeFn={likeFn}
+              // 좋아요/취소 이벤트 핸들러 추가
+              onLikeToggle={() =>
+                handleLikeToggle(course.trail.id, course.likeCheck)
+              }
             />
           );
         })}

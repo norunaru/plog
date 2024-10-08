@@ -14,31 +14,21 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import {likeCourse, unLikeCourse} from '../API/plogging/likeAPI';
 
 const {width} = Dimensions.get('window');
 
 const CustomCourseRecCard = ({
-  navigation, // navigation prop을 받아서 사용
+  navigation,
   id,
   name,
-  park,
-  ocean,
-  city,
-  lake,
   area,
-  lat,
-  lon,
-  center,
   imageURL,
   likeCheck,
-  likeFn,
-  unLikeFn,
+  onLikeToggle, // 좋아요/취소 핸들러를 props로 받음
 }) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('CourseDetail', {courseId: id})} // 클릭 시 navigation을 사용해 CourseDetail로 이동하고 courseId를 전달
-    >
+      onPress={() => navigation.navigate('CourseDetail', {courseId: id})}>
       <View style={styles.courseCard}>
         <Image source={{uri: imageURL}} style={styles.mapImage} />
         <View style={styles.courseInfo}>
@@ -46,18 +36,12 @@ const CustomCourseRecCard = ({
             <Text style={styles.courseTitle} numberOfLines={1}>
               {name}
             </Text>
-            {likeCheck ? (
-              <TouchableOpacity onPress={() => unLikeCourse(id)}>
-                <Image source={likeColor} style={styles.heartImg} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => likeCourse(id)}>
-                <Image
-                  source={likeGray} // isLiked에 따라 이미지 변경
-                  style={styles.heartImg}
-                />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity onPress={onLikeToggle}>
+              <Image
+                source={likeCheck ? likeColor : likeGray}
+                style={styles.heartImg}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.infoBox}>
             <View style={styles.infoLabelContainer}>
