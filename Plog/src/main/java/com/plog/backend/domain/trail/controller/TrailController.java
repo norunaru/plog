@@ -68,7 +68,7 @@ public class TrailController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/like/list")
-    @Operation(summary = "좋아요 리스트", description = "좋아요 리스트 api")
+    @Operation(summary = "좋아요 리스트 조회", description = "좋아요 리스트 api")
     public SuccessResponse<?> likeList() {
         return SuccessResponse.ok(trailService.getlikeTrail());
     }
