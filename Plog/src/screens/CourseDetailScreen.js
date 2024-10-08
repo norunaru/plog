@@ -61,6 +61,12 @@ const CourseDetailScreen = ({route, navigation}) => {
     }
   };
 
+  const formatArea = (meters) => {
+    const km = meters / 100;
+    const roundedKm = Math.round(km * 10) / 10; // 소수점 첫째 자리까지 반올림
+    return `${roundedKm}km`;
+  };
+
 
   if (!courseData) {
     return (
@@ -98,7 +104,7 @@ const CourseDetailScreen = ({route, navigation}) => {
             style={styles.infoIcon}
           />
           <Text style={styles.infoText}>활동거리</Text>
-          <Text style={styles.infoValue}>{courseData.area}</Text>
+          <Text style={styles.infoValue}>{formatArea(courseData.area)}</Text>
         </View>
         <View style={styles.infoItem}>
           <Image
