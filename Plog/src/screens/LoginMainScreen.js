@@ -16,11 +16,13 @@ import {login} from '@react-native-seoul/kakao-login';
 import {useNavigation} from '@react-navigation/native';
 import {KakaoLogin} from '../API/login/loginAPI';
 import useStore from '../../store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginMainScreen = () => {
   const navigation = useNavigation();
-  const setTokens = useStore(state => state.setTokens);
-  const setUserFromToken = useStore(state => state.setUserFromToken);
+  const setTokens = useStore((state) => state.setTokens);
+  const setUserFromToken = useStore((state) => state.setUserFromToken);
+  const setIsFirst = useStore((state) => state.setIsFirst);
   const [errorMessage, setErrorMessage] = useState('');
 
   const signInWithKakao = async () => {
@@ -41,13 +43,25 @@ const LoginMainScreen = () => {
           response.data.accessToken &&
           response.data.refreshToken
         ) {
-          // 서버 응답 데이터 처리
-          setTokens(response.data.accessToken, response.data.refreshToken);
-          setUserFromToken(response.data.accessToken);
+          // 토큰 및 사용자 정보 설정
+          await setTokens(
+            response.data.accessToken,
+            response.data.refreshToken
+          );
+          await setUserFromToken(response.data.accessToken);
 
-          navigation.navigate('Survey'); // 성공 시 Survey 페이지로 이동
-        } else {
-          setErrorMessage('서버로부터 유효한 토큰을 받지 못했습니다.');
+          // 서버에서 받은 isFirstLogin 값을 상태와 AsyncStorage에 저장
+          const isFirstLogin = response.data.isFirstLogin === 1; // 1이면 true
+          await setIsFirst(isFirstLogin);
+          await AsyncStorage.setItem('isFirst', isFirstLogin ? 'true' : 'false');
+
+          if (isFirstLogin) {
+            navigation.navigate('Survey');
+          } else {
+            navigation.navigate('Tabs');
+          }
+      } else {
+        setErrorMessage('서버로부터 유효한 토큰을 받지 못했습니다.');
         }
       } else {
         setErrorMessage('카카오 로그인에 실패했습니다.');

@@ -37,6 +37,8 @@ export default function MyPageScreen({navigation}) {
   const [ploggingCnt, setPloggingCnt] = useState(111);
   const [friendsList, setFriendsList] = useState([]);
   const lvl = parseInt(useStore(state => state.exp) / 100);
+  const clearTokens = useStore((state) => state.clearTokens);
+  const clearUser = useStore((state) => state.clearUser);
 
   useEffect(() => {
     const fetchPloggingCnt = async () => {
@@ -73,11 +75,23 @@ export default function MyPageScreen({navigation}) {
     }
   };
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     setIsModalOpen(false);
-    signOutWithKakao();
+    try {
+      // 카카오 로그아웃 처리
+      await signOutWithKakao();
+      console.log('카카오 로그아웃 성공');
+    } catch (err) {
+      console.error('카카오 로그아웃 에러:', err);
+    }
+
+    // 토큰과 사용자 정보 초기화
+    await clearTokens();
+    await clearUser();
+
     navigation.navigate('LoginMain');
   };
+
   return (
     <View style={{flex: 1}}>
       {isModalOpen && (

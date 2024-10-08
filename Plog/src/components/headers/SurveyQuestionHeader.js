@@ -10,13 +10,17 @@ const SurveyQuestionHeader = ({onBackPress, onClosePress}) => {
     return (
         <View style={styles.headerWrap}>
             <View style={styles.header}>
-                <Pressable onPress={onBackPress}>
+                <Pressable 
+                    onPress={onBackPress}
+                    style={styles.backWrap}>
                     <Image 
                         source={require('../../../assets/icons/ic_back.png')}
                         style={styles.backIcon}
                     />
                 </Pressable>
-                <Pressable onPress={onClosePress}>
+                <Pressable 
+                    onPress={onClosePress}
+                    style={styles.closeWrap}>
                     <Image 
                         source={require('../../../assets/icons/greenClose.png')}
                         style={styles.closeIcon}
@@ -43,6 +47,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: '95%',
+    },
+    backWrap: {
+        width: responsiveWidth(12),
+        height: responsiveHeight(4),
+        justifyContent: 'center',
+    },
+    closeWrap: {
+        width: responsiveWidth(12),
+        height: responsiveHeight(4),
+        alignItems: 'flex-end',
+        justifyContent: 'center',
     },
     backIcon: {
         width: 24,

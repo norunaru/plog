@@ -4,18 +4,25 @@ import {
   StyleSheet,
   Pressable,
   SafeAreaView,
+  View,
 } from 'react-native';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import chevronLeft from '../../../assets/icons/ic_back.png';
 
 const PloggingHeader = ({navigation, headerText}) => {
   return (
     <SafeAreaView style={styles.headerWrap}>
-      <Pressable onPress={() => navigation.goBack()}>
+      <Pressable onPress={() => navigation.goBack()} style={styles.backWrap}>
         <Image source={chevronLeft} style={styles.chevron} />
       </Pressable>
       <Text style={styles.headerText}>
         {headerText}
       </Text>
+      <View style={styles.boxWrap} />
     </SafeAreaView>
   );
 };
@@ -45,6 +52,16 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 45,
     marginLeft: -10,
+  },
+  backWrap: {
+    width: responsiveWidth(12),
+    height: responsiveHeight(4),
+    justifyContent: 'center',
+  },
+  boxWrap: {
+    width: responsiveWidth(8),
+    height: responsiveHeight(4),
+    justifyContent: 'center',
   },
 });
 
