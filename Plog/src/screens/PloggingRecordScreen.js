@@ -6,10 +6,9 @@ import {
   responsiveHeight,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
-import { useFocusEffect } from '@react-navigation/native'; // useFocusEffect 추가
-
-import PloggingHeader from '../components/headers/PloggingHeader';
+import { useFocusEffect } from '@react-navigation/native';
 import { getAcitivities } from '../API/activity/activityAPI';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import useStore from '../../store/store';
 
 import ChevronLeft from '../../assets/calendar/left.png';
@@ -57,27 +56,31 @@ const PloggingRecordScreen = ({ navigation }) => {
     }, [accessToken])
   );
 
-  const filteredData = ploggingData.filter(item => item.date === selectedDate);
-
+  const filteredData = (Array.isArray(ploggingData) ? ploggingData : []).filter(item => {
+    const itemDate = new Date(item.creationDate).toISOString().split('T')[0];
+    return itemDate === selectedDate;
+  });
+  
   const getMarkedDates = () => {
     const markedDates = {};
-
+  
     ploggingData.forEach(item => {
-      markedDates[item.date] = {
+      const itemDate = new Date(item.creationDate).toISOString().split('T')[0];
+      markedDates[itemDate] = {
         marked: true,
         dotColor: '#1ECD90',
       };
     });
-
+  
     markedDates[selectedDate] = {
       selected: true,
       selectedColor: '#1ECD90',
       dotColor: selectedDate === today ? 'white' : '#1ECD90',
     };
-
+  
     return markedDates;
   };
-
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = date.getMonth() + 1;
@@ -87,7 +90,7 @@ const PloggingRecordScreen = ({ navigation }) => {
 
   const handleCourseDetailPress = (activityId) => {
     navigation.navigate('PloggingRecordDetail', { activityId });
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -147,7 +150,7 @@ const PloggingRecordScreen = ({ navigation }) => {
                     </Text>
                     <View style={styles.locationContainer}>
                       <Image source={locationIcon} style={styles.locationImage} />
-                      <Text style={styles.location}>{item.location}</Text>
+                      <Text style={styles.location}>{item.locationName}</Text>
                       <Image source={starIcon} style={styles.starImage} />
                       <Text style={styles.location}>평점 {item.star}</Text>
                     </View>

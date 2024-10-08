@@ -136,6 +136,7 @@ const WritingScreen = ({navigation}) => {
           multiline={true}
           maxLength={120}
           textAlignVertical="top"
+          onChangeText={text => setTitleValue(text)}
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
