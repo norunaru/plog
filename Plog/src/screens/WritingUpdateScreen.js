@@ -44,7 +44,7 @@ const WritingUpdateScreen = ({ navigation, activityId }) => {
         images: [],
       });
     };
-
+    console.log(activityData)
     fetchData();
   }, []);
 

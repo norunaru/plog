@@ -22,10 +22,10 @@ const UpdateDeleteModal = ({ isVisible, onClose, onEdit, onDelete }) => {
           <Text style={styles.updateText}>수정</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.option} onPress={onDelete}>
+        {/* <TouchableOpacity style={styles.option} onPress={onDelete}>
           <Image source={trashIcon} style={styles.icon} />
           <Text style={styles.deleteText}>삭제</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
       </View>
     </Modal>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 25,
     borderRadius: 20,
     flexDirection: 'column',
