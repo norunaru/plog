@@ -210,10 +210,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   infoValue: {
-    fontSize: responsiveFontSize(2), // 반응형 텍스트 크기
+    fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
     color: '#3F3F47',
     fontWeight: '400',
     marginLeft: responsiveWidth(1), // 반응형 마진
+    marginTop: responsiveHeight(0.2),
   },
   footer: {
     flexDirection: 'row',

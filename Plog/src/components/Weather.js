@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 import { View, Text, Image, StyleSheet, ActivityIndicator, PermissionsAndroid, Platform } from 'react-native';
 import axios from 'axios';
 import Geolocation from 'react-native-geolocation-service';
@@ -361,13 +366,13 @@ const styles = StyleSheet.create({
   imageBox: {
     position: 'absolute',
     top: 2,
-    left: 8,
+    left: responsiveWidth(3),
     width: 100,
     height: 100,
   },
   contentBox: {
     position: 'absolute',
-    left: 133,
+    left: responsiveWidth(40),
     width: 148,
     height: 104,
     paddingVertical: 8,

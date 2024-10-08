@@ -6,6 +6,11 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveFontSize,
+  responsiveWidth,
+} from 'react-native-responsive-dimensions';
 
 const Modal = ({
   onClose,
@@ -70,15 +75,15 @@ const styles = StyleSheet.create({
     zIndex: 11,
   },
   boldText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2.3),
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 8,
   },
   subText: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.8),
     color: '#666',
-    marginBottom: 12,
+    marginBottom: 30,
   },
   buttonContainer: {
     flexDirection: 'row',

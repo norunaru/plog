@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.3),
     color: '#3F3F47',
     fontWeight: '400',
+    marginTop: responsiveHeight(0.2),
   },
   separator: {
     height: 1,

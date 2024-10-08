@@ -11,9 +11,11 @@ import {
   Platform,
   ScrollView,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import { postActivity } from '../API/activity/activityAPI';
+import { detailCourse } from '../API/plogging/detailAPI';
 
 import Modal from '../components/Modal';
 import useStore from '../../store/store';
@@ -32,21 +34,22 @@ const WritingScreen = ({ navigation, route }) => {
   const [titleValue, setTitleValue] = useState('');
   const [memo, setMemo] = useState('');
   const [selectedImages, setSelectedImages] = useState([]); 
+  const [courseData, setCourseData] = useState(null);
   const id = useStore((state) => state.id);
   const accessToken = useStore((state) => state.accessToken);
 
   const writingSavePress = async () => {
-    // 임의 데이터 (id, token 제외)
+    // 코스 데이터와 사용자가 입력한 데이터를 저장
     const memberId = id;
-    const trailId = 1;
-    const lat = [37.5172, 37.5175, 37.5178];
-    const lon = [127.0473, 127.0476, 127.0480];
+    const trailId = courseId;
+    const lat = path.map(coord => coord.latitude);
+    const lon = path.map(coord => coord.longitude);
     const review = memo;
     const score = parseFloat(rating);
-    const title = titleValue;
-    const totalTime = parseFloat(160.0);
-    const totalDistance = parseFloat(3.0);
-    const totalKcal = parseFloat(150.0);
+    const title = courseName;
+    const totalTime = seconds;
+    const totalDistance = parseFloat(distance);
+    const totalKcal = parseFloat(calories);
     const token = accessToken;
   
     const imageFiles = selectedImages.map((uri, index) => {
@@ -81,6 +84,7 @@ const WritingScreen = ({ navigation, route }) => {
 
   // 전달된 데이터를 가져옵니다.
   const {
+    courseId = 0,
     totalDistance = 0,
     caloriesBurned = 0,
     seconds = 0,
@@ -88,6 +92,21 @@ const WritingScreen = ({ navigation, route }) => {
     courseName = '',
     endDate = new Date().toISOString(),
   } = route.params || {};
+
+  // 해당 코스 상세정보 데이터 가져오기
+  useEffect(() => {
+    const CourseDetail = async () => {
+      try {
+        const response  = await detailCourse(courseId);
+        setCourseData(response.data);
+
+      } catch (error) {
+        console.error("Error:", error)
+      }
+    };
+    
+    CourseDetail();
+  }, [courseId]);
 
   // endDate를 Date 객체로 변환
   const endDateObj = new Date(endDate);
@@ -141,6 +160,14 @@ const WritingScreen = ({ navigation, route }) => {
     );
   };
 
+  if (!courseData) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#1ECD90" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -185,7 +212,7 @@ const WritingScreen = ({ navigation, route }) => {
         {/* 지도, 정보 박스 */}
         <View>
           <Image
-            source={require('../../assets/images/mapmap.png')}
+            source={courseData.imageUri ? { uri: courseData.imageUri } : require('../../assets/images/map_default.png')}
             style={styles.map}
           />
           <View style={styles.detail}>
@@ -397,5 +424,15 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 12,
     marginRight: 8,
+  },
+  loaderContainer: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

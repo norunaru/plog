@@ -14,7 +14,7 @@ import pauseIcon from '../../assets/icons/ic_pause.png';
 import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
 import Modal from '../components/Modal';
-import InPolygonModal from '../components/modals/inPolygonModal';
+import InPolygonModal from '../components/modals/InPolygonModal';
 import {
   responsiveWidth,
   responsiveHeight,
@@ -58,6 +58,7 @@ const PloggingScreen = ({ navigation, route }) => {
   const handleFinish = () => {
     // 여기서 Writing 페이지로 이동하면서 필요한 데이터를 전달
     navigation.navigate('Writing', {
+      courseId,
       totalDistance,
       caloriesBurned,
       seconds,
@@ -370,14 +371,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: responsiveFontSize(2.2),
     fontWeight: 'bold',
-    marginTop: 40,
+    marginTop: 30,
     textAlign: 'center',
   },
   timerContainer: {
     marginTop: 20,
     backgroundColor: '#ffffff',
     width: responsiveWidth(60),
-    height: 89,
+    height: responsiveHeight(9),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
