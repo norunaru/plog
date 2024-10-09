@@ -243,7 +243,7 @@ public class TrailServiceImpl implements TrailService {
             Float lon = member.getRegionLon();
             Integer type = member.getRegion_type();
             Integer floggingTimeType = member.getActivityTime();
-            Pageable pageable = PageRequest.of(0, 3);
+            Pageable pageable = PageRequest.of(0, 10);
 
             List<Trail> recommendedTrails = trailRepository.findRecommendedTrails(lat, lon, type,
                 pageable);
@@ -254,8 +254,7 @@ public class TrailServiceImpl implements TrailService {
                 int time = (int) (Math.sqrt(trail.getArea()) / 6);
                 // 면적 => 거리
                 float area = (float) (Math.sqrt(trail.getArea()));
-                if (checkFologgingTime(time, floggingTimeType))
-                    ;
+                if (checkFologgingTime(time, floggingTimeType)) continue;
                 String tag = "";
                 tag += timeToTag(time);
                 tag += typeTotag(type);
