@@ -98,7 +98,13 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         </View>
 
         <View style={styles.recordItem}>
-          <Image source={{ uri: course.image }} style={styles.mapImage} />
+
+          {course.image ? (
+            <Image source={{ uri: course.image }} style={styles.mapImage} />
+          ) : (
+            <Image source={require('../../assets/images/map_default.png')} style={styles.mapImage} />
+          )}
+
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
               <Image source={distanceIcon} style={styles.infoIcon} />
@@ -122,18 +128,13 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         <View style={styles.imageContainer}>
           {/* activityImages map 으로 출력 */}
           {Array.isArray(course.images) && course.images.length > 0 &&
-            course.images.map((image, index) => {
-              console.log("image:", image);  // 이미지 값이 무엇인지 확인
-              return (
-                image && image !== "" ? (
-                  <Image
-                    key={index}
-                    source={{ uri: image }}
-                    style={styles.image}
-                  />
-                ) : null
-              );
-            })
+            course.images.filter(image => image).map((image, index) => (
+              <Image
+                key={index}
+                source={{ uri: image }}
+                style={styles.image}
+              />
+            ))
           }
 
         </View>
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
   },
   greenBtn: {
     flex: 1,
-    height: 54,
+    height: 65,
     backgroundColor: '#1ECD90',
     borderRadius: 30,
     justifyContent: 'center',

@@ -154,7 +154,7 @@ const WritingScreen = ({ navigation, route }) => {
           onClose={() => setIsModalOpen(false)}
           boldText={'작성을 중단하시겠어요?'}
           subText={
-            '지금 나가면 내용이 저장되지 않으며 추후 마이페이지에서 작성이 가능해요'
+            '지금 나가면 내용이 저장되지 않으며 \n추후 마이페이지에서 작성이 가능해요'
           }
           whiteBtnFn={() => setIsModalOpen(false)}
           greenBtnFn={() => navigation.navigate('Tabs')}
@@ -251,7 +251,9 @@ const WritingScreen = ({ navigation, route }) => {
         <View style={{flexDirection: 'row', marginBottom: 24}}>
           {/* 선택한 이미지들을 표시 */}
           {selectedImages.map((imageUri, index) => (
-            <Image key={index} source={{uri: imageUri}} style={styles.photo} />
+            imageUri && ( // URI가 null이 아닌 경우에만 렌더링
+              <Image key={index} source={{ uri: imageUri }} style={styles.photo} />
+            )
           ))}
         </View>
 
@@ -341,8 +343,8 @@ const styles = StyleSheet.create({
     color: '#8A8A8A',
   },
   whiteBtn: {
-    width: 122,
-    height: 52,
+    width: 140,
+    height: 55,
     borderColor: '#1ECD90',
     borderWidth: 1,
     marginRight: 8,
@@ -353,13 +355,14 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
   greenBtn: {
-    width: 205,
-    height: 52,
+    width: 230,
+    height: 55,
     backgroundColor: '#1ECD90',
     marginRight: 8,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 8,
   },
   btnText: {
     fontSize: 16,
@@ -391,7 +394,7 @@ const styles = StyleSheet.create({
   },
   btnWrap: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     marginTop: 29,
   },
   photo: {
