@@ -15,7 +15,6 @@ const CustomCourseRecScreen = ({navigation}) => {
   const getData = async () => {
     const response = await getRecommendedCourses(token);
     setCourses(response);
-    console.log(response);
   };
 
   useEffect(() => {

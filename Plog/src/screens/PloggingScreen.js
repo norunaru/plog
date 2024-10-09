@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Platform, ActivityIndicator } from 'react-native';
 import LottieView from 'lottie-react-native';
 import MapView, { PROVIDER_GOOGLE, Polygon, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
@@ -221,6 +221,14 @@ const PloggingScreen = ({ navigation, route }) => {
       }
     };
   }, [isRunning]);
+
+  if (!coursePolygon || !courseName) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#1ECD90" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.wrap}>
@@ -471,6 +479,16 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8),
     fontWeight: 'bold',
     marginLeft: 7,
+  },
+  loaderContainer: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

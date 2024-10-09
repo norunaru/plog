@@ -63,11 +63,9 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   modalWrap: {
-    width: 275,
-    height: 168,
-    paddingTop: 24,
-    paddingBottom: 16,
-    paddingHorizontal: 17,
+    width: '75%',          // 고정된 값 대신 화면 크기의 85%로 설정
+    paddingVertical: 24,   // 상하 여백
+    paddingHorizontal: 17, // 좌우 여백
     borderRadius: 24,
     backgroundColor: 'white',
     justifyContent: 'center',
@@ -83,12 +81,16 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: responsiveFontSize(1.8),
     color: '#666',
-    marginBottom: 30,
+    marginBottom: 20,
+    textAlign: 'center',      // 텍스트 중앙 정렬
+    lineHeight: 24,           // 줄 간 간격 설정
+    flexWrap: 'wrap', 
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
+    width: '100%', // 버튼들이 모달 안에 들어가도록 폭을 맞춤
+    marginTop: 20, // 텍스트와 버튼 사이에 여백 추가
   },
   whiteBtn: {
     flex: 1,
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     borderColor: '#1ECD90',
     borderWidth: 1,
     borderRadius: 24,
-    height: 52,
+    height: responsiveHeight(6.5), // 버튼 높이를 더 유연하게 조정
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1ECD90',
     borderRadius: 24,
-    height: 52,
+    height: responsiveHeight(6.5),
     justifyContent: 'center',
     alignItems: 'center',
   },

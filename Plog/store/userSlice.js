@@ -37,6 +37,7 @@ const createUserSlice = set => ({
       isFirst: true,
       lat: 0,
       lng: 0,
+      exp: 0,
     });
   },
 });
