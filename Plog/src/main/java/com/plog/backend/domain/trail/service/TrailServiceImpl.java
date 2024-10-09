@@ -405,6 +405,11 @@ public class TrailServiceImpl implements TrailService {
             .stream()
             .filter(LikeTrail::getLikeCheck)
             .collect(Collectors.toList());
+        for(LikeTrail likeTrail : list) {
+            Trail trail = likeTrail.getTrail();
+            trail.setDistance((float) (int) (Math.sqrt(trail.getArea()) / 6));
+            likeTrail.setTrail(trail);
+        }
 
         return LikeTrailListResponseDto.builder()
             .likeTrailList(list)
