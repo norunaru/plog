@@ -277,6 +277,7 @@ function UnauthenticatedStack() {
         component={SurveyResultScreen}
         options={{headerShown: false}}
       />
+
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
