@@ -323,9 +323,7 @@ response.data.data =
   ]
 
   */
-import BASE_URL from '../apiconfig';
-import axios from 'axios';
-
+ 
 // 일지 공유하기
 export const shareActivity = async ({id, token}) => {
   try {
