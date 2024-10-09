@@ -407,8 +407,8 @@ public class TrailServiceImpl implements TrailService {
             .collect(Collectors.toList());
         for(LikeTrail likeTrail : list) {
             Trail trail = likeTrail.getTrail();
-            trail.setArea((float) (Math.sqrt(trail.getArea())));
             trail.setTime((float) (int) (Math.sqrt(trail.getArea()) / 6));
+            trail.setArea((float) (Math.sqrt(trail.getArea())));
             likeTrail.setTrail(trail);
         }
 
