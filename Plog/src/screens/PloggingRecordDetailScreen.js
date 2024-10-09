@@ -26,6 +26,7 @@ import starIcon from '../../assets/icons/ic_star.png';
 
 const PloggingRecordDetailScreen = ({route, navigation}) => {
   const [course, setCourse] = useState([]);
+  const [courseId, setCourseId] = useState(null);
   const [createDate, setCreateDate] = useState([]);
   const accessToken = useStore((state) => state.accessToken);
   
@@ -36,6 +37,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
       try {
         const activityData = await getActivityData(activityId, accessToken); // API 호출
         setCourse(activityData);
+        setCourseId(activityData.id)
         // creationDate가 유효한지 체크
         if (activityData.creationDate) {
           const date = new Date(activityData.creationDate); // 날짜 변환
@@ -128,7 +130,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
           </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.greenBtn}
-            onPress={() => navigation.navigate('Plogging')}>
+            onPress={() => navigation.navigate('Plogging', { courseId })}>
             <Text style={styles.againText}>이 코스 한번 더 하기</Text>
           </TouchableOpacity>
         </View>
