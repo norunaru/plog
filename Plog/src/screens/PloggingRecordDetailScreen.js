@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import PloggingDetailHeader from '../components/headers/PloggingDetailHeader';
 import { getActivityData } from '../API/activity/activityAPI';
+import { shareActivity } from '../API/community/communityAPI';
 import useStore from '../../store/store';
 
 import locationIcon from '../../assets/icons/ic_location.png';
@@ -56,13 +57,15 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     fetchActivityData();
   }, [activityId, accessToken]);
 
-  const onShare = async () => {
+  const handleSharePress = async () => {
     try {
-      await Share.share({
-        message: `내 플로깅 기록: ${course.title} (${course.location}, ${course.date}). 총 거리: ${course.distance}, 총 시간: ${course.time}, 소모 칼로리: ${course.calorie}.`,
-      });
+      console.log('Access Token:', accessToken);
+      await shareActivity({
+        id: activityId,
+        token: accessToken,
+      }); // API 호출
     } catch (error) {
-      alert(error.message);
+      console.error('일지 공유 에러:', error);
     }
   };
   
@@ -134,18 +137,18 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
           }
 
         </View>
+      </ScrollView>
 
         <View style={styles.footer}>
-          {/* <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
+          <TouchableOpacity style={styles.whiteBtn} onPress={handleSharePress}>
             <Text style={styles.shareText}>공유하기</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.greenBtn}
             onPress={() => navigation.navigate('Plogging', { courseId })}>
             <Text style={styles.againText}>이 코스 한번 더 하기</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
     </View>
   );
 };
@@ -244,10 +247,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 10,
-    width: '100%',
-    marginBottom: 20,
+    marginHorizontal: 10,
+    width: '90%',
+    marginBottom: 40,
   },
   whiteBtn: {
     width: 122,
@@ -271,7 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 15,
     width: '100%',
   },
   againText: {
