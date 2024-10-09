@@ -140,6 +140,7 @@ const RecommendScreen = ({ navigation }) => {
                 coordinate={location.polygonCenter}
                 onPress={() => handleMarkerPress(location)}
                 isSelected={selectedMarkerId === location.id}
+                tracksViewChanges={false}
               >
                 <Image
                   source={
