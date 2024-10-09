@@ -42,7 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Transactional
     @Override
-    public void save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
+    public Long save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
 
         // S3에 이미지 업로드
         List<MultipartFile> images = activity.getImages();
@@ -67,7 +67,7 @@ public class ActivityServiceImpl implements ActivityService {
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
         memberScore.getScore()[(int) trailId] = activity.getScore();
         memberScoreRepository.save(memberScore);
-
+        Long retunValue = -1L;
         Optional<Trail> trail = trailRepository.findById(trailId);
         if (trail.isPresent()) {
             Trail trailEntity = trail.get();
@@ -101,8 +101,9 @@ public class ActivityServiceImpl implements ActivityService {
             newActivity.setActivityImages(activityImages);
 
             // 4. Activity와 ActivityImage 둘 다 저장 (Cascade 설정을 통해 자동으로 ActivityImage도 저장)
-            activityRepository.save(newActivity);
+            retunValue = activityRepository.save(newActivity).getId();
         }
+        return retunValue;
     }
 
 

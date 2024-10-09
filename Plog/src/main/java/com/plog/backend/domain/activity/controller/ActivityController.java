@@ -33,8 +33,7 @@ public class ActivityController {
     @Operation(summary = "플로깅 일지 기록", description = "플로깅 일지 기록(저장) API")
     public SuccessResponse<?> save(@ModelAttribute ActivitySaveRequestDto activitySaveRequestDto)
         throws IOException {
-        activityService.save(activitySaveRequestDto, MemberInfo.getUserId());
-        return SuccessResponse.created();
+        return SuccessResponse.created(activityService.save(activitySaveRequestDto, MemberInfo.getUserId()));
     }
 
     @GetMapping("")
