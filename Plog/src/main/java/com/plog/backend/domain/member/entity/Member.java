@@ -94,7 +94,7 @@ public class Member {
     @Setter
     @Column(name = "exp", columnDefinition = "real")
     @ColumnDefault("0")
-    private Float exp;
+    private Float expLevel;
 
     @Setter
     @JsonBackReference

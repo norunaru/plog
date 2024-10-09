@@ -67,7 +67,7 @@ public class JwtUtil {
      */
     private String createToken(MemberDto member, long expirationTime) {
         Claims claims = Jwts.claims();
-        claims.put("exp", member.getExp());
+        claims.put("expLevel", member.getExp());
         claims.put("id", member.getId());
         claims.put("email", member.getEmail());
         claims.put("nickname", member.getNickname());

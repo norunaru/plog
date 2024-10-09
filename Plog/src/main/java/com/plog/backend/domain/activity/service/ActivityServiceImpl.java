@@ -71,7 +71,7 @@ public class ActivityServiceImpl implements ActivityService {
         Optional<Trail> trail = trailRepository.findById(trailId);
         if (trail.isPresent()) {
             Trail trailEntity = trail.get();
-            member.setExp(member.getExp() + trailEntity.getExp());
+            member.setExpLevel(member.getExpLevel() + trailEntity.getExp());
 
             // 3. Activity 엔티티를 생성하여 저장
             Activity newActivity = Activity.builder()
