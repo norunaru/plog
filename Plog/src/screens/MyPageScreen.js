@@ -159,7 +159,7 @@ export default function MyPageScreen({navigation}) {
                 return (
                   <FriendCard
                     key={i}
-                    level={parseInt(friend.friend.exp / 100) + 1}
+                    level={parseInt(friend.friend.expLevel / 100) + 1}
                     name={friend.friend.nickname}
                     profile={friend.friend.profileImageUrl}
                   />
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     marginLeft: 8,
     marginTop: 12,
+    textAlign: 'center',
   },
   runImg: {
     position: 'absolute',

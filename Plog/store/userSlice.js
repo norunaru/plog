@@ -18,7 +18,7 @@ const createUserSlice = set => ({
       nickname: decoded.nickname,
       role: decoded.role,
       isFirst: decoded.isFirst,
-      exp: decoded.exp,
+      exp: decoded.expLevel,
     });
   },
 

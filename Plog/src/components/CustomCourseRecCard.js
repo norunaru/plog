@@ -27,6 +27,11 @@ const CustomCourseRecCard = ({
   onLikeToggle, // 좋아요/취소 핸들러를 props로 받음
   time,
 }) => {
+  const formatArea = meters => {
+    const km = meters / 100;
+    const roundedKm = Math.round(km * 10) / 10; // 소수점 첫째 자리까지 반올림
+    return `${roundedKm}km`;
+  };
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('CourseDetail', {courseId: id})}>
@@ -48,7 +53,7 @@ const CustomCourseRecCard = ({
             <View style={styles.infoLabelContainer}>
               <Text style={styles.infoLabel}>활동 영역</Text>
             </View>
-            <Text style={styles.infoValue}>{area}㎢</Text>
+            <Text style={styles.infoValue}>{formatArea(area)}</Text>
           </View>
           <View style={styles.infoBox}>
             <View style={styles.infoLabelContainer}>

@@ -20,6 +20,7 @@ import Weather from '../components/Weather';
 import running from '../../assets/images/running.png';
 import locationCourse from '../../assets/icons/locationCourse.png';
 import music from '../../assets/icons/ic_music.png';
+import rest from '../../assets/icons/ic_rest.png';
 import {getAttractions} from '../API/attraction/attractionAPI';
 import useStore from '../../store/store';
 import Geolocation from 'react-native-geolocation-service';
@@ -118,8 +119,10 @@ export default function HomeScreen({navigation}) {
             </TouchableOpacity>
             <Pressable onPress={() => navigation.navigate('Bench')}>
               <View style={styles.SmallBox}>
-                <Image style={styles.icon} source={music} />
-                <Text style={styles.heading2}>내 주변{'\n'}벤치 찾기 </Text>
+                <Image style={styles.icon} source={rest} />
+                <Text style={styles.heading2}>
+                  근처 벤치에서{'\n'}쉬어가기{' '}
+                </Text>
               </View>
             </Pressable>
           </View>
