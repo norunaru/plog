@@ -36,9 +36,7 @@ export const postActivity = async ({
   const today = new Date().toISOString().slice(0, -1);
 
   lat.forEach((latitude, index) => formData.append(`lat[]`, String(latitude)));
-  lon.forEach((longitude, index) =>
-    formData.append(`lon[]`, String(longitude)),
-  );
+  lon.forEach((longitude, index) => formData.append(`lon[]`, String(longitude)));
 
   formData.append('trailId', String(trailId));
   formData.append('totalTime', String(totalTime));
@@ -54,11 +52,6 @@ export const postActivity = async ({
       formData.append('images[]', imageUri);
     });
   }
-  // if (images && images.length > 0) {
-  //   images.forEach((image, index) => {
-  //     formData.append(`images[${index}]`, image);
-  //   });
-  // }
 
   try {
     const response = await axios.post(`${BASE_URL}/activities`, formData, {
@@ -68,6 +61,8 @@ export const postActivity = async ({
       },
     });
     console.log('플로깅 일지 기록 응답 : ', response.data);
+    const activityId = response.data.data;
+    return activityId;
   } catch (error) {
     console.log('플로깅 일지 기록 에러', error);
   }

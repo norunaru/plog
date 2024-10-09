@@ -29,7 +29,6 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
   const [courseId, setCourseId] = useState(null);
   const [createDate, setCreateDate] = useState([]);
   const accessToken = useStore((state) => state.accessToken);
-  
   const activityId = route.params.activityId;
 
   useEffect(() => {
@@ -65,6 +64,13 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     } catch (error) {
       alert(error.message);
     }
+  };
+  
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}.${month}.${day}`;
   };
 
   const formatTime = (secs) => {
@@ -127,6 +133,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
               />
             ))
           }
+
         </View>
 
         <View style={styles.footer}>
