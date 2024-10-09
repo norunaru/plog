@@ -14,7 +14,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
-import { postActivity } from '../API/activity/activityAPI';
+import { updatePlogHistory } from '../API/activity/activityAPI';
 import { detailCourse } from '../API/plogging/detailAPI';
 
 import Modal from '../components/Modal';
@@ -35,47 +35,28 @@ const WritingScreen = ({ navigation, route }) => {
   const [memo, setMemo] = useState('');
   const [selectedImages, setSelectedImages] = useState([]); 
   const [courseData, setCourseData] = useState(null);
-  const id = useStore((state) => state.id);
   const accessToken = useStore((state) => state.accessToken);
+  const activityId = route.params.activityId;
 
   const writingSavePress = async () => {
-    // 코스 데이터와 사용자가 입력한 데이터를 저장
-    const memberId = id;
-    const trailId = courseId;
-    const lat = path.map(coord => coord.latitude);
-    const lon = path.map(coord => coord.longitude);
-    const review = memo;
-    const score = parseFloat(rating);
-    const title = titleValue;
-    const totalTime = seconds;
-    const totalDistance = parseFloat(distance);
-    const totalKcal = parseFloat(calories);
-    const token = accessToken;
-  
     const imageFiles = selectedImages.map((uri, index) => {
       return {
         uri,
         type: 'image/jpeg',
-        name: `image_${index}.jpg`,  // 고유 파일명
+        name: `image_${index}.jpg`,
       };
     });
 
     // 일지 기록 post 요청
     try {
-      await postActivity({
-        memberId,
-        trailId,
-        lat,
-        lon,
-        totalTime,
-        review,
-        score,
-        title,
-        totalDistance,
-        totalKcal,
-        images: imageFiles, // 이미지 리스트
-        token,
-      });
+      await updatePlogHistory(
+        activityId,
+        titleValue, 
+        memo, 
+        rating, 
+        imageFiles, 
+        accessToken
+      );
       navigation.navigate('Tabs');
     } catch (error) {
       console.error('저장 실패:', error.response ? error.response.data : error.message);
@@ -104,29 +85,24 @@ const WritingScreen = ({ navigation, route }) => {
         console.error("Error:", error)
       }
     };
-    
     CourseDetail();
   }, [courseId]);
 
-  // endDate를 Date 객체로 변환
   const endDateObj = new Date(endDate);
 
-  // 날짜 형식 변환
   const formatDate = (date) => {
     const year = date.getFullYear();
-    const month = date.getMonth() + 1; // 월은 0부터 시작하므로 1을 더합니다.
+    const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${year}.${month}.${day}`;
   };
 
-  // 시간을 시:분 형식으로 변환
   const formatTime = (secs) => {
     const hours = parseInt(secs / 3600, 10);
     const minutes = parseInt((secs % 3600) / 60, 10);
     return `${hours}시간 ${minutes}분`;
   };
 
-  // 상태 설정
   const [date, setDate] = useState(formatDate(endDateObj));
   const [locationName, setLocationName] = useState(courseName);
   const [distance, setDistance] = useState((totalDistance / 1000).toFixed(2)); // km 단위

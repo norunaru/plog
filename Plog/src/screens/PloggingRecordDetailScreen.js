@@ -66,6 +66,13 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
       alert(error.message);
     }
   };
+  
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}.${month}.${day}`;
+  };
 
   const formatTime = (secs) => {
     const hours = parseInt(secs / 3600, 10);
