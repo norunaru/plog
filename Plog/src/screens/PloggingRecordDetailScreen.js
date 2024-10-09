@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import PloggingDetailHeader from '../components/headers/PloggingDetailHeader';
 import { getActivityData } from '../API/activity/activityAPI';
+import { shareActivity } from '../API/community/communityAPI';
 import useStore from '../../store/store';
 
 import locationIcon from '../../assets/icons/ic_location.png';
@@ -29,7 +30,6 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
   const [courseId, setCourseId] = useState(null);
   const [createDate, setCreateDate] = useState([]);
   const accessToken = useStore((state) => state.accessToken);
-  
   const activityId = route.params.activityId;
 
   useEffect(() => {
@@ -57,14 +57,23 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     fetchActivityData();
   }, [activityId, accessToken]);
 
-  const onShare = async () => {
+  const handleSharePress = async () => {
     try {
-      await Share.share({
-        message: `내 플로깅 기록: ${course.title} (${course.location}, ${course.date}). 총 거리: ${course.distance}, 총 시간: ${course.time}, 소모 칼로리: ${course.calorie}.`,
-      });
+      console.log('Access Token:', accessToken);
+      await shareActivity({
+        id: activityId,
+        token: accessToken,
+      }); // API 호출
     } catch (error) {
-      alert(error.message);
+      console.error('일지 공유 에러:', error);
     }
+  };
+  
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}.${month}.${day}`;
   };
 
   const formatTime = (secs) => {
@@ -89,7 +98,13 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         </View>
 
         <View style={styles.recordItem}>
-          <Image source={{ uri: course.image }} style={styles.mapImage} />
+
+          {course.image ? (
+            <Image source={{ uri: course.image }} style={styles.mapImage} />
+          ) : (
+            <Image source={require('../../assets/images/map_default.png')} style={styles.mapImage} />
+          )}
+
           <View style={styles.infoContainer}>
             <View style={styles.infoItem}>
               <Image source={distanceIcon} style={styles.infoIcon} />
@@ -112,28 +127,29 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         <Text style={styles.memo}>{course.review}</Text>
         <View style={styles.imageContainer}>
           {/* activityImages map 으로 출력 */}
-          {Array.isArray(course.images) && course.images.length > 0 && 
-            course.images.map((image, index) => (
+          {Array.isArray(course.images) && course.images.length > 0 &&
+            course.images.filter(image => image).map((image, index) => (
               <Image
                 key={index}
-                source={{ uri: image }} // 이미지 URI로 설정
+                source={{ uri: image }}
                 style={styles.image}
               />
             ))
           }
+
         </View>
+      </ScrollView>
 
         <View style={styles.footer}>
-          {/* <TouchableOpacity style={styles.whiteBtn} onPress={onShare}>
+          <TouchableOpacity style={styles.whiteBtn} onPress={handleSharePress}>
             <Text style={styles.shareText}>공유하기</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.greenBtn}
             onPress={() => navigation.navigate('Plogging', { courseId })}>
             <Text style={styles.againText}>이 코스 한번 더 하기</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
     </View>
   );
 };
@@ -232,20 +248,22 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    width: '100%',
-    marginBottom: 20,
+    marginHorizontal: 10,
+    width: '90%',
+    marginBottom: 40,
   },
   whiteBtn: {
-    width: 122,
-    height: 54,
+    width: 140,
+    height: 65,
     backgroundColor: 'white',
     borderColor: '#1ECD90',
     borderWidth: 1,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 15,
   },
   shareText: {
     color: '#1ECD90',
@@ -254,12 +272,12 @@ const styles = StyleSheet.create({
   },
   greenBtn: {
     flex: 1,
-    height: 54,
+    height: 65,
     backgroundColor: '#1ECD90',
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
+    marginLeft: 15,
     width: '100%',
   },
   againText: {

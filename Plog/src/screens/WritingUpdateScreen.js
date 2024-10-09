@@ -150,7 +150,11 @@ const WritingUpdateScreen = ({ navigation, route }) => {
 
         {/* 지도, 정보 박스 */}
         <View>
-          <Image source={{ uri: course.image }} style={styles.map} />
+          {course.image ? (
+            <Image source={{ uri: course.image }} style={styles.map} />
+          ) : (
+            <Image source={require('../../assets/images/map_default.png')} style={styles.mapImage} />
+          )}
           <View style={styles.detail}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={distance} style={styles.icon} />

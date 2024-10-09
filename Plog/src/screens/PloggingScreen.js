@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef  } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Platform } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, Platform, ActivityIndicator } from 'react-native';
 import LottieView from 'lottie-react-native';
 import MapView, { PROVIDER_GOOGLE, Polygon, Polyline } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import { request, PERMISSIONS } from 'react-native-permissions';
 import { detailCourse } from '../API/plogging/detailAPI';
 import { getDistance, isPointInPolygon } from 'geolib';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 
 import timerIcon from '../../assets/icons/ic_time.png';
 import startIcon from '../../assets/icons/ic_start.png';
@@ -15,11 +20,8 @@ import calorieIcon from '../../assets/icons/ic_calorie.png';
 import distIcon from '../../assets/icons/distance.png';
 import Modal from '../components/Modal';
 import InPolygonModal from '../components/modals/InPolygonModal';
-import {
-  responsiveWidth,
-  responsiveHeight,
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions';
+import { postActivity } from '../API/activity/activityAPI';
+import useStore from '../../store/store';
 
 const PloggingScreen = ({ navigation, route }) => {
   const [seconds, setSeconds] = useState(0);
@@ -37,6 +39,7 @@ const PloggingScreen = ({ navigation, route }) => {
   const [totalDistance, setTotalDistance] = useState(0); // 총 이동 거리 (미터 단위)
   const [caloriesBurned, setCaloriesBurned] = useState(0); // 소모 칼로리
   const userWeight = 60; // 사용자의 몸무게 (kg), 필요에 따라 사용자 입력으로 변경 가능
+  const accessToken = useStore((state) => state.accessToken);
 
   const { courseId } = route.params; // 선택된 코스의 ID 가져오기
 
@@ -55,18 +58,49 @@ const PloggingScreen = ({ navigation, route }) => {
   };
   
   // 모달에서 '끝내기' 버튼을 눌렀을 때
-  const handleFinish = () => {
-    // 여기서 Writing 페이지로 이동하면서 필요한 데이터를 전달
-    navigation.navigate('Writing', {
-      courseId,
-      totalDistance,
-      caloriesBurned,
-      seconds,
-      pathCoordinates,
-      courseName,
-      endDate: new Date().toISOString(), // Date 객체를 문자열로 변환하여 전달
-    });
-  };
+  const handleFinish = async () => {
+    try {
+      const trailId = courseId;
+      const latitudes = pathCoordinates.map(coord => coord.latitude);
+      const longitudes = pathCoordinates.map(coord => coord.longitude);
+      const totalTime = seconds;
+      const review = '';
+      const score = '';
+      const title = '';
+      const totalKcal = caloriesBurned;
+      const images = [];
+      const token = accessToken;
+
+      // API 요청 보내기
+      const activityId = await postActivity({
+        trailId,
+        lat: latitudes,
+        lon: longitudes,
+        totalTime,
+        review,
+        score,
+        title,
+        totalDistance,
+        totalKcal,
+        images,
+        token,
+      });
+  
+      // Writing 페이지로 이동하면서 필요한 데이터를 전달
+      navigation.navigate('Writing', {
+        courseId,
+        totalDistance,
+        caloriesBurned,
+        seconds,
+        pathCoordinates,
+        courseName,
+        endDate: new Date().toISOString(),
+        activityId,
+      });
+    } catch (error) {
+      console.error('플로깅 후 플로깅 일지 기록 에러:', error);
+    }
+  };  
 
   useEffect(() => {
     let interval = null;
@@ -221,6 +255,14 @@ const PloggingScreen = ({ navigation, route }) => {
       }
     };
   }, [isRunning]);
+
+  if (!coursePolygon || !courseName) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#1ECD90" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.wrap}>
@@ -471,6 +513,16 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8),
     fontWeight: 'bold',
     marginLeft: 7,
+  },
+  loaderContainer: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
