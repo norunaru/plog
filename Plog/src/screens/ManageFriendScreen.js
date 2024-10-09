@@ -123,7 +123,7 @@ const ManageFriendScreen = ({navigation}) => {
                 <FriendManageCard
                   key={index}
                   name={friend.friend.nickname}
-                  level={parseInt(friend.friend.exp / 100) + 1}
+                  level={parseInt(friend.friend.expLevel / 100) + 1}
                   ploggingCnt={friend.ploggingCnt}
                   email={friend.friend.email}
                   profileURL={friend.friend.profileImageUrl}
