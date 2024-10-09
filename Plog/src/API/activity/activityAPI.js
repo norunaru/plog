@@ -106,7 +106,7 @@ export const updatePlogHistory = async (
       },
     );
 
-    console.log('일지 수정 : ', response);
+    console.log('일지 수정 : ', response.data);
   } catch (error) {
     console.log('일지 수정 에러 : ', error);
   }
