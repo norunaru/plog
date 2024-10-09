@@ -29,7 +29,6 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
   const [courseId, setCourseId] = useState(null);
   const [createDate, setCreateDate] = useState([]);
   const accessToken = useStore((state) => state.accessToken);
-  
   const activityId = route.params.activityId;
 
   useEffect(() => {
@@ -119,15 +118,21 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         <Text style={styles.memo}>{course.review}</Text>
         <View style={styles.imageContainer}>
           {/* activityImages map 으로 출력 */}
-          {Array.isArray(course.images) && course.images.length > 0 && 
-            course.images.map((image, index) => (
-              <Image
-                key={index}
-                source={{ uri: image }} // 이미지 URI로 설정
-                style={styles.image}
-              />
-            ))
+          {Array.isArray(course.images) && course.images.length > 0 &&
+            course.images.map((image, index) => {
+              console.log("image:", image);  // 이미지 값이 무엇인지 확인
+              return (
+                image && image !== "" ? (
+                  <Image
+                    key={index}
+                    source={{ uri: image }}
+                    style={styles.image}
+                  />
+                ) : null
+              );
+            })
           }
+
         </View>
 
         <View style={styles.footer}>
