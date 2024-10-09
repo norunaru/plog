@@ -65,6 +65,7 @@ const CustomCourseRecScreen = ({navigation}) => {
                   area={course.area}
                   time={course.time}
                   navigation={navigation}
+                  imageURL={course.imageUri}
                   onLikeToggle={() => {
                     handleLikeToggle(course.id, course.like);
                   }}
