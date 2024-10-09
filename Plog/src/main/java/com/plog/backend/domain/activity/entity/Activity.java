@@ -72,12 +72,14 @@ public class Activity {
     @Column(name = "location_name", columnDefinition = "TEXT")
     private String locationName;
 
-    @ColumnDefault("'리뷰를 남겨주세요!'")
+
     @Column(name = "review", columnDefinition = "TEXT")
+    @ColumnDefault("'리뷰를 남겨주세요!'")
     private String review;
 
-    @ColumnDefault("3")
+
     @Column(name = "score", columnDefinition = "real")
+    @ColumnDefault("0")
     private Float score;
 
     @ManyToOne()
