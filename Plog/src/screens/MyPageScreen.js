@@ -127,7 +127,7 @@ export default function MyPageScreen({navigation}) {
                 {nickName}님
               </Text>
               <View style={styles.levelBadge}>
-                <Text style={{fontSize: 11, color: 'white'}}>
+                <Text style={{fontSize: 11, color: 'white', marginBottom: 3}}>
                   {lvl + 1}레벨 플로거
                 </Text>
               </View>
