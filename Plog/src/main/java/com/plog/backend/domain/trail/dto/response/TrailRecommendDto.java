@@ -16,4 +16,5 @@ public class TrailRecommendDto {
     private int time;
     private Boolean like;
     private String tags;
+    private String imageUri;
 }
