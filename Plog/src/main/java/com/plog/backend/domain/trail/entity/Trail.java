@@ -52,7 +52,7 @@ public class Trail {
     private Float toiletCnt;
 
     @Column(name = "distance", columnDefinition = "real")
-    private Float distance;
+    private Float time;
 
     @Column(name = "area", columnDefinition = "real")
     private Float area;
