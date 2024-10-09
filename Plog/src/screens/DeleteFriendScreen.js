@@ -28,7 +28,7 @@ const DeleteFriendScreen = ({navigation}) => {
   const [friend, setFriend] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState(0);
-  const [isNoticeOn, setIsNoticeOn] = useState(true);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
   const [friendsCnt, setFriendsCnt] = useState(0);
   const [friendsList, setFriendsList] = useState([]);
 
