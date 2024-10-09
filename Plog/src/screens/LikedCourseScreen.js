@@ -54,6 +54,7 @@ export default function LikedCourseScreen({navigation}) {
               likeCheck={course.likeCheck}
               area={course.trail.area}
               name={course.trail.name}
+              time={course.trail.time}
               // 좋아요/취소 이벤트 핸들러 추가
               onLikeToggle={() =>
                 handleLikeToggle(course.trail.id, course.likeCheck)
