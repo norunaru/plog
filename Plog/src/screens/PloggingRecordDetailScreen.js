@@ -37,7 +37,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
       try {
         const activityData = await getActivityData(activityId, accessToken); // API 호출
         setCourse(activityData);
-        setCourseId(activityData.id)
+        setCourseId(activityData.trailId)
         // creationDate가 유효한지 체크
         if (activityData.creationDate) {
           const date = new Date(activityData.creationDate); // 날짜 변환
@@ -67,7 +67,6 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     }
   };
 
-  // 시간을 시:분 형식으로 변환
   const formatTime = (secs) => {
     const hours = parseInt(secs / 3600, 10);
     const minutes = parseInt((secs % 3600) / 60, 10);
@@ -76,7 +75,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <PloggingDetailHeader navigation={navigation} headerText={'일지 조회'} />
+      <PloggingDetailHeader navigation={navigation} headerText={'일지 조회'} activityId={activityId}/>
 
       <ScrollView style={styles.bodyContainer}>
         <Text style={styles.title}>{course.title}</Text>

@@ -46,7 +46,7 @@ const WritingScreen = ({ navigation, route }) => {
     const lon = path.map(coord => coord.longitude);
     const review = memo;
     const score = parseFloat(rating);
-    const title = courseName;
+    const title = titleValue;
     const totalTime = seconds;
     const totalDistance = parseFloat(distance);
     const totalKcal = parseFloat(calories);
