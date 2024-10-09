@@ -231,6 +231,7 @@ public class TrailServiceImpl implements TrailService {
                     .time(time)
                     .tags(tag)
                     .like(like)
+                    .imageUri(trail.getImage())
                     .build();
                 response.add(trailRecommendDto);
             }
@@ -278,6 +279,7 @@ public class TrailServiceImpl implements TrailService {
                     .time(time)
                     .tags(tag)
                     .like(like)
+                    .imageUri(trail.getImage())
                     .build();
                 response.add(trailRecommendDto);
             }
@@ -324,6 +326,7 @@ public class TrailServiceImpl implements TrailService {
                 .time(time)
                 .tags(tag)
                 .like(like)
+                .imageUri(trail.getImage())
                 .build();
             response.add(trailRecommendDto);
         }
