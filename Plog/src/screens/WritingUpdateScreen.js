@@ -13,7 +13,10 @@ import {
   Pressable,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { getActivityData } from '../API/activity/activityAPI';
+import { updatePlogHistory } from '../API/activity/activityAPI';
 import PloggingHeader from '../components/headers/PloggingHeader';
+import useStore from '../../store/store';
 
 import calendar from '../../assets/icons/ic_calendar.png';
 import location from '../../assets/icons/location.png';
@@ -24,42 +27,68 @@ import calorie from '../../assets/icons/ic_calorie.png';
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
-const WritingUpdateScreen = ({ navigation, activityId }) => {
+const WritingUpdateScreen = ({ navigation, route }) => {
+  const [course, setCourse] = useState([]);
   const [rating, setRating] = useState(0);
   const [memo, setMemo] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
   const [title, setTitle] = useState('');
-  const [activityData, setActivityData] = useState({});
+  const [createDate, setCreateDate] = useState([]);
+  const accessToken = useStore((state) => state.accessToken);
+  const activityId = route.params.activityId
 
   // 이 화면 열리면, API 호출
-  // 데이터 저장 후 화면에 표시 => 칸에 채워두기
   useEffect(() => {
-    const fetchData = async () => {
-      // 여기서 API 호출 가능
-      setActivityData({
-        id: 1,
-        title: '제목 예시',
-        memo: '리뷰 예시',
-        score: 4,
-        images: [],
-      });
+    const fetchActivityData = async () => {
+      try {
+        const activityData = await getActivityData(activityId, accessToken); // API 호출
+        setCourse(activityData);
+        console.log(activityData)
+        if (activityData.creationDate) {
+          const date = new Date(activityData.creationDate); 
+          if (!isNaN(date.getTime())) {
+            setCreateDate(date.toISOString().split('T')[0]);
+          } else {
+            console.error('유효하지 않은 날짜:', activityData.creationDate);
+          }
+        } else {
+          console.error('creationDate가 없습니다.');
+        }
+      } catch (error) {
+        console.error('기록 조회 에러:', error);
+      }
     };
-    console.log(activityData)
-    fetchData();
-  }, []);
 
-  // activityData 업데이트에 따라 필드 초기값 설정
+    fetchActivityData();
+  }, [activityId, accessToken]);
+
   useEffect(() => {
-    if (activityData) {
-      setTitle(activityData.title || '');
-      setMemo(activityData.memo || '');
-      setRating(activityData.score || 0);
-      setSelectedImages(activityData.images || []);
+    if (course) {
+      setTitle(course.title);
+      setMemo(course.review);
+      setRating(course.score);
+      setSelectedImages(course.avtivityImages);
     }
-  }, [activityData]);
+  }, [course]);
 
   // 저장하기 누르면, API 호출
-
+  const handleSavePress = async () => {
+    try {  
+      // API 호출
+      await updatePlogHistory(
+        activityId,
+        title, 
+        memo, 
+        rating, 
+        selectedImages, 
+        accessToken
+      );
+  
+      navigation.navigate('Tabs');
+    } catch (error) {
+      console.error('저장 에러:', error);
+    }
+  };  
   
   // 별 클릭 시 호출되는 함수
   const handleStarPress = (index) => {
@@ -87,6 +116,12 @@ const WritingUpdateScreen = ({ navigation, activityId }) => {
     );
   };
 
+  const formatTime = (secs) => {
+    const hours = parseInt(secs / 3600, 10);
+    const minutes = parseInt((secs % 3600) / 60, 10);
+    return `${hours}시간 ${minutes}분`;
+  };
+
   return (
     <View behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
       <PloggingHeader navigation={navigation} headerText={'일지 수정'} />
@@ -105,32 +140,32 @@ const WritingUpdateScreen = ({ navigation, activityId }) => {
         <View style={{ flexDirection: 'row', marginVertical: 16 }}>
           <View style={{ flexDirection: 'row', marginRight: 12 }}>
             <Image style={styles.miniIcon} source={calendar} />
-            <Text>2024.9.30</Text>
+            <Text>{createDate}</Text>
           </View>
           <View style={{ flexDirection: 'row' }}>
             <Image style={styles.miniIcon} source={location} />
-            <Text>잠실 한강 공원</Text>
+            <Text>{course.locationName}</Text>
           </View>
         </View>
 
         {/* 지도, 정보 박스 */}
         <View>
-          <Image source={require('../../assets/images/mapmap.png')} style={styles.map} />
+          <Image source={{ uri: course.image }} style={styles.map} />
           <View style={styles.detail}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={distance} style={styles.icon} />
               <Text style={styles.detailBold}>총 거리</Text>
-              <Text style={styles.detailThin}>3km</Text>
+              <Text style={styles.detailThin}>{course.totalDistance}km</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={time} style={styles.icon} />
               <Text style={styles.detailBold}>총 시간</Text>
-              <Text style={styles.detailThin}>2시간 15분</Text>
+              <Text style={styles.detailThin}>{formatTime(course.totalTime)}</Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image source={calorie} style={styles.icon} />
               <Text style={styles.detailBold}>소모 칼로리</Text>
-              <Text style={styles.detailThin}>150kcal</Text>
+              <Text style={styles.detailThin}>{course.totalKcal}</Text>
             </View>
           </View>
         </View>
@@ -163,14 +198,14 @@ const WritingUpdateScreen = ({ navigation, activityId }) => {
             textAlignVertical="top"
           />
           {/* 글자수 카운터 표시 */}
-          <Text style={styles.charCounter}>{memo.length}/255</Text>
+          <Text style={styles.charCounter}>{memo ? memo.length : 0}/255</Text>
         </KeyboardAvoidingView>
 
         {/* 선택된 이미지 표시 */}
         <View style={{ flexDirection: 'row', marginBottom: 24 }}>
-          {selectedImages.map((imageUri, index) => (
-            <Image key={index} source={{ uri: imageUri }} style={styles.photo} />
-          ))}
+        {selectedImages && selectedImages.length > 0 && selectedImages.map((imageUri, index) => (
+          <Image key={index} source={{ uri: imageUri }} style={styles.photo} />
+        ))}
         </View>
 
         {/* 사진 선택 버튼 */}
@@ -180,7 +215,7 @@ const WritingUpdateScreen = ({ navigation, activityId }) => {
 
         {/* 저장 버튼 */}
         <View style={styles.btnWrap}>
-          <TouchableOpacity onPress={() => navigation.navigate('Tabs')}>
+          <TouchableOpacity onPress={() => handleSavePress()}>
             <View style={styles.greenBtn}>
               <Text style={styles.btnText}>저장하기</Text>
             </View>
