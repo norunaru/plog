@@ -29,4 +29,5 @@ public class ActivityFindByIdResponseDto {
     private Double score;
     private List<ActivityImage> activityImages;
     private String image;
+    private Long trailId;
 }
