@@ -13,29 +13,29 @@ import {
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 import DetailHeader from '../components/headers/DetailHeader';
-import { detailCourse } from '../API/plogging/detailAPI';
-import { likeCourse, unLikeCourse } from '../API/plogging/likeAPI';
+import {detailCourse} from '../API/plogging/detailAPI';
+import {likeCourse, unLikeCourse} from '../API/plogging/likeAPI';
 
 const CourseDetailScreen = ({route, navigation}) => {
-  const { courseId } = route.params;
+  const {courseId} = route.params;
   const [isLiked, setIsLiked] = useState(false);
   const [courseData, setCourseData] = useState(null);
 
   useEffect(() => {
     const CourseDetail = async () => {
       try {
-        const response  = await detailCourse(courseId);
+        const response = await detailCourse(courseId);
         setCourseData(response.data);
         setIsLiked(response.data.like);
       } catch (error) {
-        console.error("Error:", error)
+        console.error('Error:', error);
       }
     };
-    
+
     CourseDetail();
   }, [courseId]);
 
-  console.log('코스 데이터: ', courseData)
+  console.log('코스 데이터: ', courseData);
 
   const handleLikePress = async () => {
     try {
@@ -50,10 +50,10 @@ const CourseDetailScreen = ({route, navigation}) => {
     }
   };
 
-  const convertTime = (minutes) => {
+  const convertTime = minutes => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-  
+
     if (hours > 0) {
       return `${hours}시간 ${remainingMinutes}분`;
     } else {
@@ -61,12 +61,11 @@ const CourseDetailScreen = ({route, navigation}) => {
     }
   };
 
-  const formatArea = (meters) => {
+  const formatArea = meters => {
     const km = meters / 100;
     const roundedKm = Math.round(km * 10) / 10; // 소수점 첫째 자리까지 반올림
     return `${roundedKm}km`;
   };
-
 
   if (!courseData) {
     return (
@@ -78,12 +77,17 @@ const CourseDetailScreen = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <DetailHeader 
-        navigation={navigation} 
-        headerText={'코스 상세정보'} 
-        style={styles.header}/>
+      <DetailHeader
+        navigation={navigation}
+        headerText={'코스 상세정보'}
+        style={styles.header}
+      />
       <Image
-        source={courseData.imageUri ? { uri: courseData.imageUri } : require('../../assets/images/map_default.png')}
+        source={
+          courseData.imageUri
+            ? {uri: courseData.imageUri}
+            : require('../../assets/images/map_default.png')
+        }
         style={styles.courseMap}
       />
 
@@ -129,7 +133,7 @@ const CourseDetailScreen = ({route, navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.start}
-          onPress={() => navigation.navigate('Plogging', { courseId: courseId })}>
+          onPress={() => navigation.navigate('Plogging', {courseId: courseId})}>
           <Text style={styles.startText}>플로깅 시작</Text>
         </TouchableOpacity>
       </View>

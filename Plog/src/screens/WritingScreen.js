@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -19,8 +19,8 @@ import {
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
-import { updatePlogHistory } from '../API/activity/activityAPI';
-import { detailCourse } from '../API/plogging/detailAPI';
+import {updatePlogHistory} from '../API/activity/activityAPI';
+import {detailCourse} from '../API/plogging/detailAPI';
 
 import Modal from '../components/Modal';
 import useStore from '../../store/store';
@@ -33,15 +33,15 @@ import calorieImg from '../../assets/icons/ic_calorie.png';
 import greenStar from '../../assets/images/greenStar.png';
 import grayStar from '../../assets/images/grayStar.png';
 
-const WritingScreen = ({ navigation, route }) => {
+const WritingScreen = ({navigation, route}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNoticeOn, setIsNoticeOn] = useState(false);
   const [rating, setRating] = useState(0);
   const [titleValue, setTitleValue] = useState('');
   const [memo, setMemo] = useState('');
-  const [selectedImages, setSelectedImages] = useState([]); 
+  const [selectedImages, setSelectedImages] = useState([]);
   const [courseData, setCourseData] = useState(null);
-  const accessToken = useStore((state) => state.accessToken);
+  const accessToken = useStore(state => state.accessToken);
   const activityId = route.params.activityId;
 
   const writingSavePress = async () => {
@@ -57,20 +57,23 @@ const WritingScreen = ({ navigation, route }) => {
     try {
       await updatePlogHistory(
         activityId,
-        titleValue, 
-        memo, 
-        rating, 
-        imageFiles, 
-        accessToken
+        titleValue,
+        memo,
+        rating,
+        imageFiles,
+        accessToken,
       );
       setIsNoticeOn(true);
       setTimeout(() => {
         navigation.navigate('Tabs');
       }, 3000);
     } catch (error) {
-      console.error('저장 실패:', error.response ? error.response.data : error.message);
+      console.error(
+        '저장 실패:',
+        error.response ? error.response.data : error.message,
+      );
     }
-  };  
+  };
 
   // 전달된 데이터를 가져옵니다.
   const {
@@ -87,11 +90,10 @@ const WritingScreen = ({ navigation, route }) => {
   useEffect(() => {
     const CourseDetail = async () => {
       try {
-        const response  = await detailCourse(courseId);
+        const response = await detailCourse(courseId);
         setCourseData(response.data);
-
       } catch (error) {
-        console.error("Error:", error)
+        console.error('Error:', error);
       }
     };
     CourseDetail();
@@ -99,14 +101,14 @@ const WritingScreen = ({ navigation, route }) => {
 
   const endDateObj = new Date(endDate);
 
-  const formatDate = (date) => {
+  const formatDate = date => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
     return `${year}.${month}.${day}`;
   };
 
-  const formatTime = (secs) => {
+  const formatTime = secs => {
     const hours = parseInt(secs / 3600, 10);
     const minutes = parseInt((secs % 3600) / 60, 10);
     return `${hours}시간 ${minutes}분`;
@@ -119,6 +121,13 @@ const WritingScreen = ({ navigation, route }) => {
   const [time, setTime] = useState(formatTime(seconds));
   const [path, setPath] = useState(pathCoordinates);
 
+  const handleDeleteImage = indexToRemove => {
+    // 선택한 이미지를 삭제
+    setSelectedImages(prevImages =>
+      prevImages.filter((_, index) => index !== indexToRemove),
+    );
+  };
+
   // 별 클릭 시 호출되는 함수
   const handleStarPress = index => {
     setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
@@ -129,7 +138,7 @@ const WritingScreen = ({ navigation, route }) => {
     launchImageLibrary(
       {
         mediaType: 'photo', // 사진만 선택 가능
-        selectionLimit: 3, // 최대 3개 선택 가능
+        selectionLimit: 3 - selectedImages.length, // 최대 3개 선택 가능, 이미 선택된 이미지 수만큼 제한
       },
       response => {
         if (response.didCancel) {
@@ -137,9 +146,9 @@ const WritingScreen = ({ navigation, route }) => {
         } else if (response.errorMessage) {
           console.log('ImagePicker Error: ', response.errorMessage);
         } else {
-          // 선택된 이미지를 상태에 저장
+          // 선택된 이미지를 상태에 추가
           const selectedUris = response.assets.map(asset => asset.uri);
-          setSelectedImages(selectedUris);
+          setSelectedImages(prevImages => [...prevImages, ...selectedUris]);
         }
       },
     );
@@ -191,8 +200,7 @@ const WritingScreen = ({ navigation, route }) => {
       ) : null}
 
       <SafeAreaView
-        style={{padding: 20, backgroundColor: 'white', height: '100%'}}
-      >
+        style={{padding: 20, backgroundColor: 'white', height: '100%'}}>
         <TextInput
           style={styles.textInput}
           placeholder="제목을 입력해 주세요"
@@ -215,7 +223,11 @@ const WritingScreen = ({ navigation, route }) => {
         {/* 지도, 정보 박스 */}
         <View>
           <Image
-            source={courseData.imageUri ? { uri: courseData.imageUri } : require('../../assets/images/map_default.png')}
+            source={
+              courseData.imageUri
+                ? {uri: courseData.imageUri}
+                : require('../../assets/images/map_default.png')
+            }
             style={styles.map}
           />
           <View style={styles.detail}>
@@ -270,18 +282,20 @@ const WritingScreen = ({ navigation, route }) => {
             textAlignVertical="top"
           />
           {/* 글자수 카운터 표시 */}
-          <Text style={styles.charCounter}>
-            {memo.length}/255
-          </Text>
+          <Text style={styles.charCounter}>{memo.length}/255</Text>
         </KeyboardAvoidingView>
 
         <View style={{flexDirection: 'row', marginBottom: 24}}>
-          {/* 선택한 이미지들을 표시 */}
-          {selectedImages.map((imageUri, index) => (
-            imageUri && ( 
-              <Image key={index} source={{ uri: imageUri }} style={styles.photo} />
-            )
-          ))}
+          {selectedImages.map(
+            (imageUri, index) =>
+              imageUri && ( // URI가 null이 아닌 경우에만 렌더링
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleDeleteImage(index)}>
+                  <Image source={{uri: imageUri}} style={styles.photo} />
+                </TouchableOpacity>
+              ),
+          )}
         </View>
 
         {/* 사진 선택 버튼 */}
@@ -354,7 +368,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   memo: {
-    borderBottomColor: '#D9D9D9', 
+    borderBottomColor: '#D9D9D9',
     borderBottomWidth: 1,
     height: 80,
     maxHeight: 265,

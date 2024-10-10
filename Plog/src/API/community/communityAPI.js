@@ -323,7 +323,7 @@ response.data.data =
   ]
 
   */
- 
+
 // 일지 공유하기
 export const shareActivity = async ({id, token}) => {
   try {
