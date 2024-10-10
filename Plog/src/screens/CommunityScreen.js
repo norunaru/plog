@@ -71,8 +71,15 @@ export default function CommunityScreen() {
       </View>
 
       <ScrollView style={styles.postWrap}>
-        {selectedOption === 'myPosts'
-          ? myPosts.map(post => (
+        {selectedOption === 'myPosts' ? (
+          myPosts == [] ? (
+            <View style={styles.emptyView}>
+              <Text style={{textAlign: 'center'}}>
+                공유된 사진이 없어요. {'\n'} 사진을 공유해보세요
+              </Text>
+            </View>
+          ) : (
+            myPosts.map(post => (
               <CommunityPostCard
                 key={post.activity.id}
                 name={post.member.nickname}
@@ -86,20 +93,29 @@ export default function CommunityScreen() {
                 title={post.activity.title}
               />
             ))
-          : otherPosts.map(post => (
-              <CommunityPostCard
-                key={post.activity.id}
-                name={post.member.nickname}
-                profile={post.member.profileImageUrl}
-                expLevel={post.member.expLevel}
-                courseName={post.activity.trail.name}
-                plogTimes={post.member.floggingTime}
-                memo={post.activity.review}
-                images={post.activity.activityImages} // 이미지 배열로 넘겨줌
-                image={post.activity.trail.image}
-                title={post.activity.title}
-              />
-            ))}
+          )
+        ) : otherPosts == [] ? (
+          <View style={styles.emptyView}>
+            <Text style={{textAlign: 'center'}}>
+              공유된 사진이 없어요. {'\n'} 사진을 공유해보세요
+            </Text>
+          </View>
+        ) : (
+          otherPosts.map(post => (
+            <CommunityPostCard
+              key={post.activity.id}
+              name={post.member.nickname}
+              profile={post.member.profileImageUrl}
+              expLevel={post.member.expLevel}
+              courseName={post.activity.trail.name}
+              plogTimes={post.member.floggingTime}
+              memo={post.activity.review}
+              images={post.activity.activityImages} // 이미지 배열로 넘겨줌
+              image={post.activity.trail.image}
+              title={post.activity.title}
+            />
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -150,5 +166,11 @@ const styles = StyleSheet.create({
   postWrap: {
     padding: 0,
     width: '100%',
+  },
+  emptyView: {
+    width: '100%',
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
