@@ -337,16 +337,16 @@ const Weather = () => {
                 width: 60,
               },
             ]}>
-            <Text style={styles.titleFont}>{'흐림'}</Text>
+            <Text style={styles.titleFont}>{'맑음'}</Text>
           </View>
           <View style={styles.content}>
             <Text style={[styles.contentFont, styles.space]}>
-              현재 기온 <Text style={styles.gray}> | </Text> {23.4}℃
+              현재 기온 <Text style={styles.gray}> | </Text> {19.2}℃ ({toFahrenheit(19.2).toFixed(1)}℉)
             </Text>
             <Text style={[styles.contentFont, styles.space]}>
-              현재 습도 <Text style={styles.gray}> | </Text> 49%
+              현재 습도 <Text style={styles.gray}> | </Text> 70%
             </Text>
-            {/* <Text style={styles.contentFont}>
+            <Text style={styles.contentFont}>
               미세 먼지 <Text style={styles.gray}> | </Text>{' '}
               <Text
                 style={[
@@ -362,10 +362,11 @@ const Weather = () => {
                       : styles.default
                     : styles.default,
                 ]}>
-                {pm10 !== null ? getPm10GradeText(pm10Grade) : '정보 없음'}
+                {pm10 !== null ? getPm10GradeText(pm10Grade) : <ActivityIndicator size="small" color="#1ECD90" />}
               </Text>{' '}
-              <Text>{pm10 !== null ? `(${pm10}㎍/m³)` : '정보 없음'}</Text>
-            </Text> */}
+              {/* <Text style={styles.blue}>좋음</Text>{' '} */}
+              <Text>{pm10 !== null ? `(${pm10}㎍/m³)` : null}</Text>
+            </Text>
           </View>
         </View>
       </View>
