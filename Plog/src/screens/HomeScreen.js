@@ -78,22 +78,6 @@ export default function HomeScreen({navigation}) {
     requestLocationPermission(); // 앱이 실행될 때 권한을 요청하고 위치 정보를 가져옴
   }, []);
 
-  // useEffect(() => {
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       const {latitude, longitude} = position.coords;
-  //       console.log('현재 위치:', {latitude, longitude}); // 위도, 경도 출력
-  //       setUserLocation(latitude, longitude); // Store lat, lng in the app state
-  //     },
-  //     error => {
-  //       console.log(error);
-  //       setErrorMsg('위치 정보를 가져오는 데 실패했습니다.');
-  //       setLoading(false);
-  //     },
-  //     {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-  //   );
-  // }, [setUserLocation]);
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <TopBar />

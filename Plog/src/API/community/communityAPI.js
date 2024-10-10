@@ -8,7 +8,8 @@ export const getMyPosts = async token => {
         Authorization: `Bearer ${token}`,
       },
     });
-    await console.log('내 공유 게시물 가져오기 성공');
+    console.log('내 공유 게시물 가져오기 성공');
+    console.log('내 공유 게시물 목록 : ', respose.data.data);
     return respose.data.data;
   } catch (error) {
     console.log('내 게시물 가져오기 오류 : ', error);
@@ -23,6 +24,7 @@ export const getOtherPosts = async token => {
       },
     });
     console.log('친구 공유 게시물 가져오기 성공');
+    console.log('친구 공유 게시물 목록 : ', respose.data.data);
     return respose.data.data;
   } catch (error) {
     console.log('친구 게시물 가져오기 오류 : ', error);

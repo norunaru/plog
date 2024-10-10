@@ -10,6 +10,7 @@ import TopBar from '../components/TopBar';
 import {getMyPosts, getOtherPosts} from '../API/community/communityAPI';
 import useStore from '../../store/store';
 import CommunityPostCard from '../components/cards/CommuintyPostCard';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function CommunityScreen() {
   const [selectedOption, setSelectedOption] = useState('myPosts'); // 선택된 옵션 상태 관리
@@ -23,6 +24,12 @@ export default function CommunityScreen() {
     setMyPosts(response1 || []);
     setOtherPosts(response2 || []);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getPosts();
+    }, []),
+  );
 
   useEffect(() => {
     getPosts();
