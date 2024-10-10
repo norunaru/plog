@@ -29,6 +29,7 @@ const RecommendScreen = ({ navigation }) => {
   const [selectedCourse, setSelectedCourse] = useState(null); // 선택된 코스 정보 저장
   const [locations, setLocations] = useState([]);
   const [regionName, setRegionName] = useState('');
+  const [tracksViewChanges, setTracksViewChanges] = useState(true);
 
   const mapRef = useRef(null); // 지도 참조
 
@@ -47,7 +48,16 @@ const RecommendScreen = ({ navigation }) => {
     // 마커가 눌리면 해당 마커 ID를 상태로 저장
     setSelectedMarkerId(course.id);
     setSelectedCourse(course); // 선택된 코스 정보 저장
+    setTracksViewChanges(true);
   }, []);
+
+  useEffect(() => {
+    if (selectedMarkerId !== null) {
+      // 마커가 눌린 후 잠시 후 트래킹을 비활성화하여 성능 최적화
+      const timeout = setTimeout(() => setTracksViewChanges(false), 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [selectedMarkerId]);
 
   const resetSelectedCourse = useCallback(() => {
     setSelectedCourse(null); // 바텀 시트 열었을 때 선택된 코스 초기화
@@ -140,7 +150,7 @@ const RecommendScreen = ({ navigation }) => {
                 coordinate={location.polygonCenter}
                 onPress={() => handleMarkerPress(location)}
                 isSelected={selectedMarkerId === location.id}
-                tracksViewChanges={false}
+                tracksViewChanges={selectedMarkerId === location.id ? tracksViewChanges : false} // 선택된 마커만 트래킹
               >
                 <Image
                   source={
