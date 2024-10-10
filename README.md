@@ -1,4 +1,4 @@
-# readme
+# README
 
 # 환경 문제를 건강하게 해결하는 서비스, "Plog"
 
