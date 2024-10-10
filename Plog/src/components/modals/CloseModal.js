@@ -33,25 +33,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     modalContent: {
-        width: 275,
-        height: 170,
-        backgroundColor: 'white',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
+        width: '75%',          // 고정된 값 대신 화면 크기의 85%로 설정
+        paddingVertical: 24,   // 상하 여백
+        paddingHorizontal: 17, // 좌우 여백
         borderRadius: 24,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 11,
     },
     modalTitle: {
-        fontSize: responsiveFontSize(2),
+        fontSize: responsiveFontSize(2.3),
         fontWeight: 'bold',
-        color: '#0F1012',
+        color: 'black',
+        marginBottom: 8,
     },
     modalMessage: {
-        width: 193,
-        height: 34,
-        fontSize: responsiveFontSize(1.3),
-        fontWeight: '500',
-        textAlign: 'center',
-        color: '#66666D'
+        fontSize: responsiveFontSize(1.5),
+        color: '#666',
+        marginBottom: 20,
+        textAlign: 'center',      // 텍스트 중앙 정렬
+        lineHeight: 24,           // 줄 간 간격 설정
+        flexWrap: 'wrap', 
     },
     modalButtons: {
         flexDirection: 'row',
