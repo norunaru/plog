@@ -66,7 +66,7 @@ const WritingScreen = ({navigation, route}) => {
       setIsNoticeOn(true);
       setTimeout(() => {
         navigation.navigate('Tabs');
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error(
         '저장 실패:',

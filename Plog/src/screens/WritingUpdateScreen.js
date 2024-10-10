@@ -91,7 +91,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
       setIsNoticeOn(true);
       setTimeout(() => {
         navigation.navigate('PloggingRecord');
-      }, 1000);
+      }, 500);
     } catch (error) {
       console.error('저장 에러:', error);
     }
