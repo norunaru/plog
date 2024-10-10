@@ -5,15 +5,6 @@ services:
     environment:
       - TZ=Asia/Seoul
     privileged: true
-    
-  python:
-    container_name: python
-    image: python-app
-    environment:
-      - TZ=Asia/Seoul
-    networks:
-      - app-network
-
 networks:
   app-network:
     external: true
