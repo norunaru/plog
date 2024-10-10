@@ -91,6 +91,7 @@ export default function CommunityScreen() {
                 images={post.activity.activityImages} // 이미지 배열로 넘겨줌
                 image={post.activity.trail.image}
                 title={post.activity.title}
+                locationName={post.activity.locationName}
               />
             ))
           )

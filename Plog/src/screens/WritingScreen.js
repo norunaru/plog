@@ -172,6 +172,14 @@ const WritingScreen = ({navigation, route}) => {
         />
       ) : null}
 
+      {/* {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
+            친구가 삭제되었어요
+          </Text>
+        </View>
+      ) : null} */}
+
       <SafeAreaView
         style={{padding: 20, backgroundColor: 'white', height: '100%'}}>
         <TextInput
@@ -179,18 +187,18 @@ const WritingScreen = ({navigation, route}) => {
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
           multiline={true}
-          maxLength={120}
+          maxLength={40}
           textAlignVertical="top"
           onChangeText={text => setTitleValue(text)}
         />
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
             <Image style={styles.miniIcon} source={calendar} />
-            <Text>{date}</Text>
+            <Text style={{paddingTop: 1}}>{date}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Image style={styles.miniIcon} source={location} />
-            <Text>{locationName}</Text>
+            <Text style={{paddingBottom: 2}}>{locationName}</Text>
           </View>
         </View>
         {/* 지도, 정보 박스 */}
@@ -248,8 +256,8 @@ const WritingScreen = ({navigation, route}) => {
             placeholder="메모를 작성하세요"
             style={styles.memo}
             multiline={true}
-            scrollEnabled={true} // 내부 스크롤 가능하게 설정
-            maxLength={255} // 최대 글자 수 제한
+            scrollEnabled={true}
+            maxLength={255}
             onChangeText={text => setMemo(text)}
             value={memo}
             textAlignVertical="top"
