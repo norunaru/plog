@@ -6,7 +6,7 @@ import {
     responsiveFontSize,
   } from 'react-native-responsive-dimensions';
 
-const SurveyScreen = ({navigation}) => {
+const ReSurveyScreen = ({navigation}) => {
 
     return (
         <View style={styles.surveyView}>
@@ -67,9 +67,9 @@ const SurveyScreen = ({navigation}) => {
                 </Pressable> */}
                 <Pressable 
                     style={styles.preferBtn}
-                    onPress={() => navigation.navigate('Question')}>
+                    onPress={() => navigation.navigate('Question', { from: 'ReSurvey' })}>
                     <Text style={styles.preferText}>
-                        선호도 조사 하러가기
+                        선호도 조사 다시하기
                     </Text>
                 </Pressable>
             </View>
@@ -170,4 +170,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SurveyScreen;
+export default ReSurveyScreen;
