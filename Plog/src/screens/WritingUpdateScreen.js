@@ -12,6 +12,11 @@ import {
   ScrollView,
   Pressable,
 } from 'react-native';
+import {
+  responsiveWidth,
+  responsiveHeight,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getActivityData } from '../API/activity/activityAPI';
 import { updatePlogHistory } from '../API/activity/activityAPI';
@@ -34,6 +39,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [title, setTitle] = useState('');
   const [createDate, setCreateDate] = useState([]);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
   const accessToken = useStore((state) => state.accessToken);
   const activityId = route.params.activityId
 
@@ -82,7 +88,10 @@ const WritingUpdateScreen = ({ navigation, route }) => {
         selectedImages, 
         accessToken
       );
-      navigation.navigate('PloggingRecord');
+      setIsNoticeOn(true);
+      setTimeout(() => {
+        navigation.navigate('PloggingRecord');
+      }, 3000);
     } catch (error) {
       console.error('저장 에러:', error);
     }
@@ -119,6 +128,16 @@ const WritingUpdateScreen = ({ navigation, route }) => {
     const minutes = parseInt((secs % 3600) / 60, 10);
     return `${hours}시간 ${minutes}분`;
   };
+
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
 
   return (
     <View behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
@@ -224,6 +243,14 @@ const WritingUpdateScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white', paddingBottom: 3}}>
+            일지가 수정되었어요
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -340,5 +367,18 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 12,
     marginRight: 8,
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: responsiveHeight(5),
+    alignSelf: 'center',
+    paddingVertical: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
+    width: responsiveWidth(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    zIndex: 100, 
   },
 });
