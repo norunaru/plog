@@ -57,50 +57,58 @@ const PloggingScreen = ({ navigation, route }) => {
     setIsRunning(true); // 타이머와 위치 추적을 다시 시작
   };
   
-  // 모달에서 '끝내기' 버튼을 눌렀을 때
-  const handleFinish = async () => {
-    try {
-      const trailId = courseId;
-      const latitudes = pathCoordinates.map(coord => coord.latitude);
-      const longitudes = pathCoordinates.map(coord => coord.longitude);
-      const totalTime = seconds;
-      const review = '';
-      const score = '';
-      const title = '';
-      const totalKcal = caloriesBurned;
-      const images = [];
-      const token = accessToken;
+// 모달에서 '끝내기' 버튼을 눌렀을 때
+const handleFinish = async () => {
+  try {
+    const trailId = courseId;
+    const latitudes = pathCoordinates.map(coord => coord.latitude);
+    const longitudes = pathCoordinates.map(coord => coord.longitude);
+    const totalTime = seconds;
+    const review = '';
+    const score = '';
+    const title = '';
+    const totalKcal = caloriesBurned;
+    const images = [];
+    const token = accessToken;
 
-      // API 요청 보내기
-      const activityId = await postActivity({
-        trailId,
-        lat: latitudes,
-        lon: longitudes,
-        totalTime,
-        review,
-        score,
-        title,
-        totalDistance,
-        totalKcal,
-        images,
-        token,
-      });
-  
-      // Writing 페이지로 이동하면서 필요한 데이터를 전달
-      navigation.navigate('Writing', {
-        courseId,
-        totalDistance,
-        caloriesBurned,
-        seconds,
-        pathCoordinates,
-        courseName,
-        endDate: new Date().toISOString(),
-        activityId,
-      });
-    } catch (error) {
-      console.error('플로깅 후 플로깅 일지 기록 에러:', error);
-    }
-  };  
+    // API 요청 보내기
+    const activityId = await postActivity({
+      trailId,
+      lat: latitudes,
+      lon: longitudes,
+      totalTime,
+      review,
+      score,
+      title,
+      totalDistance,
+      totalKcal,
+      images,
+      token,
+    });
+
+    // 네비게이션 스택을 재설정하여 Writing 페이지로 이동하고 뒤로 가기 비활성화
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'Writing',
+          params: {
+            courseId,
+            totalDistance,
+            caloriesBurned,
+            seconds,
+            pathCoordinates,
+            courseName,
+            endDate: new Date().toISOString(),
+            activityId,
+          },
+        },
+      ],
+    });
+  } catch (error) {
+    console.error('플로깅 후 플로깅 일지 기록 에러:', error);
+  }
+};
 
   useEffect(() => {
     let interval = null;
