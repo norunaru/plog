@@ -13,6 +13,11 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
+import {
+  responsiveHeight,
+  responsiveWidth,
+  responsiveFontSize,
+} from 'react-native-responsive-dimensions';
 import {launchImageLibrary} from 'react-native-image-picker'; // 이미지 선택을 위한 패키지 추가
 import { updatePlogHistory } from '../API/activity/activityAPI';
 import { detailCourse } from '../API/plogging/detailAPI';
@@ -30,6 +35,7 @@ import grayStar from '../../assets/images/grayStar.png';
 
 const WritingScreen = ({ navigation, route }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
   const [rating, setRating] = useState(0);
   const [titleValue, setTitleValue] = useState('');
   const [memo, setMemo] = useState('');
@@ -47,7 +53,7 @@ const WritingScreen = ({ navigation, route }) => {
       };
     });
 
-    // 일지 기록 post 요청
+    // 일지 기록 patch 요청
     try {
       await updatePlogHistory(
         activityId,
@@ -57,7 +63,10 @@ const WritingScreen = ({ navigation, route }) => {
         imageFiles, 
         accessToken
       );
-      navigation.navigate('Tabs');
+      setIsNoticeOn(true);
+      setTimeout(() => {
+        navigation.navigate('Tabs');
+      }, 3000);
     } catch (error) {
       console.error('저장 실패:', error.response ? error.response.data : error.message);
     }
@@ -136,6 +145,16 @@ const WritingScreen = ({ navigation, route }) => {
     );
   };
 
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
+
   if (!courseData) {
     return (
       <View style={styles.loaderContainer}>
@@ -163,13 +182,13 @@ const WritingScreen = ({ navigation, route }) => {
         />
       ) : null}
 
-      {/* {isNoticeOn ? (
+      {isNoticeOn ? (
         <View style={styles.noticeBox}>
-          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
-            친구가 삭제되었어요
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white', paddingBottom: 3}}>
+            일지가 작성되었어요
           </Text>
         </View>
-      ) : null} */}
+      ) : null}
 
       <SafeAreaView
         style={{padding: 20, backgroundColor: 'white', height: '100%'}}
@@ -351,26 +370,22 @@ const styles = StyleSheet.create({
     color: '#8A8A8A',
   },
   whiteBtn: {
-    width: 140,
+    width: responsiveWidth(34),
     height: 55,
     borderColor: '#1ECD90',
     borderWidth: 1,
-    marginRight: 8,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 16,
-    fontWeight: 600,
   },
   greenBtn: {
-    width: 230,
+    width: responsiveWidth(55),
     height: 55,
     backgroundColor: '#1ECD90',
-    marginRight: 8,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: 12,
   },
   btnText: {
     fontSize: 16,
@@ -404,6 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginTop: 29,
+    width: responsiveWidth(90),
   },
   photo: {
     backgroundColor: 'gray',
@@ -421,5 +437,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: responsiveHeight(5),
+    alignSelf: 'center',
+    paddingVertical: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
+    width: responsiveWidth(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    zIndex: 100, 
   },
 });

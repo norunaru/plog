@@ -75,9 +75,7 @@ const DeleteFriendScreen = ({navigation}) => {
       {isModalOpen ? (
         <RedModal
           boldText={'친구를 삭제하시겠어요?'}
-          subText={
-            '삭제 시, 해당 친구가 목록에서 삭제되며 차단 여부는 상대방이 알 수 없어요'
-          }
+          subText={''}
           whiteBtnText={'취소'}
           redBtnText={'삭제하기'}
           whiteBtnFn={() => setIsModalOpen(false)} // 취소 버튼 클릭 시 모달 닫힘
