@@ -9,6 +9,8 @@ import numpy as np
 from . import models
 from .schemas import TrailNormalCreate
 
+np.set_printoptions(threshold=np.inf)
+
 """
 산책로 정규화
 1. 산책로 시작점 위치, 산책로 편의점 갯수, 화장실 갯수, 주변의 것, 산책로 길이 정보 최대 최소 값을 바탕으로 정규화 (이때 거리를 우선 순위를 증가시키기 위해서 0~2로 둠)
@@ -177,7 +179,7 @@ def recommend_score(db: Session, user: int):
     user_ids = []
 
     for userScore in usersScores:
-        score_array = np.array(userScore.score)
+        score_array = np.array([0 if score is None else score for score in userScore.score])
         # 점수가 0이 아닌 경우만 저장
         scores_matrix.append(score_array)
         user_ids.append(userScore.user_id)
