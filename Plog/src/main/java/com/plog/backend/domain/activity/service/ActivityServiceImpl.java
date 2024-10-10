@@ -77,7 +77,7 @@ public class ActivityServiceImpl implements ActivityService {
             // 3. Activity 엔티티를 생성하여 저장
             Activity newActivity = Activity.builder()
                 .member(member)
-                .title(activity.getTitle() != null ? activity.getTitle() : "제목을 입력해 주세요!")
+                .title("제목을 수정하여 일지를 계속 작성해주세요!")
                 .lat(activity.getLat() != null ? activity.getLat() : new Float[]{0.0f})
                 .lon(activity.getLon() != null ? activity.getLon() : new Float[]{0.0f})
                 .totalDistance(
@@ -86,11 +86,10 @@ public class ActivityServiceImpl implements ActivityService {
                 .totalTime(activity.getTotalTime() != null ? activity.getTotalTime() : 0.0f)
                 .creationDate(LocalDateTime.now())
                 .locationName(
-                    trailEntity.getName() != null ? trailEntity.getName() : "위치 정보를 입력해 주세요!")
-                .review(activity.getReview() != null ? activity.getReview() : "리뷰를 남겨주세요!")
-                .score(activity.getScore() != null ? activity.getScore() : 0.0f)
+                    trailEntity.getName() != null ? trailEntity.getName() : "나만의 코스")
+                .review("일지 내용을 남겨주세요!")
+                .score(0.0f)
                 .trail(trailEntity)
-
                 .build();
 
             // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
