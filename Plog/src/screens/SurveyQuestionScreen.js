@@ -88,6 +88,13 @@ const SurveyQuestionScreen = ({navigation}) => {
     setSelectedCity(city);
     setSelectedCounty("");
     setSelectedTown("");
+
+    if (city === "세종특별자치시") {
+      setCountyModalVisible(false); // 시/군/구 모달 숨기기
+      setTownModalVisible(true); // 동/읍/면 모달 바로 표시
+    } else {
+      setCountyModalVisible(true); // 다른 시의 경우 시/군/구 선택
+    }
   };
 
   const handleCountySelect = (county) => {
@@ -104,10 +111,16 @@ const SurveyQuestionScreen = ({navigation}) => {
   };
 
   const getCounties = () => {
+    if (selectedCity === "세종특별자치시") {
+      return [];
+    }
     return [...new Set(csvData.filter(item => item.sd_nm === selectedCity).map(item => item.sgg_nm))];
   };
 
   const getTowns = () => {
+    if (selectedCity === "세종특별자치시") {
+      return csvData.filter(item => item.sd_nm === selectedCity).map(item => item.emd_nm);
+    }
     return csvData.filter(item => item.sgg_nm === selectedCounty).map(item => item.emd_nm);
   };
 
