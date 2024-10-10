@@ -1,6 +1,5 @@
 package com.plog.backend.domain.activity.service;
 
-import com.plog.backend.domain.activity.dto.ActivityImageDto;
 import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByIdResponseDto;
 import com.plog.backend.domain.activity.dto.response.ActivityFindByMemberIdResponseDto;
@@ -16,6 +15,7 @@ import com.plog.backend.domain.trail.entity.Trail;
 import com.plog.backend.domain.trail.repository.TrailRepository;
 import com.plog.backend.global.s3.service.S3Service;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Transactional
     @Override
-    public void save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
+    public Long save(ActivitySaveRequestDto activity, Long memberId) throws IOException {
 
         // S3에 이미지 업로드
         List<MultipartFile> images = activity.getImages();
@@ -65,9 +65,10 @@ public class ActivityServiceImpl implements ActivityService {
         long trailId = activity.getTrailId();
         // 2.2. trailId
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        memberScore.getScore()[(int) trailId] = activity.getScore();
+        memberScore.getScore()[(int) trailId] =
+            activity.getScore() != null ? activity.getScore() : 0.5f;
         memberScoreRepository.save(memberScore);
-
+        Long retunValue = -1L;
         Optional<Trail> trail = trailRepository.findById(trailId);
         if (trail.isPresent()) {
             Trail trailEntity = trail.get();
@@ -76,17 +77,22 @@ public class ActivityServiceImpl implements ActivityService {
             // 3. Activity 엔티티를 생성하여 저장
             Activity newActivity = Activity.builder()
                 .member(member)
-                .title(activity.getTitle())
-                .lat(activity.getLat())
-                .lon(activity.getLon())
-                .totalDistance(activity.getTotalDistance())
-                .totalKcal(activity.getTotalKcal())
-                .totalTime(activity.getTotalTime())
-                .creationDate(activity.getCreationDate())
-                .locationName(trailEntity.getName())
-                .review(activity.getReview())
-                .score(activity.getScore())
-                .trail(trailEntity).build();
+                .title(activity.getTitle() != null ? activity.getTitle() : "제목을 입력해 주세요!")
+                .lat(activity.getLat() != null ? activity.getLat() : new Float[]{0.0f})
+                .lon(activity.getLon() != null ? activity.getLon() : new Float[]{0.0f})
+                .totalDistance(
+                    activity.getTotalDistance() != null ? activity.getTotalDistance() : 0.0f)
+                .totalKcal(activity.getTotalKcal() != null ? activity.getTotalKcal() : 0.0f)
+                .totalTime(activity.getTotalTime() != null ? activity.getTotalTime() : 0.0f)
+                .creationDate(activity.getCreationDate() != null ? activity.getCreationDate()
+                    : LocalDateTime.now())
+                .locationName(
+                    trailEntity.getName() != null ? trailEntity.getName() : "위치 정보를 입력해 주세요!")
+                .review(activity.getReview() != null ? activity.getReview() : "리뷰를 남겨주세요!")
+                .score(activity.getScore() != null ? activity.getScore() : 0.5f)
+                .trail(trailEntity)
+
+                .build();
 
             // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
             List<ActivityImage> activityImages = new ArrayList<>();
@@ -101,8 +107,9 @@ public class ActivityServiceImpl implements ActivityService {
             newActivity.setActivityImages(activityImages);
 
             // 4. Activity와 ActivityImage 둘 다 저장 (Cascade 설정을 통해 자동으로 ActivityImage도 저장)
-            activityRepository.save(newActivity);
+            retunValue = activityRepository.save(newActivity).getId();
         }
+        return retunValue;
     }
 
 

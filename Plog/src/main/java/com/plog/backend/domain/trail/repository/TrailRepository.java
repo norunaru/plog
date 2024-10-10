@@ -16,7 +16,7 @@ public interface TrailRepository extends JpaRepository<Trail, Long> {
             OR (:type = 3 AND t.park >= 0.51)
             AND (6371 * acos(cos(radians(:lat)) * cos(radians(t.center[1])) 
             * cos(radians(t.center[0]) - radians(:lon)) + sin(radians(:lat)) 
-            * sin(radians(t.center[1])))) <= 10
+            * sin(radians(t.center[1])))) <= 30
             """, nativeQuery = true)
     List<Trail> findRecommendedTrails(@Param("lat") Float lat,
                                       @Param("lon") Float lon,

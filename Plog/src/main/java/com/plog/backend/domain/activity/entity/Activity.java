@@ -8,15 +8,7 @@ import com.plog.backend.domain.activity.dto.request.ActivityUpdateRequestDto;
 import com.plog.backend.domain.member.entity.Member;
 import com.plog.backend.domain.trail.entity.Trail;
 import io.hypersistence.utils.hibernate.type.array.FloatArrayType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -80,12 +72,14 @@ public class Activity {
     @Column(name = "location_name", columnDefinition = "TEXT")
     private String locationName;
 
-    @ColumnDefault("'리뷰를 남겨주세요!'")
+
     @Column(name = "review", columnDefinition = "TEXT")
+    @ColumnDefault("'리뷰를 남겨주세요!'")
     private String review;
 
-    @ColumnDefault("3")
+
     @Column(name = "score", columnDefinition = "real")
+    @ColumnDefault("0")
     private Float score;
 
     @ManyToOne()
@@ -93,8 +87,7 @@ public class Activity {
     private Trail trail;
 
     @Setter
-    @JsonIgnore
-    @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "activity", cascade = ALL, orphanRemoval = true,  fetch = FetchType.EAGER)
     private List<ActivityImage> activityImages;
 
     public void update(ActivityUpdateRequestDto activityUpdateRequestDto, List<String> savedUrls) {

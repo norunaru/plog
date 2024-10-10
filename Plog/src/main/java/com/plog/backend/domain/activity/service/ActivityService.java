@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ActivityService {
 
-    void save(ActivitySaveRequestDto activity, Long memberId) throws IOException;
+    Long save(ActivitySaveRequestDto activity, Long memberId) throws IOException;
 
     List<ActivityFindByMemberIdResponseDto> findActivityByMemberId(Long id);
 
