@@ -55,10 +55,12 @@ const PloggingRecordScreen = ({ navigation }) => {
     }, [accessToken])
   );
 
-  const filteredData = (Array.isArray(ploggingData) ? ploggingData : []).filter(item => {
+  const filteredData = (Array.isArray(ploggingData) ? ploggingData : [])
+  .filter(item => {
     const itemDate = new Date(item.creationDate).toISOString().split('T')[0];
     return itemDate === selectedDate;
-  });
+  })
+  .sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate));
   
   const getMarkedDates = () => {
     const markedDates = {};

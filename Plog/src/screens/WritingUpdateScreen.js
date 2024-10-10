@@ -41,7 +41,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchActivityData = async () => {
       try {
-        const activityData = await getActivityData(activityId, accessToken); // API 호출
+        const activityData = await getActivityData(activityId, accessToken);
         setCourse(activityData);
         console.log(activityData)
         if (activityData.creationDate) {
@@ -74,7 +74,6 @@ const WritingUpdateScreen = ({ navigation, route }) => {
   // 저장하기 누르면, API 호출
   const handleSavePress = async () => {
     try {  
-      // API 호출
       await updatePlogHistory(
         activityId,
         title, 
@@ -83,7 +82,6 @@ const WritingUpdateScreen = ({ navigation, route }) => {
         selectedImages, 
         accessToken
       );
-  
       navigation.navigate('PloggingRecord');
     } catch (error) {
       console.error('저장 에러:', error);
@@ -92,7 +90,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
   
   // 별 클릭 시 호출되는 함수
   const handleStarPress = (index) => {
-    setRating(index); // 클릭한 별의 인덱스(1~5)를 상태에 저장
+    setRating(index);
   };
 
   // 이미지 선택 핸들러
@@ -129,8 +127,8 @@ const WritingUpdateScreen = ({ navigation, route }) => {
         {/* 제목 입력 */}
         <TextInput
           style={styles.textInput}
-          value={title} // 제목을 상태값으로 표시
-          onChangeText={text => setTitle(text)} // 제목 변경 시 상태 업데이트
+          value={title}
+          onChangeText={text => setTitle(text)}
           multiline={true}
           maxLength={40}
           textAlignVertical="top"
@@ -195,9 +193,9 @@ const WritingUpdateScreen = ({ navigation, route }) => {
             placeholder="메모를 작성하세요"
             style={styles.memo}
             multiline={true}
-            scrollEnabled={true} // 내부 스크롤 가능하게 설정
-            maxLength={255} // 최대 글자 수 제한
-            onChangeText={(text) => setMemo(text)} // 메모 변경 시 상태 업데이트
+            scrollEnabled={true}
+            maxLength={255}
+            onChangeText={(text) => setMemo(text)}
             value={memo}
             textAlignVertical="top"
           />

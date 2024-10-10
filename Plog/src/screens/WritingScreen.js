@@ -244,8 +244,8 @@ const WritingScreen = ({ navigation, route }) => {
             placeholder="메모를 작성하세요"
             style={styles.memo}
             multiline={true}
-            scrollEnabled={true} // 내부 스크롤 가능하게 설정
-            maxLength={255} // 최대 글자 수 제한
+            scrollEnabled={true}
+            maxLength={255}
             onChangeText={text => setMemo(text)}
             value={memo}
             textAlignVertical="top"
@@ -259,7 +259,7 @@ const WritingScreen = ({ navigation, route }) => {
         <View style={{flexDirection: 'row', marginBottom: 24}}>
           {/* 선택한 이미지들을 표시 */}
           {selectedImages.map((imageUri, index) => (
-            imageUri && ( // URI가 null이 아닌 경우에만 렌더링
+            imageUri && ( 
               <Image key={index} source={{ uri: imageUri }} style={styles.photo} />
             )
           ))}
