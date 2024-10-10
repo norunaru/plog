@@ -21,6 +21,7 @@ export default function CommunityPostCard({
   image, // 단일 이미지 url
   title,
   locationName,
+  creationDate,
 }) {
   // images 배열에서 savedUrl만 추출하고, 마지막에 image를 추가
   const imageUrls = images.map(img => img.savedUrl);
@@ -43,6 +44,7 @@ export default function CommunityPostCard({
   return (
     <View style={styles.wrap}>
       <View style={styles.header}>
+        <Text style={styles.dateData}>{creationDate}</Text>
         <Image style={styles.profileImg} source={{uri: profile}} />
         <View style={styles.infoWrap}>
           <View style={[styles.userInfo, {alignItems: 'center'}]}>
@@ -125,6 +127,15 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     marginBottom: 4,
   },
+  dateData: {
+    position: 'absolute',
+    bottom: 2,
+    right: 10,
+    fontSize: 14,
+    color: 'black',
+    marginLeft: 2,
+    marginBottom: 4,
+  },
   pin: {
     width: 11,
     height: 12,
@@ -136,6 +147,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
+    position: 'relative',
   },
   postImg: {
     width: '100%',
