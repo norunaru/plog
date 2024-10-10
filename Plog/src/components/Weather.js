@@ -300,7 +300,16 @@ const Weather = () => {
       <View style={styles.weatherBox}>
         {weatherIcon && (<Image source={weatherIcon} style={styles.imageBox} />)}
         <View style={styles.contentBox}>
-          <View style={styles.title}>
+          <View
+              style={[
+                styles.title,
+                { 
+                  width: weather.skyCondition === '구름 많음' 
+                  ? 85 
+                  : (weather.skyCondition === '맑음' || weather.skyCondition === '흐림' ? 60 : 45)
+                }
+              ]}
+          >
             <Text style={styles.titleFont}>{weather.skyCondition}</Text>
           </View>
           <View style={styles.content}>
@@ -381,7 +390,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -7,
     left: -3,
-    width: 60,
     height: 30,
     backgroundColor: '#1ECD90',
     borderRadius: 14,
