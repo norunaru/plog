@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
   const [course, setCourse] = useState([]);
   const [courseId, setCourseId] = useState(null);
   const [createDate, setCreateDate] = useState([]);
+  const [isNoticeOn, setIsNoticeOn] = useState(false);
   const accessToken = useStore((state) => state.accessToken);
   const activityId = route.params.activityId;
 
@@ -64,6 +65,8 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         id: activityId,
         token: accessToken,
       }); // API 호출
+      setIsNoticeOn(true);
+
     } catch (error) {
       console.error('일지 공유 에러:', error);
     }
@@ -81,6 +84,16 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     const minutes = parseInt((secs % 3600) / 60, 10);
     return `${hours}시간 ${minutes}분`;
   };
+
+  useEffect(() => {
+    if (isNoticeOn) {
+      const timer = setTimeout(() => {
+        setIsNoticeOn(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNoticeOn]);
 
   return (
     <View style={styles.container}>
@@ -140,16 +153,24 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
         </View>
       </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.whiteBtn} onPress={handleSharePress}>
-            <Text style={styles.shareText}>공유하기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.greenBtn}
-            onPress={() => navigation.navigate('Plogging', { courseId })}>
-            <Text style={styles.againText}>이 코스 한번 더 하기</Text>
-          </TouchableOpacity>
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.whiteBtn} onPress={handleSharePress}>
+          <Text style={styles.shareText}>공유하기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.greenBtn}
+          onPress={() => navigation.navigate('Plogging', { courseId })}>
+          <Text style={styles.againText}>이 코스 한번 더 하기</Text>
+        </TouchableOpacity>
+      </View>
+        
+      {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white', paddingBottom: 3}}>
+            일지가 커뮤니티에 공유되었어요
+          </Text>
         </View>
+      ) : null}
     </View>
   );
 };
@@ -284,6 +305,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: responsiveFontSize(1.9),
     fontWeight: 'bold',
+  },
+  noticeBox: {
+    position: 'absolute',
+    bottom: responsiveHeight(7),
+    alignSelf: 'center',
+    paddingVertical: responsiveHeight(2),
+    paddingHorizontal: responsiveWidth(10),
+    width: responsiveWidth(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    zIndex: 100, 
   },
 });
 
