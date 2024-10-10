@@ -89,7 +89,7 @@ const PloggingRecordDetailScreen = ({route, navigation}) => {
     if (isNoticeOn) {
       const timer = setTimeout(() => {
         setIsNoticeOn(false);
-      }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
