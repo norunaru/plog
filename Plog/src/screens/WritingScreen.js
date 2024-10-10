@@ -64,7 +64,9 @@ const WritingScreen = ({ navigation, route }) => {
         accessToken
       );
       setIsNoticeOn(true);
-      navigation.navigate('Tabs');
+      setTimeout(() => {
+        navigation.navigate('Tabs');
+      }, 3000);
     } catch (error) {
       console.error('저장 실패:', error.response ? error.response.data : error.message);
     }
@@ -182,8 +184,8 @@ const WritingScreen = ({ navigation, route }) => {
 
       {isNoticeOn ? (
         <View style={styles.noticeBox}>
-          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
-            친구가 삭제되었어요
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white', paddingBottom: 3}}>
+            일지가 작성되었어요
           </Text>
         </View>
       ) : null}
@@ -368,26 +370,22 @@ const styles = StyleSheet.create({
     color: '#8A8A8A',
   },
   whiteBtn: {
-    width: 140,
+    width: responsiveWidth(34),
     height: 55,
     borderColor: '#1ECD90',
     borderWidth: 1,
-    marginRight: 8,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 16,
-    fontWeight: 600,
   },
   greenBtn: {
-    width: 230,
+    width: responsiveWidth(55),
     height: 55,
     backgroundColor: '#1ECD90',
-    marginRight: 8,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
+    marginLeft: 12,
   },
   btnText: {
     fontSize: 16,
@@ -421,6 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginTop: 29,
+    width: responsiveWidth(90),
   },
   photo: {
     backgroundColor: 'gray',
@@ -450,5 +449,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
     borderRadius: 30,
+    zIndex: 100, 
   },
 });
