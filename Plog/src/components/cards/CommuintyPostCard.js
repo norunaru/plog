@@ -20,6 +20,7 @@ export default function CommunityPostCard({
   images, // 이미지 객체 배열이 props로 넘어옴
   image, // 단일 이미지 url
   title,
+  locationName,
 }) {
   // images 배열에서 savedUrl만 추출하고, 마지막에 image를 추가
   const imageUrls = images.map(img => img.savedUrl);
@@ -47,14 +48,13 @@ export default function CommunityPostCard({
           <View style={[styles.userInfo, {alignItems: 'center'}]}>
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.userData}>
-              {parseInt(expLevel / 100) + 1}레벨,
-              {plogTimes}번의 플로깅
+              {parseInt(expLevel / 100) + 1}레벨
             </Text>
           </View>
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {/* <Image source={location} style={styles.pin} /> */}
-            <Text style={styles.location}>대전광역시 유성구</Text>
+            <Text style={styles.location}>{locationName}</Text>
           </View>
         </View>
       </View>
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flexDirection: 'row',
-    marginBottom: 4,
     textAlign: 'center',
   },
   userData: {
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   location: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#787878',
   },
   header: {
