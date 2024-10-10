@@ -146,64 +146,97 @@ const ManageFriendScreen = ({navigation}) => {
           </View>
         )}
 
-        {friends.length > 0 && typedText !== '' && (
-          <View
-            style={{
-              width: '100%',
-              padding: 24,
-              borderRadius: 12,
-              backgroundColor: '#F7F7F7',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {/* 배열의 첫 번째 친구만 표시 */}
-            <View style={{alignItems: 'center'}}>
-              <Image
-                source={{uri: friends[0].profileImageUrl}} // 첫 번째 원소의 이미지 URL
-                style={{
-                  width: 90,
-                  height: 90,
-                  borderRadius: 25,
-                  marginBottom: 8,
-                }}
-              />
-              <Text
-                style={{
-                  marginBottom: 12,
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  color: 'black',
-                }}>
-                {friends[0].nickName} {/* 첫 번째 원소의 닉네임 */}
-              </Text>
-              <Pressable
-                onPress={async () => {
-                  await addFriend(token, friends[0].id); // 첫 번째 원소의 id를 사용하여 친구 추가
-                  setIsNoticeOn(true);
-                  setTypedText('');
-                  setFriends([]); // 검색 결과 초기화
-                  await fetchFriendsList(); // 친구 추가 후 목록 갱신
-                }}
-                style={{
-                  borderRadius: 30,
-                  height: 52,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#1ECD90',
-                  width: 287,
-                }}>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: 16,
-                    color: 'white',
-                  }}>
-                  친구 추가
-                </Text>
-              </Pressable>
+        <ScrollView>
+          {friends.length > 0 && typedText !== '' && (
+            <View style={{marginBottom: 60}}>
+              {/* 배열의 첫 번째 친구만 표시 */}
+              {friends.map((friend, index) => {
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      width: '100%',
+                      paddingTop: 14,
+                      paddingLeft: '18%',
+                      paddingBottom: 8,
+                      borderRadius: 12,
+                      backgroundColor: '#F7F7F7',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: 20,
+                    }}>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <Image
+                        source={{uri: friend.profileImageUrl}} // 첫 번째 원소의 이미지 URL
+                        style={{
+                          width: 90,
+                          height: 90,
+                          borderRadius: 25,
+                          marginBottom: 8,
+                        }}
+                      />
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '80%',
+                        }}>
+                        <Text
+                          style={{
+                            marginBottom: 4,
+                            fontWeight: 'bold',
+                            fontSize: 18,
+                            color: 'black',
+                          }}>
+                          {friend.nickName} {/* 첫 번째 원소의 닉네임 */}
+                        </Text>
+                        <Text
+                          style={{
+                            marginBottom: 8,
+                            fontWeight: 'bold',
+                            fontSize: 12,
+                            color: 'gray',
+                          }}>
+                          {friend.email}
+                        </Text>
+                        <Pressable
+                          onPress={async () => {
+                            await addFriend(token, friend.id); // 첫 번째 원소의 id를 사용하여 친구 추가
+                            setIsNoticeOn(true);
+                            setTypedText('');
+                            setFriends([]); // 검색 결과 초기화
+                            await fetchFriendsList(); // 친구 추가 후 목록 갱신
+                          }}
+                          style={{
+                            borderRadius: 30,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: '#1ECD90',
+                            paddingVertical: 8,
+                            paddingHorizontal: 12,
+                          }}>
+                          <Text
+                            style={{
+                              fontWeight: 'bold',
+                              fontSize: 16,
+                              color: 'white',
+                            }}>
+                            친구 추가
+                          </Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
+                );
+              })}
             </View>
-          </View>
-        )}
+          )}
+        </ScrollView>
       </View>
 
       {isNoticeOn && (
@@ -225,6 +258,7 @@ const styles = StyleSheet.create({
   wrap: {
     padding: 20,
     paddingTop: 20,
+    height: '100%',
   },
   inputWrapper: {
     flexDirection: 'row',

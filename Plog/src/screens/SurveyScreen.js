@@ -36,7 +36,7 @@ const SurveyScreen = ({navigation}) => {
                                 style={styles.checkImg}
                             />
                             <Text style={styles.checkText}>
-                                휴지통과 사용자의 별점 취향기반으로{'\n'}
+                                사용자의 위치와 별점 취향기반으로{'\n'}
                                 플로깅코스를 추천해드려요.
                             </Text>
                         </View>

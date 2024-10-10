@@ -63,12 +63,13 @@ const Weather = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
-    const fetchWeatherData = async (nx, ny) => {
+    const fetchData = async (nx, ny) => {
       try {
         const base_date = getCurrentDate();
         const base_time = getBaseTime();
-    
-        const response = await axios.get(
+
+        // API 호출 병렬화
+        const weatherPromise = axios.get(
           'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst',
           {
             params: {
@@ -83,39 +84,15 @@ const Weather = () => {
             },
           }
         );
-    
-        if (response.data?.response?.body?.items) {
-          const items = response.data.response.body.items.item;
-          const temperature = items.find(item => item.category === 'T1H')?.fcstValue;
-          const skyCondition = getSkyCondition(items);
-          const humidity = items.find(item => item.category === 'REH')?.fcstValue;
-    
-          setWeather({
-            temperature,
-            skyCondition,
-            humidity,
-          });
-        } else {
-          throw new Error('데이터 구조가 예상과 다릅니다.');
-        }
-        setLoading(false);
-      } catch (error) {
-        console.log('Error:', error.response?.data || error.message);
-        setErrorMsg('날씨 정보를 가져오는 데 실패했습니다.');
-        setLoading(false);
-      }
-    };
 
-    const fetchFineDustData = async (stationName) => {
-      try {
-        const response = await axios.get(
+        const dustPromise = axios.get(
           'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty',
           {
             params: {
               serviceKey: FINEDUST_API_KEY,
               numOfRows: 2,
               pageNo: 1,
-              stationName,
+              stationName: '종로구',
               dataTerm: 'DAILY',
               ver: '1.3',
               returnType: 'json',
@@ -123,13 +100,36 @@ const Weather = () => {
           }
         );
 
-        const pm10Value = response.data.response.body.items[0].pm10Value;
-        const pm10GradeValue = response.data.response.body.items[0].pm10Grade;
-        setPm10(pm10Value);
-        setPm10Grade(pm10GradeValue);
+        const [weatherResponse, dustResponse] = await Promise.all([weatherPromise, dustPromise]);
+
+        // 날씨 데이터 처리
+        if (weatherResponse.data?.response?.body?.items) {
+          const items = weatherResponse.data.response.body.items.item;
+          const temperature = items.find(item => item.category === 'T1H')?.fcstValue;
+          const skyCondition = getSkyCondition(items);
+          const humidity = items.find(item => item.category === 'REH')?.fcstValue;
+
+          setWeather({
+            temperature,
+            skyCondition,
+            humidity,
+          });
+        } else {
+          throw new Error('날씨 데이터 구조가 예상과 다릅니다.');
+        }
+
+        // 미세먼지 데이터 처리
+        if (dustResponse.data.response.body.items.length > 0) {
+          const pm10Value = dustResponse.data.response.body.items[0].pm10Value;
+          const pm10GradeValue = dustResponse.data.response.body.items[0].pm10Grade;
+          setPm10(pm10Value);
+          setPm10Grade(pm10GradeValue);
+        }
+
+        setLoading(false);
       } catch (error) {
-        console.log('Error fetching fine dust data:', error.response?.data || error.message);
-        setErrorMsg('미세먼지 정보를 가져오는 데 실패했습니다.');
+        console.log('Error:', error.response?.data || error.message);
+        setErrorMsg('정보를 가져오는 데 실패했습니다: ' + (error.response?.data?.message || error.message));
         setLoading(false);
       }
     };
@@ -149,10 +149,8 @@ const Weather = () => {
         Geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
-            // console.log('현재 위치:', { latitude, longitude });  // 위도, 경도 출력
             const { x: nx, y: ny } = latLonToGrid(longitude, latitude); // 위경도 -> 격자 좌표 변환
-            fetchWeatherData(nx, ny);
-            fetchFineDustData('종로구'); // 종로구를 예시로 사용
+            fetchData(nx, ny); // 날씨 및 미세먼지 데이터 요청
           },
           (error) => {
             console.log(error);
@@ -161,7 +159,7 @@ const Weather = () => {
           },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
-        
+
       } catch (error) {
         setErrorMsg('위치 권한 요청 중 문제가 발생했습니다.');
       }

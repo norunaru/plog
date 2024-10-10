@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8), // 반응형 텍스트 크기
     fontWeight: '400',
     height: '100%',
+    paddingTop: 2,
   },
   content: {
     marginHorizontal: responsiveWidth(5), // 반응형 가로 마진
