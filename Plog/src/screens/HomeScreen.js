@@ -130,7 +130,7 @@ export default function HomeScreen({navigation}) {
       </View>
       <Text style={styles.heading}>플로깅하기 좋은 관광지</Text>
 
-      {attractions.image && (
+      {attractions?.image && (
         <ImageBackground
           source={{uri: attractions.image}}
           style={styles.attractionCard}

@@ -72,7 +72,7 @@ export default function CommunityScreen() {
 
       <ScrollView style={styles.postWrap}>
         {selectedOption === 'myPosts' ? (
-          myPosts == [] ? (
+          myPosts.length == 0 ? (
             <View style={styles.emptyView}>
               <Text style={{textAlign: 'center'}}>
                 공유된 사진이 없어요. {'\n'} 사진을 공유해보세요
@@ -96,7 +96,7 @@ export default function CommunityScreen() {
               />
             ))
           )
-        ) : otherPosts == [] ? (
+        ) : otherPosts.length == 0 ? (
           <View style={styles.emptyView}>
             <Text style={{textAlign: 'center'}}>
               공유된 사진이 없어요. {'\n'} 사진을 공유해보세요
