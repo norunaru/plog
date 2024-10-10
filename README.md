@@ -2,7 +2,7 @@
 
 # 환경 문제를 건강하게 해결하는 서비스, "Plog"
 
-![1.png](1.png)
+![1.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/1.png)
 
 ## 팀 소개
 
@@ -75,51 +75,49 @@ PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적�
 
 ## 디자인 시스템
 
-![color.png](color.png)
+![color.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/color.png)
 
-![asset.png](asset.png)
+![asset.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/asset.png)
 
 ## 화면 구성 📺
 
 ### 온보딩 스크린 & 홈 스크린
 
-![00 로그인_온보딩.png](00_%25EB%25A1%259C%25EA%25B7%25B8%25EC%259D%25B8_%25EC%2598%25A8%25EB%25B3%25B4%25EB%2594%25A9.png)
+![00 로그인_온보딩.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/00_%25EB%25A1%259C%25EA%25B7%25B8%25EC%259D%25B8_%25EC%2598%25A8%25EB%25B3%25B4%25EB%2594%25A9.png)
 
-![00 로그인_온보딩_결과조회.png](00_%25EB%25A1%259C%25EA%25B7%25B8%25EC%259D%25B8_%25EC%2598%25A8%25EB%25B3%25B4%25EB%2594%25A9_%25EA%25B2%25B0%25EA%25B3%25BC%25EC%25A1%25B0%25ED%259A%258C.png)
+![00 로그인_온보딩_결과조회.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/00_%25EB%25A1%259C%25EA%25B7%25B8%25EC%259D%25B8_%25EC%2598%25A8%25EB%25B3%25B4%25EB%2594%25A9_%25EA%25B2%25B0%25EA%25B3%25BC%25EC%25A1%25B0%25ED%259A%258C.png)
 
-![image.png](image.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image.png)
 
 ### 마이페이지
 
-![image.png](image%201.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%201.png)
 
-![image.png](image%202.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%202.png)
 
-![image.png](image%203.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%203.png)
 
-![image.png](image%204.png)
-
-### 
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%204.png)
 
 ### 맞춤형 코스 추천, 플로깅
 
-![image.png](image%205.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%205.png)
 
-![image.png](image%206.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%206.png)
 
-![image.png](image%207.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%207.png)
 
-![image.png](image%208.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%208.png)
 
 ### 내 주변 벤치 찾기
 
-![image.png](image%209.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%209.png)
 
 ### 커뮤니티 페이지
 
-![image.png](image%2010.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2010.png)
 
-![image.png](image%2011.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2011.png)
 
 # PLOG-server
 
@@ -147,13 +145,13 @@ PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적�
 
 ---
 
-![Slide 16_9 - 2.png](Slide_16_9_-_2.png)
+![Slide 16_9 - 2.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/Slide_16_9_-_2.png)
 
 ## ERD
 
 ---
 
-![image.png](image%2012.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2012.png)
 
 # API 명세서
 
@@ -161,19 +159,19 @@ PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적�
 
 ## SPRING
 
-![image.png](image%2013.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2013.png)
 
-![image.png](image%2014.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2014.png)
 
-![image.png](image%2015.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2015.png)
 
-![image.png](image%2016.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2016.png)
 
-![image.png](image%2017.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2017.png)
 
 ## FastApi
 
-![image.png](image%2018.png)
+![image.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/image%2018.png)
 
 # Convention
 
@@ -210,3 +208,4 @@ PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적�
 | Rename | 파일 및 폴더명 수정 |
 | Remove | 파일 삭제 |
 | Init | 프로젝트 등록(1회성) |
+
