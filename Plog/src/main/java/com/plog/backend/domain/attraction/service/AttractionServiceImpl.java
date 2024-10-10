@@ -3,6 +3,9 @@ package com.plog.backend.domain.attraction.service;
 import com.plog.backend.domain.attraction.dto.response.AttractionResponseDto;
 import com.plog.backend.domain.attraction.entity.Attraction;
 import com.plog.backend.domain.attraction.repository.AttractionRepository;
+import com.plog.backend.domain.member.entity.Member;
+import com.plog.backend.domain.member.repository.MemberRepository;
+import com.plog.backend.global.common.util.MemberInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,9 @@ import org.springframework.web.client.RestTemplate;
 public class AttractionServiceImpl implements AttractionService {
     @Autowired
     private AttractionRepository attractionRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Override
     public void saveAttraction() {
@@ -52,7 +58,8 @@ public class AttractionServiceImpl implements AttractionService {
 
     @Override
     public AttractionResponseDto getRandomAttraction() {
-        Attraction attraction = attractionRepository.findRandomAttraction();
+        Member member = memberRepository.findById(MemberInfo.getUserId()).orElseThrow();
+        Attraction attraction = attractionRepository.findClosestAttraction(member.getRegionLon(),member.getRegionLat());
         AttractionResponseDto attractionResponseDto = AttractionResponseDto.builder()
                 .id(attraction.getId())
                 .address(attraction.getAddress())
