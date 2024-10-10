@@ -163,6 +163,14 @@ const WritingScreen = ({ navigation, route }) => {
         />
       ) : null}
 
+      {/* {isNoticeOn ? (
+        <View style={styles.noticeBox}>
+          <Text style={{fontSize: responsiveFontSize(1.8), color: 'white'}}>
+            친구가 삭제되었어요
+          </Text>
+        </View>
+      ) : null} */}
+
       <SafeAreaView
         style={{padding: 20, backgroundColor: 'white', height: '100%'}}
       >
@@ -171,7 +179,7 @@ const WritingScreen = ({ navigation, route }) => {
           placeholder="제목을 입력해 주세요"
           placeholderTextColor="#D9D9D9"
           multiline={true}
-          maxLength={120}
+          maxLength={40}
           textAlignVertical="top"
           onChangeText={text => setTitleValue(text)}
         />

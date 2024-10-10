@@ -132,7 +132,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
           value={title} // 제목을 상태값으로 표시
           onChangeText={text => setTitle(text)} // 제목 변경 시 상태 업데이트
           multiline={true}
-          maxLength={120}
+          maxLength={40}
           textAlignVertical="top"
         />
         

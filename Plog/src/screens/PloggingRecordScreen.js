@@ -144,8 +144,8 @@ const PloggingRecordScreen = ({ navigation }) => {
                 <Image source={{ uri: item.images }} style={styles.image} />
                 <View style={styles.contContainer}>
                   <View style={styles.textContainer}>
-                    <Text style={styles.title}>
-                      {item.title.length > 23 ? item.title.slice(0, 23) + '...' : item.title}
+                    <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
+                      {item.title}
                     </Text>
                     <View style={styles.locationContainer}>
                       <Image source={locationIcon} style={styles.locationImage} />
