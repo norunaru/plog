@@ -58,8 +58,9 @@ public class AttractionServiceImpl implements AttractionService {
 
     @Override
     public AttractionResponseDto getRandomAttraction() {
-        Member member = memberRepository.findById(MemberInfo.getUserId()).orElseThrow();
-        Attraction attraction = attractionRepository.findClosestAttraction(member.getRegionLon(),member.getRegionLat());
+//        Member member = memberRepository.findById(MemberInfo.getUserId()).orElseThrow();
+//        Attraction attraction = attractionRepository.findClosestAttraction(member.getRegionLon(),member.getRegionLat());
+        Attraction attraction = attractionRepository.findRandomAttraction();
         AttractionResponseDto attractionResponseDto = AttractionResponseDto.builder()
                 .id(attraction.getId())
                 .address(attraction.getAddress())
