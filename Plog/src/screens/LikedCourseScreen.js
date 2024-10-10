@@ -1,4 +1,4 @@
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ActivityIndicator, ScrollView} from 'react-native';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
@@ -38,7 +38,7 @@ export default function LikedCourseScreen({navigation}) {
 
   return (
     <View style={styles.mapView}>
-      <RecommendHeader
+      <PloggingHeader
         navigation={navigation}
         headerText={'찜한 플로깅 코스'}
         style={styles.header}
