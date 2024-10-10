@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -41,10 +41,20 @@ const WritingScreen = ({navigation, route}) => {
   const [memo, setMemo] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
   const [courseData, setCourseData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const scrollViewRef = useRef(null)
   const accessToken = useStore(state => state.accessToken);
   const activityId = route.params.activityId;
 
   const writingSavePress = async () => {
+    if (titleValue.trim() === '') {
+      setErrorMessage('제목을 입력하지 않았습니다.');
+      scrollViewRef.current?.scrollTo({y: 0, animated: true});
+      return;
+    }
+
+    setErrorMessage(''); // 에러 메시지를 초기화
+     
     const imageFiles = selectedImages.map((uri, index) => {
       return {
         uri,
@@ -174,6 +184,7 @@ const WritingScreen = ({navigation, route}) => {
 
   return (
     <ScrollView
+      ref={scrollViewRef} // ScrollView에 참조 연결
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       {/* 모달 */}
@@ -210,6 +221,10 @@ const WritingScreen = ({navigation, route}) => {
           textAlignVertical="top"
           onChangeText={text => setTitleValue(text)}
         />
+        {/* 제목 입력란 아래에 에러 메시지 추가 */}
+        {errorMessage ? (
+          <Text style={{ color: 'red', marginTop: 6, marginLeft: 8 }}>{errorMessage}</Text>
+        ) : null}
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
             <Image style={styles.miniIcon} source={calendar} />
