@@ -130,9 +130,10 @@ const Weather = () => {
             skyCondition,
             humidity,
           });
-        } else {
-          throw new Error('날씨 데이터 구조가 예상과 다릅니다.');
         }
+        // else {
+        //   throw new Error('날씨 데이터 구조가 예상과 다릅니다.');
+        // }
 
         // 미세먼지 데이터 처리
         if (dustResponse.data.response.body.items.length > 0) {
@@ -345,7 +346,7 @@ const Weather = () => {
             <Text style={[styles.contentFont, styles.space]}>
               현재 습도 <Text style={styles.gray}> | </Text> 49%
             </Text>
-            <Text style={styles.contentFont}>
+            {/* <Text style={styles.contentFont}>
               미세 먼지 <Text style={styles.gray}> | </Text>{' '}
               <Text
                 style={[
@@ -364,7 +365,7 @@ const Weather = () => {
                 {pm10 !== null ? getPm10GradeText(pm10Grade) : '정보 없음'}
               </Text>{' '}
               <Text>{pm10 !== null ? `(${pm10}㎍/m³)` : '정보 없음'}</Text>
-            </Text>
+            </Text> */}
           </View>
         </View>
       </View>
