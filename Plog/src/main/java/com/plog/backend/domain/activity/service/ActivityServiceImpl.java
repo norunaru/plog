@@ -84,8 +84,7 @@ public class ActivityServiceImpl implements ActivityService {
                     activity.getTotalDistance() != null ? activity.getTotalDistance() : 0.0f)
                 .totalKcal(activity.getTotalKcal() != null ? activity.getTotalKcal() : 0.0f)
                 .totalTime(activity.getTotalTime() != null ? activity.getTotalTime() : 0.0f)
-                .creationDate(activity.getCreationDate() != null ? activity.getCreationDate()
-                    : LocalDateTime.now())
+                .creationDate(LocalDateTime.now())
                 .locationName(
                     trailEntity.getName() != null ? trailEntity.getName() : "위치 정보를 입력해 주세요!")
                 .review(activity.getReview() != null ? activity.getReview() : "리뷰를 남겨주세요!")
