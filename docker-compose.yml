@@ -1,4 +1,11 @@
 services:
+  spring:
+    container_name: spring
+    image: spring-app
+    environment:
+      - TZ=Asia/Seoul
+    privileged: true
+    
   python:
     container_name: python
     image: python-app
@@ -6,6 +13,7 @@ services:
       - TZ=Asia/Seoul
     networks:
       - app-network
+
 networks:
   app-network:
     external: true
