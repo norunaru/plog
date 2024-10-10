@@ -5,6 +5,7 @@ import PloggingHeader from '../components/headers/PloggingHeader';
 import useStore from '../../store/store';
 import {getRecommendedCourses} from '../API/activity/activityAPI';
 import {likeCourse, unLikeCourse} from '../API/plogging/likeAPI';
+import {useFocusEffect} from '@react-navigation/native';
 
 const CustomCourseRecScreen = ({navigation}) => {
   const nickName = useStore(state => state.nickname);
@@ -14,12 +15,19 @@ const CustomCourseRecScreen = ({navigation}) => {
 
   const getData = async () => {
     const response = await getRecommendedCourses(token);
+    console.log('추천 코스 리스트 : ', response);
     setCourses(response);
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, []),
+  );
 
   const handleLikeToggle = async (courseId, isLiked) => {
     if (isLiked) {
@@ -40,16 +48,6 @@ const CustomCourseRecScreen = ({navigation}) => {
         navigation={navigation}
         headerText={`${nickName}님에게 추천드려요`}
       />
-
-      {/* <ScrollView>
-        {recommendedCourses.map(courseId => (
-          <TouchableOpacity
-            key={courseId}
-            onPress={() => handleCourseDetailPress(courseId)}>
-            <CustomCourseRecCard />
-          </TouchableOpacity>
-        ))}
-      </ScrollView> */}
 
       <ScrollView>
         <ScrollView>
