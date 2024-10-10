@@ -4,14 +4,6 @@
 
 ![1.png](e0e106d7-b8f4-40e4-8ac1-cbc9363a811a_Export-0fe59d7c-cf3e-4079-bec5-0727d01410f3/1.png)
 
-## 팀 소개
-
-| 최승빈 | 이재준 | 조용훈 | 김호준 | 장가원 | 노우영 |
-| --- | --- | --- | --- | --- | --- |
-| <img width="160px" src="[https://avatars.githubusercontent.com/csb9427](https://avatars.githubusercontent.com/csb9427)" /> | <img width="160px" src="[https://avatars.githubusercontent.com/jaejunlee11](https://avatars.githubusercontent.com/jaejunlee11)" /> | <img width="160px" src="[https://avatars.githubusercontent.com/sjsin0905](https://avatars.githubusercontent.com/sjsin0905)" /> | <img width="160px" src="[https://avatars.githubusercontent.com/](https://avatars.githubusercontent.com/jaejunlee11)hozzun" /> | <img width="160px" src="[https://avatars.githubusercontent.com/placeholder](https://avatars.githubusercontent.com/placeholder)" /> | <img width="160px" src="[https://avatars.githubusercontent.com/norunaru](https://avatars.githubusercontent.com/norunaru)" /> |
-| [@csb9427](https://github.com/csb9427) | [@jaejunlee11](https://github.com/jaejunlee11) | [@sjsin0905](https://github.com/sjsin0905) | [https://github.com/hozzun](https://github.com/hozzun) | [https://github.com/gawona](https://github.com/gawona) | [@norunaru](https://github.com/norunaru) |
-| Team Leader | Backend | Backend | Frontend | Frontend | Frontend |
-
 ## 프로젝트 소개
 
 PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적으로 기록하는 서비스입니다.
@@ -30,48 +22,6 @@ PLOG는 나만의 맞춤형 플로깅 장소를 추천받고, 이를 효과적�
 - 주위 환경을 실시간으로 모니터링하여 안전성을 높임
 
 이 서비스를 통해 서울 시민과 관광객들이 보다 안심하고 야간에도 자유롭게 이동할 수 있는 환경을 조성하고자 합니다.
-
-## Stacks 🐈
-
-### Environment
-
-[https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white)
-
-[https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white)
-
-[https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white)
-
-### Config
-
-[https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
-
-### Development
-
-[https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white)
-
-[https://img.shields.io/badge/react--native-0.75.4-61DAFB?style=for-the-badge&logo=react&logoColor=white](https://img.shields.io/badge/react--native-0.75.4-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-
-[https://img.shields.io/badge/axios-1.7.7-blue?style=for-the-badge](https://img.shields.io/badge/axios-1.7.7-blue?style=for-the-badge)
-
-[https://img.shields.io/badge/lottie--react--native-7.0.0-FF9900?style=for-the-badge](https://img.shields.io/badge/lottie--react--native-7.0.0-FF9900?style=for-the-badge)
-
-[https://img.shields.io/badge/react--native--maps-1.18.0-FF5722?style=for-the-badge](https://img.shields.io/badge/react--native--maps-1.18.0-FF5722?style=for-the-badge)
-
-[https://img.shields.io/badge/@react--navigation-6.1.18-009688?style=for-the-badge](https://img.shields.io/badge/@react--navigation-6.1.18-009688?style=for-the-badge)
-
-[https://img.shields.io/badge/react--query-5.59.0-FF4154?style=for-the-badge](https://img.shields.io/badge/react--query-5.59.0-FF4154?style=for-the-badge)
-
-[https://img.shields.io/badge/zustand-5.0.0--rc.2-FFDD00?style=for-the-badge](https://img.shields.io/badge/zustand-5.0.0--rc.2-FFDD00?style=for-the-badge)
-
-[https://img.shields.io/badge/Kakao-FFCD00?style=for-the-badge&logo=Kakao&logoColor=black](https://img.shields.io/badge/Kakao-FFCD00?style=for-the-badge&logo=Kakao&logoColor=black)
-
-### Communication
-
-[https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white](https://img.shields.io/badge/Mattermost-0058CC?style=for-the-badge&logo=Mattermost&logoColor=white)
-
-[https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white)
-
-[https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
 ## 디자인 시스템
 
