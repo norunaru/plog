@@ -10,7 +10,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
@@ -88,7 +88,7 @@ const DeleteFriendScreen = ({navigation}) => {
           onClose={() => setIsModalOpen(false)} // 배경 클릭 시 모달 닫힘
         />
       ) : null}
-      <RecommendHeader navigation={navigation} headerText={'팔로잉 삭제'} />
+      <PloggingHeader navigation={navigation} headerText={'팔로잉 삭제'} />
       <View style={styles.wrap}>
         {typedText == '' && Object.keys(friend).length == 0 && (
           <View>

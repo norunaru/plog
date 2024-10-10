@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: 'black',
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.1),
     height: '100%',
     fontWeight: 'semiBold',
     textAlign: 'center',   
