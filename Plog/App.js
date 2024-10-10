@@ -28,6 +28,7 @@ import SurveyFinishScreen from './src/components/SurveyFinishScreen';
 import SurveyResultScreen from './src/components/SurveyResultScreen';
 import DeleteFriendScreen from './src/screens/DeleteFriendScreen';
 import ModifyInfoScreen from './src/screens/ModifyInfoScreen';
+import ReSurveyScreen from './src/screens/ReSurveyScreen';
 
 import {Image} from 'react-native';
 import homeBlack from './assets/icons/homeBlack.png';
@@ -244,6 +245,12 @@ function AuthenticatedStack() {
         component={LikedCourseScreen}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="ReSurvey"
+        component={ReSurveyScreen}
+        options={{headerShown: false}}
+      />
+
     </Stack.Navigator>
   );
 }

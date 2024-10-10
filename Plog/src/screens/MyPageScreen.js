@@ -203,12 +203,25 @@ export default function MyPageScreen({navigation}) {
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable> */}
+          <Pressable
+            onPress={() => {
+              navigation.navigate('ReSurvey');
+            }}>
+            <View style={styles.option}>
+              <Text style={{fontSize: 15, color: 'black'}}>
+                선호도 조사 다시하기
+              </Text>
+              <Image source={chevronRight} style={{width: 8, height: 14}} />
+            </View>
+          </Pressable>
+
           <Pressable onPress={() => setIsModalOpen(true)}>
             <View style={styles.option}>
               <Text style={{fontSize: 15, color: 'black'}}>로그아웃</Text>
               <Image source={chevronRight} style={{width: 8, height: 14}} />
             </View>
           </Pressable>
+
         </View>
       </ScrollView>
     </View>

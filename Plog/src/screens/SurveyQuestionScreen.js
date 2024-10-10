@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import useStore from '../../store/store';
 
-const SurveyQuestionScreen = ({navigation}) => {
+const SurveyQuestionScreen = ({ navigation, route }) => {
   const [isModalVisible, setModalVisible] = useState(false)
   const [step, setStep] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -39,6 +39,9 @@ const SurveyQuestionScreen = ({navigation}) => {
   const [alreadySelected, setAlreadySelected] = useState(false);
 
   const setIsFirst = useStore((state) => state.setIsFirst);
+
+  // 이전 페이지에서 받은 'from' 값 (없으면 기본적으로 'Survey' 설정)
+  const fromPage = route?.params?.from || 'Survey';
 
   const questions = [
     {
@@ -170,6 +173,15 @@ const SurveyQuestionScreen = ({navigation}) => {
     setEnvironmentModalVisible(true);
   };
 
+  const handleClosePress = () => {
+    // CloseModal에서 종료를 눌렀을 때, fromPage에 따라 이동할 화면 결정
+    if (fromPage === 'ReSurvey') {
+      navigation.navigate('MyPage');
+    } else {
+      navigation.navigate('LoginMain');
+    }
+  };
+
   useEffect(() => {
     if (navigateToResult) {
       setNavigateToResult(false);
@@ -267,7 +279,7 @@ const SurveyQuestionScreen = ({navigation}) => {
         <CloseModal 
           isVisible={isModalVisible}
           onClose={toggleModal}
-          onExit={() => navigation.navigate('LoginMain')}
+          onExit={handleClosePress}
         />
         
         <View style={styles.progressBarContainer}>
