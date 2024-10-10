@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
   },
   EnvironmentItem: {
     width: responsiveWidth(70),
-    height: 43,
-    justifyContent: 'space-evenly',
+    height: 52,
+    justifyContent: 'center',
     marginTop: responsiveHeight(0.5),
     marginLeft: responsiveWidth(3),
   },
