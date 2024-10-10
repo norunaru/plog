@@ -115,11 +115,13 @@ const styles = StyleSheet.create({
     color: '#1ECD90',
     fontSize: 16,
     fontWeight: 'bold',
+    paddingBottom: 5,
   },
   greenBtnText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    paddingBottom: 5,
   },
 });
 

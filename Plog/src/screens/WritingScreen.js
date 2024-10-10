@@ -178,11 +178,11 @@ const WritingScreen = ({ navigation, route }) => {
         <View style={{flexDirection: 'row', marginVertical: 16}}>
           <View style={{flexDirection: 'row', marginRight: 12}}>
             <Image style={styles.miniIcon} source={calendar} />
-            <Text>{date}</Text>
+            <Text style={{paddingTop: 1}}>{date}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Image style={styles.miniIcon} source={location} />
-            <Text>{locationName}</Text>
+            <Text style={{paddingBottom: 2}}>{locationName}</Text>
           </View>
         </View>
         {/* 지도, 정보 박스 */}
