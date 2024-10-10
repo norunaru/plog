@@ -91,9 +91,15 @@ public class Activity {
     private List<ActivityImage> activityImages;
 
     public void update(ActivityUpdateRequestDto activityUpdateRequestDto, List<String> savedUrls) {
-        this.title = activityUpdateRequestDto.getTitle();
+        this.title = (activityUpdateRequestDto.getTitle() == null || activityUpdateRequestDto.getTitle().trim().isEmpty())
+            ? "제목을 수정하여 일지를 계속 작성해주세요!"
+            : activityUpdateRequestDto.getTitle();
+
+        this.review = (activityUpdateRequestDto.getReview() == null || activityUpdateRequestDto.getReview().trim().isEmpty())
+            ? "일지 내용을 남겨주세요!"
+            : activityUpdateRequestDto.getReview();
+
         this.score = activityUpdateRequestDto.getScore();
-        this.review = activityUpdateRequestDto.getReview();
 
         // 기존 activityImages 컬렉션을 clear하여 모든 이미지를 제거하고 새로 추가
         this.activityImages.clear();
