@@ -372,7 +372,7 @@ public class TrailServiceImpl implements TrailService {
             }
             return time <= 60;
         } else {
-            return time >= 60;
+            return time >= 30;
         }
     }
 
