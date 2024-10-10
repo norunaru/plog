@@ -8,6 +8,7 @@ import com.plog.backend.domain.member.repository.MemberRepository;
 import com.plog.backend.global.common.util.MemberInfo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -101,12 +102,28 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public List<FriendFindByEmailResponseDto> findByEmail(String email) {
         List<Member> members = memberRepository.findByEmailContaining(email);
-        List<FriendFindByEmailResponseDto> emailList = new ArrayList<>(members.size());
+        Optional<Member> nowMemberOptional = memberRepository.findByEmail(MemberInfo.getEmail());
+
+        // 현재 회원이 존재하지 않으면 빈 리스트 반환
+        if (nowMemberOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Member nowMember = nowMemberOptional.get();
+        List<FriendFindByEmailResponseDto> emailList = new ArrayList<>();
 
         for (Member member : members) {
+            // 자기 자신인 경우 건너뛰기
             if (MemberInfo.getUserId().equals(member.getId())) {
                 continue;
             }
+
+            // 이미 친구인 경우 건너뛰기
+            if (nowMember.getFriends().containsKey(member.getId())) {
+                continue;
+            }
+
+            // 이메일 리스트에 추가
             emailList.add(FriendFindByEmailResponseDto.builder()
                 .email(member.getEmail())
                 .id(member.getId())
@@ -114,6 +131,7 @@ public class FriendServiceImpl implements FriendService {
                 .profileImageUrl(member.getProfileImageUrl())
                 .build());
         }
+
         return emailList;
     }
 
