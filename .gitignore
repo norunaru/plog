@@ -232,3 +232,5 @@ $RECYCLE.BIN/
 
 # Ignore all application-key.yml files in any subdirectory
 **/application-key.properties
+
+/**/.env
