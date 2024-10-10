@@ -29,7 +29,7 @@ const RecommendHeader = ({navigation, headerText}) => {
         <Text
           style={{
             color: 'black',
-            fontSize: 16,
+            fontSize: responsiveFontSize(2.1),
             height: '100%',
             fontWeight: '400',
           }}>

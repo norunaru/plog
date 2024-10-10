@@ -84,7 +84,7 @@ const WritingUpdateScreen = ({ navigation, route }) => {
         accessToken
       );
   
-      navigation.navigate('Tabs');
+      navigation.navigate('PloggingRecord');
     } catch (error) {
       console.error('저장 에러:', error);
     }

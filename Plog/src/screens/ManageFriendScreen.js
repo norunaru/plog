@@ -8,7 +8,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import RecommendHeader from '../components/headers/RecommendHeader';
+import PloggingHeader from '../components/headers/PloggingHeader';
 import ic_search from '../../assets/icons/ic_search.png';
 import FriendManageCard from '../components/cards/FriendManageCard';
 import nothing from '../../assets/images/nothing.png';
@@ -73,7 +73,7 @@ const ManageFriendScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <RecommendHeader navigation={navigation} headerText={'팔로잉'} />
+      <PloggingHeader navigation={navigation} headerText={'팔로잉'} />
       <View style={styles.wrap}>
         <View style={styles.inputWrapper}>
           <TextInput
