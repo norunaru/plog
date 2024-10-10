@@ -101,6 +101,7 @@ export default function CommunityScreen() {
                 image={post.activity.trail.image}
                 title={post.activity.title}
                 locationName={post.activity.locationName}
+                creationDate={post.activity.creationDate.split('T')[0]}
               />
             ))}
       </ScrollView>
