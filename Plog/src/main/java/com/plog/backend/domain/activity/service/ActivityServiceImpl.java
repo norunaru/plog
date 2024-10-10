@@ -65,7 +65,8 @@ public class ActivityServiceImpl implements ActivityService {
         long trailId = activity.getTrailId();
         // 2.2. trailId
         MemberScore memberScore = memberScoreRepository.findByMemberId(memberId);
-        memberScore.getScore()[(int) trailId] = activity.getScore();
+        memberScore.getScore()[(int) trailId] =
+            activity.getScore() != null ? activity.getScore() : 0.5f;
         memberScoreRepository.save(memberScore);
         Long retunValue = -1L;
         Optional<Trail> trail = trailRepository.findById(trailId);
@@ -88,8 +89,9 @@ public class ActivityServiceImpl implements ActivityService {
                 .locationName(
                     trailEntity.getName() != null ? trailEntity.getName() : "위치 정보를 입력해 주세요!")
                 .review(activity.getReview() != null ? activity.getReview() : "리뷰를 남겨주세요!")
-                .score(activity.getScore() != null ? activity.getScore() : 0.0f)
+                .score(activity.getScore() != null ? activity.getScore() : 0.5f)
                 .trail(trailEntity)
+
                 .build();
 
             // 3. ActivityImage 엔티티 생성 및 Activity와의 연관관계 설정
