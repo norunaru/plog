@@ -238,6 +238,7 @@ public class TrailServiceImpl implements TrailService {
             return response;
 
         } else {
+
             Member member = memberRepository.findById(memberId).orElseThrow();
             Float lat = member.getRegionLat();
             Float lon = member.getRegionLon();
@@ -254,7 +255,7 @@ public class TrailServiceImpl implements TrailService {
                 int time = (int) (Math.sqrt(trail.getArea()) / 6);
                 // 면적 => 거리
                 float area = (float) (Math.sqrt(trail.getArea()));
-                if (checkFologgingTime(time, floggingTimeType)) continue;
+                if (!checkFologgingTime(time, floggingTimeType)) continue;
                 String tag = "";
                 tag += timeToTag(time);
                 tag += typeTotag(type);
@@ -364,15 +365,15 @@ public class TrailServiceImpl implements TrailService {
     }
 
     private boolean checkFologgingTime(int time, int type) {
-        if (type == 0) {
-            return time <= 30;
+        if (type == 2) {
+            return time <= 40;
         } else if (type == 1) {
             if (time < 30) {
                 return false;
             }
             return time <= 60;
         } else {
-            return time >= 30;
+            return time >= 40;
         }
     }
 
