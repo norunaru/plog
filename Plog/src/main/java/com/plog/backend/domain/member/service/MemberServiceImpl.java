@@ -61,6 +61,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(kakaoInfo[0])
                 .nickname(kakaoInfo[1])
                 .profileImageUrl(kakaoInfo[2])
+                .expLevel(0F)
                 .build();
 
             // MemberScore 생성 시 member 설정
