@@ -1,7 +1,7 @@
 services:
   spring:
-    container_name: spring
-    image: spring-app
+    container_name: spring-test
+    image: spring-app-test
     environment:
       - TZ=Asia/Seoul
     networks:
