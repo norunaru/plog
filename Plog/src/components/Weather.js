@@ -309,7 +309,7 @@ const Weather = () => {
     );
   }
 
-  const weatherIcon = cloudyIcon;
+  const weatherIcon = sunnyIcon;
 
   const toFahrenheit = celsius => (celsius * 9) / 5 + 32;
 
